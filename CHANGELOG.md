@@ -1,0 +1,79 @@
+# 📝 Changelog
+
+Todos los cambios notables en este proyecto serán documentados aquí.
+
+El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
+y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
+
+## [1.0.1] - 2024-01-15
+
+### 🎨 Mejorado
+- Cursor visible en campos de entrada (color morado)
+- Efecto focus moderno en inputs
+- Mejor espaciado en campos de texto
+- Borde sutil en campos activos
+- Experiencia de usuario mejorada
+
+## [1.0.0] - 2024-01-15
+
+### ✨ Agregado
+- Gestión completa de vocabulario (agregar, editar, eliminar)
+- Búsqueda en tiempo real con debouncing
+- Pronunciación fonética
+- Modo práctica (quiz inglés ↔ español)
+- Práctica de caligrafía con oraciones de ejemplo
+- 47 preposiciones en inglés con traducciones
+- 58 términos de días/meses/tiempo
+- Conversor de números a texto en inglés
+- Reglas importantes sobre números
+- Estadísticas del vocabulario
+- Exportar/Importar CSV
+- Soporte multiplataforma (Windows/Linux)
+- Tema oscuro moderno (morado/violeta)
+- Fuente adaptativa según sistema operativo
+- Almacenamiento local seguro
+- Pestaña de ayuda con soporte técnico
+- Manual de usuario integrado
+- Términos y condiciones
+- Documentación completa en código
+
+### 🎨 Diseño
+- Interfaz moderna con tema oscuro
+- Responsive (1100x650, mínimo 950x550)
+- Scroll en pestañas con mucho contenido
+- Emojis para mejor UX
+
+### 🔧 Técnico
+- Detección automática de sistema operativo
+- Rutas de datos adaptativas
+- Validación de campos
+- Manejo de errores robusto
+- Código documentado
+
+### 📚 Documentación
+- README completo
+- Guía de instalación (INSTALL.md)
+- Guía de contribución (CONTRIBUTING.md)
+- Licencia MIT
+- .gitignore configurado
+
+## [Unreleased]
+
+### 🚀 Planeado para futuras versiones
+- Modo claro/oscuro configurable
+- Sincronización en la nube
+- Soporte para imágenes
+- Pronunciación con audio
+- Más idiomas
+- Juegos de aprendizaje
+- Estadísticas avanzadas
+- Exportar a PDF
+- Flashcards
+- Recordatorios de práctica
+
+---
+
+**Formato de versiones:** [MAJOR.MINOR.PATCH]
+- **MAJOR:** Cambios incompatibles con versiones anteriores
+- **MINOR:** Nueva funcionalidad compatible con versiones anteriores
+- **PATCH:** Correcciones de bugs compatibles con versiones anteriores

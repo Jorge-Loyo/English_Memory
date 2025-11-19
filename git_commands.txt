@@ -1,0 +1,57 @@
+# Comandos Git para Subir English Memory al Repositorio
+
+## 1. Inicializar repositorio (si no está inicializado)
+git init
+
+## 2. Agregar todos los archivos
+git add .
+
+## 3. Hacer commit inicial
+git commit -m "feat: Initial release v1.0.0 - English Memory"
+
+## 4. Crear rama main (si es necesario)
+git branch -M main
+
+## 5. Agregar repositorio remoto (reemplaza con tu URL)
+git remote add origin https://github.com/tu-usuario/english-memory.git
+
+## 6. Subir al repositorio
+git push -u origin main
+
+## 7. Crear tag para la versión
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push origin v1.0.0
+
+## Comandos útiles adicionales:
+
+# Ver estado
+git status
+
+# Ver historial
+git log --oneline
+
+# Ver ramas
+git branch -a
+
+# Actualizar cambios
+git pull origin main
+
+# Subir cambios nuevos
+git add .
+git commit -m "descripción del cambio"
+git push origin main
+
+## Estructura de commits recomendada:
+
+# feat: Nueva funcionalidad
+# fix: Corrección de bug
+# docs: Cambios en documentación
+# style: Cambios de formato (no afectan código)
+# refactor: Refactorización de código
+# test: Agregar o modificar tests
+# chore: Tareas de mantenimiento
+
+## Ejemplo de commits:
+# git commit -m "feat: agregar modo oscuro"
+# git commit -m "fix: corregir error en búsqueda"
+# git commit -m "docs: actualizar README con screenshots"
