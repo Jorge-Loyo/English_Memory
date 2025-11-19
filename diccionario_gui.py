@@ -102,8 +102,8 @@ class DiccionarioApp:
     def __init__(self, root):
         self.root = root
         self.root.title("📚 English Memory v1.0")
-        self.root.geometry("1100x650")
-        self.root.minsize(950, 550)
+        self.root.geometry("1200x700")
+        self.root.minsize(1150, 600)
         self.root.configure(bg=COLOR_BG)
         self.datos = cargar_datos()
         

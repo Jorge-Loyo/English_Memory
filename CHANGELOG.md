@@ -14,6 +14,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Borde sutil en campos activos
 - Experiencia de usuario mejorada
 
+### 🐛 Corregido
+- Tamaño de ventana ajustado (1200x700)
+- Tamaño mínimo aumentado (1150x600)
+- Todos los botones de pestañas visibles
+- Ventana no se puede achicar más allá del mínimo necesario
+
 ## [1.0.0] - 2024-01-15
 
 ### ✨ Agregado
