@@ -14,6 +14,8 @@ git commit -m "feat: Release v1.1.0 - Gramática y ventana redimensionable
 - Nueva pestaña de Gramática con pronombres, verbos auxiliares, artículos, demostrativos y cuantificadores
 - Ventana ahora se puede minimizar, maximizar y redimensionar libremente
 - Compatible con función 'Acoplar ventana' de Windows
+- Pestañas con iconos y tooltips informativos
+- Scroll con rueda del mouse mejorado en todas las pestañas
 - Eliminada restricción de tamaño mínimo
 - Actualizada documentación y versionado a v1.1.0"
 

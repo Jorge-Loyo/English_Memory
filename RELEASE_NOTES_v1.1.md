@@ -44,11 +44,16 @@ Agregamos una pestaña completa de gramática con contenido esencial para el apr
 - ✅ Eliminada restricción de tamaño mínimo para mejor usabilidad
 - ✅ Ideal para compartir pantalla con otras aplicaciones
 
+### Mejoras de Interfaz
+- ✅ **Pestañas con iconos**: Ahora muestran solo el icono para ahorrar espacio
+- ✅ **Tooltips informativos**: Al pasar el mouse sobre cualquier pestaña aparece su nombre
+- ✅ **Scroll mejorado**: La rueda del mouse funciona correctamente en todas las pestañas
+
 ## 📊 Resumen de Cambios
 
 - **Pestañas totales**: 10 (antes 9)
 - **Contenido gramatical**: 5 secciones nuevas
-- **Mejoras de UX**: Ventana completamente flexible
+- **Mejoras de UX**: Ventana completamente flexible, iconos con tooltips, scroll mejorado
 
 ## 🎯 Casos de Uso Mejorados
 

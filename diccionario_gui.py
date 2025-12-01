@@ -135,6 +135,9 @@ class DiccionarioApp:
         self.crear_pestaña_gramatica()
         self.crear_pestaña_estadisticas()
         self.crear_pestaña_ayuda()
+        
+        # Tooltips para pestañas
+        self.crear_tooltips_pestañas()
     
     def configurar_estilos(self):
         style = ttk.Style()
@@ -178,9 +181,56 @@ class DiccionarioApp:
         style.map('Treeview', background=[('selected', COLOR_ACCENT)], 
                  foreground=[('selected', COLOR_BG)])
     
+    def crear_tooltips_pestañas(self):
+        # Cambiar texto de pestañas a solo iconos
+        iconos_tooltips = [
+            ("📖", "Vocabulario"),
+            ("🔊", "Pronunciación"),
+            ("🎯", "Práctica"),
+            ("✍️", "Caligrafía"),
+            ("📍", "Preposiciones"),
+            ("📅", "Días/Meses"),
+            ("🔢", "Números"),
+            ("📝", "Gramática"),
+            ("📊", "Estadísticas"),
+            ("❓", "Ayuda")
+        ]
+        
+        for i, (icono, tooltip) in enumerate(iconos_tooltips):
+            self.notebook.tab(i, text=icono)
+        
+        # Bind para mostrar tooltips
+        self.notebook.bind('<Motion>', self._mostrar_tooltip_pestana)
+        self.notebook.bind('<Leave>', self._ocultar_tooltip_pestana)
+    
+    def _mostrar_tooltip_pestana(self, event):
+        try:
+            tab_id = self.notebook.index(f"@{event.x},{event.y}")
+            tooltips = ["Vocabulario", "Pronunciación", "Práctica", "Caligrafía", 
+                       "Preposiciones", "Días/Meses", "Números", "Gramática", 
+                       "Estadísticas", "Ayuda"]
+            
+            if hasattr(self, '_tooltip_window'):
+                self._tooltip_window.destroy()
+            
+            self._tooltip_window = tk.Toplevel(self.root)
+            self._tooltip_window.wm_overrideredirect(True)
+            self._tooltip_window.wm_geometry(f"+{event.x_root+10}+{event.y_root+10}")
+            label = tk.Label(self._tooltip_window, text=tooltips[tab_id], 
+                           background="#ffffe0", relief='solid', borderwidth=1, 
+                           font=(FONT_FAMILY, 9), padx=5, pady=2)
+            label.pack()
+        except:
+            self._ocultar_tooltip_pestana(None)
+    
+    def _ocultar_tooltip_pestana(self, event):
+        if hasattr(self, '_tooltip_window'):
+            self._tooltip_window.destroy()
+            delattr(self, '_tooltip_window')
+    
     def crear_pestaña_consultar(self):
         frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="📖 Vocabulario")
+        self.notebook.add(frame, text="📖")
         
         # Búsqueda
         frame_buscar = ttk.Frame(frame)
@@ -238,7 +288,7 @@ class DiccionarioApp:
     
     def crear_pestaña_pronunciacion(self):
         frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="🔊 Pronunciación")
+        self.notebook.add(frame, text="🔊")
         
         container = tk.Frame(frame, bg=COLOR_BG)
         container.place(relx=0.5, rely=0.5, anchor='center')
@@ -430,7 +480,7 @@ class DiccionarioApp:
     
     def crear_pestaña_practica(self):
         frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="🎯 Práctica")
+        self.notebook.add(frame, text="🎯")
         
         container = tk.Frame(frame, bg=COLOR_BG)
         container.place(relx=0.5, rely=0.5, anchor='center')
@@ -512,7 +562,7 @@ class DiccionarioApp:
     
     def crear_pestaña_preposiciones(self):
         frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="📍 Preposiciones")
+        self.notebook.add(frame, text="📍")
         
         # Búsqueda
         frame_buscar = ttk.Frame(frame)
@@ -622,7 +672,7 @@ class DiccionarioApp:
     
     def crear_pestaña_dias_meses(self):
         frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="📅 Días/Meses")
+        self.notebook.add(frame, text="📅")
         
         # Búsqueda
         frame_buscar = ttk.Frame(frame)
@@ -744,7 +794,7 @@ class DiccionarioApp:
     
     def crear_pestaña_numeros(self):
         frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="🔢 Números")
+        self.notebook.add(frame, text="🔢")
         
         # Canvas con scroll
         canvas = tk.Canvas(frame, bg=COLOR_BG, highlightthickness=0)
@@ -757,7 +807,8 @@ class DiccionarioApp:
         
         def _on_mousewheel_num(event):
             canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-        canvas.bind_all("<MouseWheel>", _on_mousewheel_num)
+        canvas.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", _on_mousewheel_num))
+        canvas.bind("<Leave>", lambda e: canvas.unbind_all("<MouseWheel>"))
         
         canvas.pack(side="left", fill="both", expand=True, padx=20, pady=20)
         scrollbar.pack(side="right", fill="y", pady=20)
@@ -910,7 +961,7 @@ class DiccionarioApp:
     
     def crear_pestaña_gramatica(self):
         frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="📝 Gramática")
+        self.notebook.add(frame, text="📝")
         
         canvas = tk.Canvas(frame, bg=COLOR_BG, highlightthickness=0)
         scrollbar = ttk.Scrollbar(frame, orient="vertical", command=canvas.yview)
@@ -922,7 +973,8 @@ class DiccionarioApp:
         
         def _on_mousewheel_gram(event):
             canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-        canvas.bind_all("<MouseWheel>", _on_mousewheel_gram)
+        canvas.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", _on_mousewheel_gram))
+        canvas.bind("<Leave>", lambda e: canvas.unbind_all("<MouseWheel>"))
         
         canvas.pack(side="left", fill="both", expand=True, padx=20, pady=20)
         scrollbar.pack(side="right", fill="y", pady=20)
@@ -1059,7 +1111,7 @@ class DiccionarioApp:
     
     def crear_pestaña_estadisticas(self):
         frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="📊 Estadísticas")
+        self.notebook.add(frame, text="📊")
         
         container = tk.Frame(frame, bg=COLOR_BG)
         container.place(relx=0.5, rely=0.5, anchor='center')
@@ -1103,7 +1155,7 @@ class DiccionarioApp:
     
     def crear_pestaña_caligrafia(self):
         frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="✍️ Caligrafía")
+        self.notebook.add(frame, text="✍️")
         
         # Frame superior para selección
         frame_top = tk.Frame(frame, bg=COLOR_BG)
@@ -1143,7 +1195,8 @@ class DiccionarioApp:
         def _on_mousewheel(event):
             self.canvas_caligrafia.yview_scroll(int(-1*(event.delta/120)), "units")
         
-        self.canvas_caligrafia.bind_all("<MouseWheel>", _on_mousewheel)
+        self.canvas_caligrafia.bind("<Enter>", lambda e: self.canvas_caligrafia.bind_all("<MouseWheel>", _on_mousewheel))
+        self.canvas_caligrafia.bind("<Leave>", lambda e: self.canvas_caligrafia.unbind_all("<MouseWheel>"))
         
         self.canvas_caligrafia.pack(side="left", fill="both", expand=True, padx=30, pady=(0,20))
         scrollbar.pack(side="right", fill="y", pady=(0,20))
@@ -1372,7 +1425,7 @@ class DiccionarioApp:
 
     def crear_pestaña_ayuda(self):
         frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="❓ Ayuda")
+        self.notebook.add(frame, text="❓")
         
         # Canvas con scroll
         canvas = tk.Canvas(frame, bg=COLOR_BG, highlightthickness=0)
@@ -1385,7 +1438,8 @@ class DiccionarioApp:
         
         def _on_mousewheel_ayuda(event):
             canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-        canvas.bind_all("<MouseWheel>", _on_mousewheel_ayuda)
+        canvas.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", _on_mousewheel_ayuda))
+        canvas.bind("<Leave>", lambda e: canvas.unbind_all("<MouseWheel>"))
         
         canvas.pack(side="left", fill="both", expand=True, padx=20, pady=20)
         scrollbar.pack(side="right", fill="y", pady=20)

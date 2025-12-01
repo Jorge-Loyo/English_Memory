@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo   English Memory v1.0 - Instalador
+echo   English Memory v1.1 - Instalador
 echo ========================================
 echo.
 

@@ -14,12 +14,19 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Artículos (a, an, the) con reglas y ejemplos
 - Adjetivos demostrativos (this, that, these, those)
 - Cuantificadores (some, any, much, many, etc.)
+- Tooltips en pestañas: al pasar el mouse muestra el nombre completo
+- Pestañas ahora muestran solo iconos para ahorrar espacio
 
 ### 🐛 Corregido
 - Ventana ahora se puede minimizar correctamente
 - Ventana se puede redimensionar libremente
 - Compatible con función "Acoplar ventana" de Windows
 - Eliminada restricción de tamaño mínimo para mejor usabilidad
+- Scroll con rueda del mouse ahora funciona en todas las pestañas
+
+### 🎨 Mejorado
+- Interfaz más compacta con iconos en pestañas
+- Mejor experiencia de usuario con tooltips informativos
 
 ## [1.0.1] - 2024-01-15
 
