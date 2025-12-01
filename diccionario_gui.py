@@ -1,5 +1,5 @@
 """
-English Memory v1.0
+English Memory v1.1
 ===================
 
 Aplicación educativa multiplataforma para aprender y organizar vocabulario en inglés.
@@ -12,6 +12,7 @@ Características:
 - Preposiciones (47 preposiciones)
 - Días/Meses (58 términos)
 - Números (conversor + reglas)
+- Gramática (pronombres, verbos auxiliares, artículos, demostrativos, cuantificadores)
 - Estadísticas del vocabulario
 - Exportar/Importar CSV
 - Soporte técnico integrado
@@ -30,7 +31,7 @@ Soporte:
 - Teléfono: +54 11 6168-2555
 
 Desarrollado por: Agilize Soluciones
-Versión: 1.0
+Versión: 1.1
 Fecha: 2024
 Licencia: Uso educativo gratuito
 """
@@ -101,9 +102,8 @@ def guardar_datos(datos):
 class DiccionarioApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("📚 English Memory v1.0")
+        self.root.title("📚 English Memory v1.1")
         self.root.geometry("1200x700")
-        self.root.minsize(1150, 600)
         self.root.configure(bg=COLOR_BG)
         self.datos = cargar_datos()
         
@@ -113,7 +113,7 @@ class DiccionarioApp:
         # Header
         header = tk.Frame(root, bg=COLOR_BG)
         header.pack(fill='x', padx=20, pady=(20,10))
-        tk.Label(header, text="📚 English Memory v1.0", 
+        tk.Label(header, text="📚 English Memory v1.1", 
                 font=(FONT_FAMILY, 24, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT).pack()
         tk.Label(header, text="Aprende y organiza tu vocabulario en inglés", 
                 font=(FONT_FAMILY, 10), bg=COLOR_BG, fg=COLOR_FG).pack()
@@ -132,6 +132,7 @@ class DiccionarioApp:
         self.crear_pestaña_preposiciones()
         self.crear_pestaña_dias_meses()
         self.crear_pestaña_numeros()
+        self.crear_pestaña_gramatica()
         self.crear_pestaña_estadisticas()
         self.crear_pestaña_ayuda()
     
@@ -906,6 +907,155 @@ class DiccionarioApp:
             if resto > 0:
                 resultado += ' ' + convertir_centenas(resto)
             return resultado
+    
+    def crear_pestaña_gramatica(self):
+        frame = ttk.Frame(self.notebook)
+        self.notebook.add(frame, text="📝 Gramática")
+        
+        canvas = tk.Canvas(frame, bg=COLOR_BG, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(frame, orient="vertical", command=canvas.yview)
+        content = tk.Frame(canvas, bg=COLOR_BG)
+        
+        content.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.create_window((0, 0), window=content, anchor="nw", width=1000)
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        def _on_mousewheel_gram(event):
+            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        canvas.bind_all("<MouseWheel>", _on_mousewheel_gram)
+        
+        canvas.pack(side="left", fill="both", expand=True, padx=20, pady=20)
+        scrollbar.pack(side="right", fill="y", pady=20)
+        
+        # Pronombres
+        pron_frame = tk.Frame(content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+        pron_frame.pack(fill='x', padx=20, pady=(0,20), ipady=15)
+        
+        ttk.Label(pron_frame, text="👤 Pronombres Personales y Posesivos", font=(FONT_FAMILY, 16, 'bold'), 
+                 foreground=COLOR_ACCENT, background=COLOR_BUTTON).pack(pady=(10,15))
+        
+        # Tabla de pronombres
+        pron_data = [
+            ('I', 'me', 'my', 'mine', 'yo', 'me/mí', 'mi/mis', 'mío/a'),
+            ('You', 'you', 'your', 'yours', 'tú/usted', 'te/ti/le', 'tu/su', 'tuyo/suyo'),
+            ('He', 'him', 'his', 'his', 'él', 'lo/le', 'su', 'suyo'),
+            ('She', 'her', 'her', 'hers', 'ella', 'la/le', 'su', 'suyo'),
+            ('It', 'it', 'its', 'its', 'ello', 'lo', 'su', 'suyo'),
+            ('We', 'us', 'our', 'ours', 'nosotros', 'nos', 'nuestro/a', 'nuestro/a'),
+            ('They', 'them', 'their', 'theirs', 'ellos/as', 'los/las/les', 'su', 'suyo')
+        ]
+        
+        table_frame = tk.Frame(pron_frame, bg=COLOR_BUTTON)
+        table_frame.pack(padx=20, pady=(0,15))
+        
+        headers = ['Sujeto', 'Objeto', 'Adj. Posesivo', 'Pron. Posesivo', 'Español (Suj)', 'Español (Obj)', 'Español (Adj)', 'Español (Pron)']
+        for col, header in enumerate(headers):
+            tk.Label(table_frame, text=header, font=(FONT_FAMILY, 9, 'bold'), 
+                    bg=COLOR_ACCENT, fg=COLOR_BG, width=12, relief='solid', borderwidth=1).grid(row=0, column=col, sticky='ew')
+        
+        for row, data in enumerate(pron_data, 1):
+            for col, value in enumerate(data):
+                bg = COLOR_BG if row % 2 == 0 else COLOR_BUTTON_HOVER
+                tk.Label(table_frame, text=value, font=(FONT_FAMILY, 9), 
+                        bg=bg, fg=COLOR_FG, width=12, relief='solid', borderwidth=1).grid(row=row, column=col, sticky='ew')
+        
+        # Verbos auxiliares
+        aux_frame = tk.Frame(content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+        aux_frame.pack(fill='x', padx=20, pady=(0,20), ipady=15)
+        
+        ttk.Label(aux_frame, text="🔧 Verbos Auxiliares", font=(FONT_FAMILY, 16, 'bold'), 
+                 foreground=COLOR_ACCENT, background=COLOR_BUTTON).pack(pady=(10,15))
+        
+        aux_data = [
+            ('TO BE', 'I am', 'You are', 'He/She/It is', 'We/They are', 'ser/estar'),
+            ('TO HAVE', 'I have', 'You have', 'He/She/It has', 'We/They have', 'tener/haber'),
+            ('TO DO', 'I do', 'You do', 'He/She/It does', 'We/They do', 'hacer')
+        ]
+        
+        for verbo, yo, tu, el, nosotros, esp in aux_data:
+            verb_frame = tk.Frame(aux_frame, bg=COLOR_BG, relief='solid', borderwidth=1)
+            verb_frame.pack(fill='x', padx=20, pady=5)
+            tk.Label(verb_frame, text=f"{verbo} ({esp})", font=(FONT_FAMILY, 11, 'bold'), 
+                    bg=COLOR_BG, fg=COLOR_ACCENT, width=20, anchor='w').pack(side='left', padx=10, pady=5)
+            tk.Label(verb_frame, text=f"{yo} | {tu} | {el} | {nosotros}", font=(FONT_FAMILY, 10), 
+                    bg=COLOR_BG, fg=COLOR_FG, anchor='w').pack(side='left', padx=10, pady=5)
+        
+        # Artículos
+        art_frame = tk.Frame(content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+        art_frame.pack(fill='x', padx=20, pady=(0,20), ipady=15)
+        
+        ttk.Label(art_frame, text="📰 Artículos", font=(FONT_FAMILY, 16, 'bold'), 
+                 foreground=COLOR_ACCENT, background=COLOR_BUTTON).pack(pady=(10,15))
+        
+        articulos = [
+            ('a', 'un/una (antes de consonante)', 'a book, a car'),
+            ('an', 'un/una (antes de vocal)', 'an apple, an hour'),
+            ('the', 'el/la/los/las (específico)', 'the book, the sun')
+        ]
+        
+        for art, desc, ej in articulos:
+            art_item = tk.Frame(art_frame, bg=COLOR_BG, relief='solid', borderwidth=1)
+            art_item.pack(fill='x', padx=20, pady=5)
+            tk.Label(art_item, text=art, font=(FONT_FAMILY, 12, 'bold'), 
+                    bg=COLOR_BG, fg=COLOR_ACCENT, width=8).pack(side='left', padx=10, pady=8)
+            tk.Label(art_item, text=desc, font=(FONT_FAMILY, 10), 
+                    bg=COLOR_BG, fg=COLOR_FG, width=35, anchor='w').pack(side='left', padx=5)
+            tk.Label(art_item, text=f"Ej: {ej}", font=(FONT_FAMILY, 9, 'italic'), 
+                    bg=COLOR_BG, fg=COLOR_BUTTON_HOVER, anchor='w').pack(side='left', padx=5)
+        
+        # Demostrativos
+        dem_frame = tk.Frame(content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+        dem_frame.pack(fill='x', padx=20, pady=(0,20), ipady=15)
+        
+        ttk.Label(dem_frame, text="👉 Adjetivos Demostrativos", font=(FONT_FAMILY, 16, 'bold'), 
+                 foreground=COLOR_ACCENT, background=COLOR_BUTTON).pack(pady=(10,15))
+        
+        demostrativos = [
+            ('this', 'este/esta (singular, cerca)', 'this book'),
+            ('that', 'ese/esa/aquel (singular, lejos)', 'that car'),
+            ('these', 'estos/estas (plural, cerca)', 'these books'),
+            ('those', 'esos/esas/aquellos (plural, lejos)', 'those cars')
+        ]
+        
+        for dem, desc, ej in demostrativos:
+            dem_item = tk.Frame(dem_frame, bg=COLOR_BG, relief='solid', borderwidth=1)
+            dem_item.pack(fill='x', padx=20, pady=5)
+            tk.Label(dem_item, text=dem, font=(FONT_FAMILY, 12, 'bold'), 
+                    bg=COLOR_BG, fg=COLOR_ACCENT, width=10).pack(side='left', padx=10, pady=8)
+            tk.Label(dem_item, text=desc, font=(FONT_FAMILY, 10), 
+                    bg=COLOR_BG, fg=COLOR_FG, width=35, anchor='w').pack(side='left', padx=5)
+            tk.Label(dem_item, text=f"Ej: {ej}", font=(FONT_FAMILY, 9, 'italic'), 
+                    bg=COLOR_BG, fg=COLOR_BUTTON_HOVER).pack(side='left', padx=5)
+        
+        # Cuantificadores
+        cuant_frame = tk.Frame(content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+        cuant_frame.pack(fill='x', padx=20, pady=(0,20), ipady=15)
+        
+        ttk.Label(cuant_frame, text="📊 Cuantificadores", font=(FONT_FAMILY, 16, 'bold'), 
+                 foreground=COLOR_ACCENT, background=COLOR_BUTTON).pack(pady=(10,15))
+        
+        cuantificadores = [
+            ('some', 'algunos/as (afirmativo)', 'I have some books'),
+            ('any', 'algún/ningún (negativo/pregunta)', 'Do you have any books?'),
+            ('much', 'mucho (incontable)', 'much water'),
+            ('many', 'muchos (contable)', 'many books'),
+            ('a lot of', 'mucho/muchos (ambos)', 'a lot of water/books'),
+            ('few', 'pocos (contable)', 'few books'),
+            ('little', 'poco (incontable)', 'little water'),
+            ('several', 'varios', 'several options'),
+            ('all', 'todo/todos', 'all students'),
+            ('no', 'ningún', 'no money')
+        ]
+        
+        for cuant, desc, ej in cuantificadores:
+            cuant_item = tk.Frame(cuant_frame, bg=COLOR_BG, relief='solid', borderwidth=1)
+            cuant_item.pack(fill='x', padx=20, pady=3)
+            tk.Label(cuant_item, text=cuant, font=(FONT_FAMILY, 11, 'bold'), 
+                    bg=COLOR_BG, fg=COLOR_ACCENT, width=12, anchor='w').pack(side='left', padx=10, pady=5)
+            tk.Label(cuant_item, text=desc, font=(FONT_FAMILY, 10), 
+                    bg=COLOR_BG, fg=COLOR_FG, width=30, anchor='w').pack(side='left', padx=5)
+            tk.Label(cuant_item, text=f"Ej: {ej}", font=(FONT_FAMILY, 9, 'italic'), 
+                    bg=COLOR_BG, fg=COLOR_BUTTON_HOVER, anchor='w').pack(side='left', padx=5)
     
     def crear_pestaña_estadisticas(self):
         frame = ttk.Frame(self.notebook)

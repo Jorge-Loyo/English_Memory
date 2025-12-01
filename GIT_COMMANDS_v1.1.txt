@@ -1,0 +1,49 @@
+# Comandos Git para Subir English Memory v1.1.0
+
+## Actualización a v1.1.0
+
+# 1. Ver estado actual
+git status
+
+# 2. Agregar todos los cambios
+git add .
+
+# 3. Hacer commit con los cambios de v1.1.0
+git commit -m "feat: Release v1.1.0 - Gramática y ventana redimensionable
+
+- Nueva pestaña de Gramática con pronombres, verbos auxiliares, artículos, demostrativos y cuantificadores
+- Ventana ahora se puede minimizar, maximizar y redimensionar libremente
+- Compatible con función 'Acoplar ventana' de Windows
+- Eliminada restricción de tamaño mínimo
+- Actualizada documentación y versionado a v1.1.0"
+
+# 4. Subir cambios
+git push origin main
+
+# 5. Crear tag para v1.1.0
+git tag -a v1.1.0 -m "Release version 1.1.0 - Gramática y mejoras de ventana"
+
+# 6. Subir el tag
+git push origin v1.1.0
+
+# 7. Crear Release en GitHub
+# - Ir a GitHub → Releases → New Release
+# - Tag: v1.1.0
+# - Title: English Memory v1.1.0 - Gramática y Ventana Redimensionable
+# - Descripción: Copiar contenido de RELEASE_NOTES_v1.1.md
+# - Adjuntar: dist/English Memory.exe
+# - Publicar
+
+## Comandos útiles
+
+# Ver historial
+git log --oneline
+
+# Ver diferencias
+git diff
+
+# Ver tags
+git tag -l
+
+# Ver último commit
+git show

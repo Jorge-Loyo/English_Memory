@@ -5,7 +5,7 @@ from pathlib import Path
 current_dir = Path(__file__).parent
 
 print("="*50)
-print("  Creando English Memory v1.0")
+print("  Creando English Memory v1.1")
 print("="*50)
 print()
 

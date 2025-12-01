@@ -5,6 +5,22 @@ Todos los cambios notables en este proyecto serán documentados aquí.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.1.0] - 2024-01-20
+
+### ✨ Agregado
+- Nueva pestaña 📝 Gramática con contenido esencial
+- Tabla completa de pronombres (sujeto, objeto, posesivos)
+- Verbos auxiliares (be, do, have) con conjugaciones
+- Artículos (a, an, the) con reglas y ejemplos
+- Adjetivos demostrativos (this, that, these, those)
+- Cuantificadores (some, any, much, many, etc.)
+
+### 🐛 Corregido
+- Ventana ahora se puede minimizar correctamente
+- Ventana se puede redimensionar libremente
+- Compatible con función "Acoplar ventana" de Windows
+- Eliminada restricción de tamaño mínimo para mejor usabilidad
+
 ## [1.0.1] - 2024-01-15
 
 ### 🎨 Mejorado

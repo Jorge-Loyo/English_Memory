@@ -1,13 +1,13 @@
-# 📚 English Memory v1.0
+# 📚 English Memory v1.1
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/tu-usuario/english-memory)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/tu-usuario/english-memory/releases)
+[![Version](https://img.shields.io/badge/version-1.1.0-green.svg)](https://github.com/tu-usuario/english-memory/releases)
 
 Aplicación educativa multiplataforma para aprender y organizar vocabulario en inglés.
 
-![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.0)
+![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.1)
 
 ## 🌟 Características Destacadas
 
@@ -15,6 +15,7 @@ Aplicación educativa multiplataforma para aprender y organizar vocabulario en i
 - 📚 **Gestión Completa** - Agrega, edita y organiza tu vocabulario
 - 🔊 **Pronunciación Fonética** - Aprende la pronunciación correcta
 - ✍️ **Práctica de Caligrafía** - Mejora tu escritura con oraciones
+- 📝 **Gramática Esencial** - Pronombres, verbos auxiliares, artículos y más
 - 📊 **Estadísticas** - Monitorea tu progreso
 - 💾 **Datos Seguros** - Almacenamiento local automático
 - 🌐 **Multiplataforma** - Windows y Linux
@@ -37,6 +38,7 @@ Aplicación educativa multiplataforma para aprender y organizar vocabulario en i
 - 📍 **Preposiciones**: 47 preposiciones con traducciones
 - 📅 **Días/Meses**: 58 términos relacionados con tiempo
 - 🔢 **Números**: Conversor + reglas importantes
+- 📝 **Gramática**: Pronombres, verbos auxiliares, artículos, demostrativos, cuantificadores
 - 📊 **Estadísticas**: Métricas de tu vocabulario
 
 ## 🖥️ Compatibilidad
@@ -207,10 +209,15 @@ La aplicación usa:
 
 ## 🔄 Actualizaciones
 
+**Versión 1.1** (2024)
+- Nueva pestaña de Gramática
+- Ventana redimensionable y minimizable
+- Compatible con "Acoplar ventana" de Windows
+
 **Versión 1.0** (2024)
 - Lanzamiento inicial
 - Gestión completa de vocabulario
-- 7 pestañas de herramientas
+- 9 pestañas de herramientas
 - Soporte multiplataforma
 - Exportar/Importar CSV
 
@@ -251,7 +258,7 @@ MIT License - Copyright (c) 2024 Agilize Soluciones
 
 ## 📊 Estado del Proyecto
 
-✅ **Versión Estable:** 1.0.0  
+✅ **Versión Estable:** 1.1.0  
 🚧 **En Desarrollo:** Nuevas funcionalidades planeadas  
 🐛 **Bugs Conocidos:** Ninguno reportado  
 
