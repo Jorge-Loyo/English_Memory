@@ -1196,9 +1196,23 @@ class DiccionarioApp:
                                               bg=COLOR_BG, fg=COLOR_FG)
         self.label_info_caligrafia.pack(pady=5)
         
-        # Frame de contenido
-        self.frame_caligrafia_content = tk.Frame(frame, bg=COLOR_BG)
-        self.frame_caligrafia_content.pack(fill='both', expand=True, padx=30, pady=(0,20))
+        # Canvas con scroll (sin barra visible)
+        canvas_cal = tk.Canvas(frame, bg=COLOR_BG, highlightthickness=0)
+        self.frame_caligrafia_content = tk.Frame(canvas_cal, bg=COLOR_BG)
+        
+        self.frame_caligrafia_content.bind(
+            "<Configure>",
+            lambda e: canvas_cal.configure(scrollregion=canvas_cal.bbox("all"))
+        )
+        
+        canvas_cal.create_window((0, 0), window=self.frame_caligrafia_content, anchor="nw", width=1100)
+        
+        def _on_mousewheel_cal(event):
+            canvas_cal.yview_scroll(int(-1*(event.delta/120)), "units")
+        canvas_cal.bind("<Enter>", lambda e: canvas_cal.bind_all("<MouseWheel>", _on_mousewheel_cal))
+        canvas_cal.bind("<Leave>", lambda e: canvas_cal.unbind_all("<MouseWheel>"))
+        
+        canvas_cal.pack(fill="both", expand=True, padx=30, pady=(0,10))
         
         # Botones de navegación
         btn_frame = tk.Frame(frame, bg=COLOR_BG)
@@ -1258,31 +1272,38 @@ class DiccionarioApp:
         practice_frame = tk.Frame(self.frame_caligrafia_content, bg=COLOR_BG)
         practice_frame.pack(fill='both', expand=True, padx=50)
         
-        # Repetición 1: Palabra completa visible
-        self.crear_linea_practica(practice_frame, "1. Copia la palabra:", palabra, True)
+        # Inglés
+        tk.Label(practice_frame, text="🇬🇧 Inglés:", font=(FONT_FAMILY, 13, 'bold'), 
+                bg=COLOR_BG, fg=COLOR_ACCENT, anchor='w').pack(fill='x', pady=(10,5))
         
-        # Repetición 2-3: Palabra con guiones
-        self.crear_linea_practica(practice_frame, "2. Escribe con guía:", palabra, False, True)
-        self.crear_linea_practica(practice_frame, "3. Escribe con guía:", palabra, False, True)
+        self.crear_linea_practica(practice_frame, "1. Copia:", palabra, True)
+        self.crear_linea_practica(practice_frame, "2. Con guía:", palabra, False, True)
+        self.crear_linea_practica(practice_frame, "3. De memoria:", palabra, False, False)
         
-        # Repetición 4-6: Solo línea
-        self.crear_linea_practica(practice_frame, "4. Escribe de memoria:", palabra, False, False)
-        self.crear_linea_practica(practice_frame, "5. Escribe de memoria:", palabra, False, False)
-        self.crear_linea_practica(practice_frame, "6. Escribe de memoria:", palabra, False, False)
+        # Español
+        tk.Label(practice_frame, text="\n🇪🇸 Español:", font=(FONT_FAMILY, 13, 'bold'), 
+                bg=COLOR_BG, fg=COLOR_ACCENT, anchor='w').pack(fill='x', pady=(15,5))
+        
+        self.crear_linea_practica(practice_frame, "4. Copia:", significado, True)
+        self.crear_linea_practica(practice_frame, "5. Con guía:", significado, False, True)
+        self.crear_linea_practica(practice_frame, "6. De memoria:", significado, False, False)
         
         # Oración de contexto
-        tk.Label(practice_frame, text="\n7. Usa en una oración:", 
-                font=(FONT_FAMILY, 12, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT, 
+        tk.Label(practice_frame, text="\n📝 Oración:", 
+                font=(FONT_FAMILY, 13, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT, 
                 anchor='w').pack(fill='x', pady=(20,5))
+        
+        tk.Label(practice_frame, text="7. Usa en una oración:", 
+                font=(FONT_FAMILY, 11, 'bold'), bg=COLOR_BG, fg=COLOR_FG, 
+                anchor='w').pack(fill='x', pady=(5,5))
         
         oracion = self.generar_oracion_simple(palabra, significado)
         tk.Label(practice_frame, text=oracion, font=(FONT_FAMILY, 11, 'italic'), 
                 bg=COLOR_BG, fg=COLOR_FG, anchor='w').pack(fill='x', padx=20)
         
-        # Línea para la oración
-        line_frame = tk.Frame(practice_frame, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
-        line_frame.pack(fill='x', pady=10, ipady=15)
-        tk.Label(line_frame, text="", bg=COLOR_BUTTON).pack()
+        # Campo de texto para la oración
+        entry_oracion = ttk.Entry(practice_frame, font=(FONT_FAMILY, 14), width=60)
+        entry_oracion.pack(fill='x', pady=10, ipady=10)
     
     def crear_linea_practica(self, parent, titulo, palabra, mostrar_palabra, mostrar_guia=False):
         container = tk.Frame(parent, bg=COLOR_BG)
@@ -1291,18 +1312,19 @@ class DiccionarioApp:
         tk.Label(container, text=titulo, font=(FONT_FAMILY, 11, 'bold'), 
                 bg=COLOR_BG, fg=COLOR_ACCENT, width=25, anchor='w').pack(side='left')
         
-        line_frame = tk.Frame(container, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
-        line_frame.pack(side='left', fill='x', expand=True, ipady=10)
-        
         if mostrar_palabra:
+            line_frame = tk.Frame(container, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+            line_frame.pack(side='left', fill='x', expand=True, ipady=10)
             tk.Label(line_frame, text=palabra, font=(FONT_FAMILY, 18, 'bold'), 
                     bg=COLOR_BUTTON, fg=COLOR_BUTTON_HOVER, anchor='w').pack(side='left', padx=20)
         elif mostrar_guia:
+            entry = ttk.Entry(container, font=(FONT_FAMILY, 16), width=40)
+            entry.pack(side='left', fill='x', expand=True, ipady=8)
             guia = ' '.join(['_' for _ in palabra])
-            tk.Label(line_frame, text=guia, font=(FONT_FAMILY, 18, 'bold'), 
-                    bg=COLOR_BUTTON, fg=COLOR_BUTTON_HOVER, anchor='w').pack(side='left', padx=20)
+            entry.insert(0, guia)
         else:
-            tk.Label(line_frame, text="", bg=COLOR_BUTTON).pack(side='left', padx=20)
+            entry = ttk.Entry(container, font=(FONT_FAMILY, 16), width=40)
+            entry.pack(side='left', fill='x', expand=True, ipady=8)
     
     def generar_oracion_simple(self, palabra, significado):
         plantillas = [
