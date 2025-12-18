@@ -5,6 +5,26 @@ Todos los cambios notables en este proyecto serán documentados aquí.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.2.0] - 2024-01-22
+
+### ✨ Agregado
+- Tabla de vocabulario ahora incluye columna de Notas
+- Campo de pronunciación al agregar/editar palabras
+- Sistema de validación de respuestas en modo práctica
+- Guardado automático de palabras erróneas
+- Nuevo modelo de caligrafía con repetición espaciada
+- Caligrafía enfocada solo en palabras erróneas
+- Navegación entre palabras en caligrafía
+
+### 🛠️ Mejorado
+- Práctica ahora requiere escribir la respuesta
+- Feedback visual inmediato (correcto/incorrecto)
+- Caligrafía con método científico de 7 pasos
+- Interfaz más limpia y moderna en caligrafía
+
+### 🗑️ Eliminado
+- Pestaña de Pronunciación (integrada en Vocabulario)
+
 ## [1.1.0] - 2024-01-20
 
 ### ✨ Agregado

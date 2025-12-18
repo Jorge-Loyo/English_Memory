@@ -31,7 +31,7 @@ Soporte:
 - Teléfono: +54 11 6168-2555
 
 Desarrollado por: Agilize Soluciones
-Versión: 1.1
+Versión: 1.2
 Fecha: 2024
 Licencia: Uso educativo gratuito
 """
@@ -102,7 +102,7 @@ def guardar_datos(datos):
 class DiccionarioApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("📚 English Memory v1.1")
+        self.root.title("📚 English Memory v1.2")
         self.root.geometry("1200x700")
         self.root.configure(bg=COLOR_BG)
         self.datos = cargar_datos()
@@ -113,7 +113,7 @@ class DiccionarioApp:
         # Header
         header = tk.Frame(root, bg=COLOR_BG)
         header.pack(fill='x', padx=20, pady=(20,10))
-        tk.Label(header, text="📚 English Memory v1.1", 
+        tk.Label(header, text="📚 English Memory v1.2", 
                 font=(FONT_FAMILY, 24, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT).pack()
         tk.Label(header, text="Aprende y organiza tu vocabulario en inglés", 
                 font=(FONT_FAMILY, 10), bg=COLOR_BG, fg=COLOR_FG).pack()
@@ -126,7 +126,6 @@ class DiccionarioApp:
         
         # Pestañas
         self.crear_pestaña_consultar()
-        self.crear_pestaña_pronunciacion()
         self.crear_pestaña_practica()
         self.crear_pestaña_caligrafia()
         self.crear_pestaña_preposiciones()
@@ -185,7 +184,6 @@ class DiccionarioApp:
         # Cambiar texto de pestañas a solo iconos
         iconos_tooltips = [
             ("📖", "Vocabulario"),
-            ("🔊", "Pronunciación"),
             ("🎯", "Práctica"),
             ("✍️", "Caligrafía"),
             ("📍", "Preposiciones"),
@@ -206,7 +204,7 @@ class DiccionarioApp:
     def _mostrar_tooltip_pestana(self, event):
         try:
             tab_id = self.notebook.index(f"@{event.x},{event.y}")
-            tooltips = ["Vocabulario", "Pronunciación", "Práctica", "Caligrafía", 
+            tooltips = ["Vocabulario", "Práctica", "Caligrafía", 
                        "Preposiciones", "Días/Meses", "Números", "Gramática", 
                        "Estadísticas", "Ayuda"]
             
@@ -258,16 +256,18 @@ class DiccionarioApp:
         ttk.Label(frame_search, text="🔍", font=(FONT_FAMILY, 14)).pack(side='right', padx=(0,5))
         
         # Tabla
-        columns = ('Inglés', 'Español', 'Pronunciación')
+        columns = ('Inglés', 'Español', 'Pronunciación', 'Notas')
         self.tree = ttk.Treeview(frame, columns=columns, show='headings', height=15)
         
         self.tree.heading('Inglés', text='🇬🇧 Inglés')
         self.tree.heading('Español', text='🇪🇸 Español')
         self.tree.heading('Pronunciación', text='🔊 Pronunciación')
+        self.tree.heading('Notas', text='📝 Notas')
         
-        self.tree.column('Inglés', width=200, minwidth=150)
-        self.tree.column('Español', width=400, minwidth=200)
-        self.tree.column('Pronunciación', width=300, minwidth=150)
+        self.tree.column('Inglés', width=150, minwidth=100)
+        self.tree.column('Español', width=250, minwidth=150)
+        self.tree.column('Pronunciación', width=200, minwidth=120)
+        self.tree.column('Notas', width=300, minwidth=150)
         
         scrollbar = ttk.Scrollbar(frame, orient='vertical', command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
@@ -282,31 +282,16 @@ class DiccionarioApp:
         self.tree.heading('Inglés', text='🇬🇧 Inglés', command=lambda: self.ordenar_columna('Inglés'))
         self.tree.heading('Español', text='🇪🇸 Español', command=lambda: self.ordenar_columna('Español'))
         self.tree.heading('Pronunciación', text='🔊 Pronunciación', command=lambda: self.ordenar_columna('Pronunciación'))
+        self.tree.heading('Notas', text='📝 Notas', command=lambda: self.ordenar_columna('Notas'))
         
         self.mostrar_todas()
         self.orden_actual = {'columna': None, 'reverso': False}
     
-    def crear_pestaña_pronunciacion(self):
-        frame = ttk.Frame(self.notebook)
-        self.notebook.add(frame, text="🔊")
-        
-        container = tk.Frame(frame, bg=COLOR_BG)
-        container.place(relx=0.5, rely=0.5, anchor='center')
-        
-        ttk.Label(container, text="🇬🇧 Palabra en inglés", style='Title.TLabel').pack(pady=(0,10))
-        self.entry_palabra_pron = ttk.Entry(container, width=50, font=(FONT_FAMILY, 12))
-        self.entry_palabra_pron.pack(pady=(0,20), ipady=10)
-        
-        ttk.Label(container, text="🔊 Pronunciación (fonética)", style='Title.TLabel').pack(pady=(0,10))
-        self.entry_pronunciacion = ttk.Entry(container, width=50, font=(FONT_FAMILY, 12))
-        self.entry_pronunciacion.pack(pady=(0,30), ipady=10)
-        
-        ttk.Button(container, text="💾 Guardar Pronunciación", command=self.guardar_pronunciacion).pack(pady=10)
-    
+
     def abrir_modal_agregar(self):
         ventana = tk.Toplevel(self.root)
         ventana.title("➕ Agregar Palabra")
-        ventana.geometry("550x420")
+        ventana.geometry("550x520")
         ventana.configure(bg=COLOR_BG)
         ventana.grab_set()
         ventana.resizable(False, False)
@@ -322,6 +307,10 @@ class DiccionarioApp:
         ttk.Label(container, text="🇪🇸 Significado en español", style='Title.TLabel').pack(pady=(0,5))
         entry_significado = ttk.Entry(container, width=45, font=(FONT_FAMILY, 11))
         entry_significado.pack(pady=(0,15), ipady=8)
+        
+        ttk.Label(container, text="🔊 Pronunciación (opcional)", style='Title.TLabel').pack(pady=(0,5))
+        entry_pronunciacion = ttk.Entry(container, width=45, font=(FONT_FAMILY, 11))
+        entry_pronunciacion.pack(pady=(0,15), ipady=8)
         
         ttk.Label(container, text="📝 Notas (opcional)", style='Title.TLabel').pack(pady=(0,5))
         entry_notas = ttk.Entry(container, width=45, font=(FONT_FAMILY, 11))
@@ -347,12 +336,19 @@ class DiccionarioApp:
                 messagebox.showwarning("Palabra duplicada", f"'{palabra}' ya está en el vocabulario")
                 return
             
+            pronunciacion = entry_pronunciacion.get().strip()
+            if pronunciacion and len(pronunciacion) > 200:
+                messagebox.showwarning("Advertencia", "La pronunciación no puede exceder 200 caracteres")
+                return
+            
             notas = entry_notas.get().strip()
             if len(notas) > 1000:
                 messagebox.showwarning("Advertencia", "Las notas no pueden exceder 1000 caracteres")
                 return
             
             self.datos[palabra] = {'significado': significado}
+            if pronunciacion:
+                self.datos[palabra]['pronunciacion'] = pronunciacion
             if notas:
                 self.datos[palabra]['notas'] = notas
             
@@ -375,7 +371,8 @@ class DiccionarioApp:
         for palabra in sorted(self.datos.keys(), key=str.lower):
             significado = self.datos[palabra].get('significado', '')
             pronunciacion = self.datos[palabra].get('pronunciacion', '-')
-            self.tree.insert('', 'end', values=(palabra, significado, pronunciacion))
+            notas = self.datos[palabra].get('notas', '-')
+            self.tree.insert('', 'end', values=(palabra, significado, pronunciacion, notas))
     
     def _on_double_click(self, event):
         region = self.tree.identify_region(event.x, event.y)
@@ -399,13 +396,13 @@ class DiccionarioApp:
             return
         
         resultados = [
-            (palabra, datos.get('significado', ''), datos.get('pronunciacion', '-'))
+            (palabra, datos.get('significado', ''), datos.get('pronunciacion', '-'), datos.get('notas', '-'))
             for palabra, datos in self.datos.items()
             if busqueda in palabra.lower() or busqueda in datos.get('significado', '').lower()
         ]
         
-        for palabra, significado, pronunciacion in sorted(resultados):
-            self.tree.insert('', 'end', values=(palabra, significado, pronunciacion))
+        for palabra, significado, pronunciacion, notas in sorted(resultados):
+            self.tree.insert('', 'end', values=(palabra, significado, pronunciacion, notas))
         
         if not resultados:
             messagebox.showinfo("Búsqueda", f"No se encontraron palabras con '{busqueda}'")
@@ -488,6 +485,7 @@ class DiccionarioApp:
         self.practica_palabra = tk.StringVar()
         self.practica_respuesta = tk.StringVar()
         self.practica_modo = tk.StringVar(value='ingles')
+        self.palabras_erroneas = set()
         
         ttk.Label(container, text="🎯 Modo Práctica", font=(FONT_FAMILY, 18, 'bold'), 
                  foreground=COLOR_ACCENT, background=COLOR_BG).pack(pady=(0,20))
@@ -508,17 +506,24 @@ class DiccionarioApp:
                                        fg=COLOR_ACCENT, wraplength=400)
         self.label_practica.pack(pady=20)
         
-        # Respuesta
+        # Campo de entrada para respuesta
+        ttk.Label(container, text="Tu respuesta:", background=COLOR_BG, 
+                 font=(FONT_FAMILY, 12)).pack(pady=(10,5))
+        self.entry_respuesta_practica = ttk.Entry(container, width=40, font=(FONT_FAMILY, 14))
+        self.entry_respuesta_practica.pack(pady=(0,10), ipady=8)
+        self.entry_respuesta_practica.bind('<Return>', lambda e: self.verificar_respuesta())
+        
+        # Resultado
         self.label_respuesta = tk.Label(container, textvariable=self.practica_respuesta, 
                                         font=(FONT_FAMILY, 16), bg=COLOR_BG, 
-                                        fg=COLOR_SUCCESS, wraplength=400)
+                                        fg=COLOR_SUCCESS, wraplength=500)
         self.label_respuesta.pack(pady=10)
         
         # Botones
         btn_frame = tk.Frame(container, bg=COLOR_BG)
         btn_frame.pack(pady=20)
+        ttk.Button(btn_frame, text="✓ Verificar", command=self.verificar_respuesta).pack(side='left', padx=5)
         ttk.Button(btn_frame, text="🔄 Nueva Palabra", command=self.nueva_palabra_practica).pack(side='left', padx=5)
-        ttk.Button(btn_frame, text="👁️ Ver Respuesta", command=self.mostrar_respuesta_practica).pack(side='left', padx=5)
         
         self.nueva_palabra_practica()
     
@@ -538,27 +543,47 @@ class DiccionarioApp:
             self.practica_palabra.set(f"🇪🇸 {significado}")
         
         self.practica_respuesta.set("")
+        self.entry_respuesta_practica.delete(0, tk.END)
+        self.entry_respuesta_practica.focus()
     
-    def mostrar_respuesta_practica(self):
+    def verificar_respuesta(self):
         if not hasattr(self, 'palabra_actual_practica'):
             return
         
+        respuesta_usuario = self.entry_respuesta_practica.get().strip().lower()
+        if not respuesta_usuario:
+            messagebox.showwarning("Advertencia", "Ingresa una respuesta")
+            return
+        
         palabra = self.palabra_actual_practica
-        significado = self.datos[palabra].get('significado', '')
+        significado = self.datos[palabra].get('significado', '').lower()
         pronunciacion = self.datos[palabra].get('pronunciacion', '')
         notas = self.datos[palabra].get('notas', '')
         
+        # Determinar respuesta correcta
         if self.practica_modo.get() == 'ingles':
-            respuesta = f"✅ {significado}"
+            respuesta_correcta = significado
         else:
-            respuesta = f"✅ {palabra}"
+            respuesta_correcta = palabra.lower()
+        
+        # Verificar si es correcta (permitir variaciones)
+        es_correcta = respuesta_usuario == respuesta_correcta or respuesta_usuario in respuesta_correcta or respuesta_correcta in respuesta_usuario
+        
+        if es_correcta:
+            resultado = f"✅ ¡CORRECTO!\n{palabra} = {self.datos[palabra].get('significado', '')}"
+            self.label_respuesta.config(fg=COLOR_SUCCESS)
+        else:
+            resultado = f"❌ INCORRECTO\nTu respuesta: {respuesta_usuario}\nRespuesta correcta: {respuesta_correcta}"
+            self.label_respuesta.config(fg=COLOR_ERROR)
+            # Guardar palabra errónea
+            self.palabras_erroneas.add(palabra)
         
         if pronunciacion:
-            respuesta += f"\n🔊 {pronunciacion}"
+            resultado += f"\n🔊 {pronunciacion}"
         if notas:
-            respuesta += f"\n📝 {notas}"
+            resultado += f"\n📝 {notas}"
         
-        self.practica_respuesta.set(respuesta)
+        self.practica_respuesta.set(resultado)
     
     def crear_pestaña_preposiciones(self):
         frame = ttk.Frame(self.notebook)
@@ -1157,136 +1182,149 @@ class DiccionarioApp:
         frame = ttk.Frame(self.notebook)
         self.notebook.add(frame, text="✍️")
         
-        # Frame superior para selección
+        self.indice_caligrafia = 0
+        
+        # Frame superior
         frame_top = tk.Frame(frame, bg=COLOR_BG)
         frame_top.pack(fill='x', padx=30, pady=20)
         
-        ttk.Label(frame_top, text="✍️ Práctica de Caligrafía", 
+        ttk.Label(frame_top, text="✍️ Práctica de Caligrafía - Palabras Erróneas", 
                  font=(FONT_FAMILY, 18, 'bold'), foreground=COLOR_ACCENT, 
-                 background=COLOR_BG).pack(pady=(0,15))
+                 background=COLOR_BG).pack(pady=(0,10))
         
-        # Selector de palabra
-        frame_selector = tk.Frame(frame_top, bg=COLOR_BG)
-        frame_selector.pack(pady=10)
+        self.label_info_caligrafia = tk.Label(frame_top, text="", font=(FONT_FAMILY, 11), 
+                                              bg=COLOR_BG, fg=COLOR_FG)
+        self.label_info_caligrafia.pack(pady=5)
         
-        ttk.Label(frame_selector, text="Selecciona palabra:").pack(side='left', padx=5)
+        # Frame de contenido
+        self.frame_caligrafia_content = tk.Frame(frame, bg=COLOR_BG)
+        self.frame_caligrafia_content.pack(fill='both', expand=True, padx=30, pady=(0,20))
         
-        self.combo_caligrafia = ttk.Combobox(frame_selector, width=30, font=(FONT_FAMILY, 11), state='readonly')
-        self.combo_caligrafia.pack(side='left', padx=5)
-        self.combo_caligrafia.bind('<<ComboboxSelected>>', self.actualizar_caligrafia)
+        # Botones de navegación
+        btn_frame = tk.Frame(frame, bg=COLOR_BG)
+        btn_frame.pack(pady=(0,20))
         
-        ttk.Button(frame_selector, text="🔄 Actualizar Lista", 
-                  command=self.cargar_palabras_caligrafia).pack(side='left', padx=5)
-        
-        # Frame de contenido con scroll
-        self.canvas_caligrafia = tk.Canvas(frame, bg=COLOR_BG, highlightthickness=0)
-        scrollbar = ttk.Scrollbar(frame, orient="vertical", command=self.canvas_caligrafia.yview)
-        self.frame_caligrafia_content = tk.Frame(self.canvas_caligrafia, bg=COLOR_BG)
-        
-        self.frame_caligrafia_content.bind(
-            "<Configure>",
-            lambda e: self.canvas_caligrafia.configure(scrollregion=self.canvas_caligrafia.bbox("all"))
-        )
-        
-        self.canvas_caligrafia.create_window((0, 0), window=self.frame_caligrafia_content, anchor="nw", width=950)
-        self.canvas_caligrafia.configure(yscrollcommand=scrollbar.set)
-        
-        # Habilitar scroll con mouse wheel
-        def _on_mousewheel(event):
-            self.canvas_caligrafia.yview_scroll(int(-1*(event.delta/120)), "units")
-        
-        self.canvas_caligrafia.bind("<Enter>", lambda e: self.canvas_caligrafia.bind_all("<MouseWheel>", _on_mousewheel))
-        self.canvas_caligrafia.bind("<Leave>", lambda e: self.canvas_caligrafia.unbind_all("<MouseWheel>"))
-        
-        self.canvas_caligrafia.pack(side="left", fill="both", expand=True, padx=30, pady=(0,20))
-        scrollbar.pack(side="right", fill="y", pady=(0,20))
+        ttk.Button(btn_frame, text="◀ Anterior", command=self.palabra_anterior_caligrafia).pack(side='left', padx=5)
+        ttk.Button(btn_frame, text="🔄 Actualizar", command=self.cargar_palabras_caligrafia).pack(side='left', padx=5)
+        ttk.Button(btn_frame, text="Siguiente ▶", command=self.palabra_siguiente_caligrafia).pack(side='left', padx=5)
         
         self.cargar_palabras_caligrafia()
     
     def cargar_palabras_caligrafia(self):
-        palabras = sorted(self.datos.keys(), key=str.lower)
-        self.combo_caligrafia['values'] = palabras
-        if palabras:
-            self.combo_caligrafia.current(0)
-            self.actualizar_caligrafia()
+        # Solo palabras erróneas de práctica
+        if hasattr(self, 'palabras_erroneas') and self.palabras_erroneas:
+            self.lista_caligrafia = sorted(list(self.palabras_erroneas), key=str.lower)
+        else:
+            self.lista_caligrafia = []
+        
+        self.indice_caligrafia = 0
+        self.actualizar_caligrafia()
     
-    def actualizar_caligrafia(self, event=None):
+    def actualizar_caligrafia(self):
         # Limpiar contenido anterior
         for widget in self.frame_caligrafia_content.winfo_children():
             widget.destroy()
         
-        palabra = self.combo_caligrafia.get()
-        if not palabra or palabra not in self.datos:
+        if not self.lista_caligrafia:
+            tk.Label(self.frame_caligrafia_content, 
+                    text="🎯 No hay palabras erróneas aún\n\n¡Practica en la pestaña Práctica para generar palabras!", 
+                    font=(FONT_FAMILY, 14), bg=COLOR_BG, fg=COLOR_FG, 
+                    justify='center').pack(expand=True, pady=100)
+            self.label_info_caligrafia.config(text="")
             return
         
+        palabra = self.lista_caligrafia[self.indice_caligrafia]
         significado = self.datos[palabra].get('significado', '')
         pronunciacion = self.datos[palabra].get('pronunciacion', '')
         
-        # Información de la palabra
-        info_frame = tk.Frame(self.frame_caligrafia_content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
-        info_frame.pack(fill='x', pady=(0,20), padx=10, ipady=10)
+        # Info superior
+        self.label_info_caligrafia.config(
+            text=f"Palabra {self.indice_caligrafia + 1} de {len(self.lista_caligrafia)} | Total erróneas: {len(self.palabras_erroneas)}"
+        )
         
-        tk.Label(info_frame, text=f"🇬🇧 {palabra}", font=(FONT_FAMILY, 16, 'bold'), 
-                bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=5)
-        tk.Label(info_frame, text=f"🇪🇸 {significado}", font=(FONT_FAMILY, 12), 
-                bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
+        # Tarjeta de palabra
+        card_frame = tk.Frame(self.frame_caligrafia_content, bg=COLOR_BUTTON, relief='solid', borderwidth=2)
+        card_frame.pack(fill='x', pady=(0,30), padx=50, ipady=20)
+        
+        tk.Label(card_frame, text=palabra, font=(FONT_FAMILY, 32, 'bold'), 
+                bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=(10,5))
+        tk.Label(card_frame, text=significado, font=(FONT_FAMILY, 16), 
+                bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=5)
         if pronunciacion:
-            tk.Label(info_frame, text=f"🔊 {pronunciacion}", font=(FONT_FAMILY, 11), 
-                    bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
+            tk.Label(card_frame, text=f"🔊 {pronunciacion}", font=(FONT_FAMILY, 13), 
+                    bg=COLOR_BUTTON, fg=COLOR_BUTTON_HOVER).pack(pady=(5,10))
         
-        # Sección de caligrafía
-        tk.Label(self.frame_caligrafia_content, text="✍️ Practica escribiendo:", 
-                font=(FONT_FAMILY, 14, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT).pack(anchor='w', pady=(10,10), padx=10)
+        # Modelo de repetición espaciada
+        practice_frame = tk.Frame(self.frame_caligrafia_content, bg=COLOR_BG)
+        practice_frame.pack(fill='both', expand=True, padx=50)
         
-        # Líneas para practicar escritura
-        for i in range(5):
-            line_frame = tk.Frame(self.frame_caligrafia_content, bg=COLOR_BG)
-            line_frame.pack(fill='x', pady=5, padx=10)
-            
-            tk.Label(line_frame, text=palabra, font=(FONT_FAMILY, 14), 
-                    bg=COLOR_BG, fg=COLOR_FG, width=20, anchor='w').pack(side='left', padx=5)
-            tk.Label(line_frame, text="_" * 50, font=(FONT_FAMILY, 14), 
-                    bg=COLOR_BG, fg=COLOR_BUTTON_HOVER).pack(side='left')
+        # Repetición 1: Palabra completa visible
+        self.crear_linea_practica(practice_frame, "1. Copia la palabra:", palabra, True)
         
-        # Sección de oraciones
-        tk.Label(self.frame_caligrafia_content, text="📝 Oraciones de ejemplo:", 
-                font=(FONT_FAMILY, 14, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT).pack(anchor='w', pady=(20,10), padx=10)
+        # Repetición 2-3: Palabra con guiones
+        self.crear_linea_practica(practice_frame, "2. Escribe con guía:", palabra, False, True)
+        self.crear_linea_practica(practice_frame, "3. Escribe con guía:", palabra, False, True)
         
-        oraciones = self.generar_oraciones(palabra)
+        # Repetición 4-6: Solo línea
+        self.crear_linea_practica(practice_frame, "4. Escribe de memoria:", palabra, False, False)
+        self.crear_linea_practica(practice_frame, "5. Escribe de memoria:", palabra, False, False)
+        self.crear_linea_practica(practice_frame, "6. Escribe de memoria:", palabra, False, False)
         
-        for i, oracion in enumerate(oraciones, 1):
-            oracion_frame = tk.Frame(self.frame_caligrafia_content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
-            oracion_frame.pack(fill='x', pady=5, padx=10, ipady=8)
-            
-            tk.Label(oracion_frame, text=f"{i}. {oracion}", font=(FONT_FAMILY, 11), 
-                    bg=COLOR_BUTTON, fg=COLOR_FG, wraplength=700, justify='left').pack(anchor='w', padx=10, pady=5)
-            
-            # Líneas para copiar la oración
-            for _ in range(2):
-                tk.Label(oracion_frame, text="_" * 80, font=(FONT_FAMILY, 10), 
-                        bg=COLOR_BUTTON, fg=COLOR_BUTTON_HOVER).pack(anchor='w', padx=10, pady=2)
+        # Oración de contexto
+        tk.Label(practice_frame, text="\n7. Usa en una oración:", 
+                font=(FONT_FAMILY, 12, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT, 
+                anchor='w').pack(fill='x', pady=(20,5))
+        
+        oracion = self.generar_oracion_simple(palabra, significado)
+        tk.Label(practice_frame, text=oracion, font=(FONT_FAMILY, 11, 'italic'), 
+                bg=COLOR_BG, fg=COLOR_FG, anchor='w').pack(fill='x', padx=20)
+        
+        # Línea para la oración
+        line_frame = tk.Frame(practice_frame, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+        line_frame.pack(fill='x', pady=10, ipady=15)
+        tk.Label(line_frame, text="", bg=COLOR_BUTTON).pack()
     
-    def generar_oraciones(self, palabra):
-        # Plantillas mejoradas con diferentes estructuras
-        plantillas_basicas = [
-            f"I use {palabra} every day.",
-            f"The {palabra} is very important.",
-            f"Can you give me the {palabra}?",
-            f"This {palabra} is amazing.",
-            f"I need a {palabra} right now."
-        ]
+    def crear_linea_practica(self, parent, titulo, palabra, mostrar_palabra, mostrar_guia=False):
+        container = tk.Frame(parent, bg=COLOR_BG)
+        container.pack(fill='x', pady=8)
         
-        plantillas_avanzadas = [
-            f"Where can I find a good {palabra}?",
-            f"My favorite {palabra} is here.",
-            f"That {palabra} looks fantastic.",
-            f"Have you seen my {palabra}?",
-            f"The best {palabra} costs a lot."
-        ]
+        tk.Label(container, text=titulo, font=(FONT_FAMILY, 11, 'bold'), 
+                bg=COLOR_BG, fg=COLOR_ACCENT, width=25, anchor='w').pack(side='left')
         
-        # Combinar y seleccionar aleatoriamente
-        todas_plantillas = plantillas_basicas + plantillas_avanzadas
-        return random.sample(todas_plantillas, min(5, len(todas_plantillas)))
+        line_frame = tk.Frame(container, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+        line_frame.pack(side='left', fill='x', expand=True, ipady=10)
+        
+        if mostrar_palabra:
+            tk.Label(line_frame, text=palabra, font=(FONT_FAMILY, 18, 'bold'), 
+                    bg=COLOR_BUTTON, fg=COLOR_BUTTON_HOVER, anchor='w').pack(side='left', padx=20)
+        elif mostrar_guia:
+            guia = ' '.join(['_' for _ in palabra])
+            tk.Label(line_frame, text=guia, font=(FONT_FAMILY, 18, 'bold'), 
+                    bg=COLOR_BUTTON, fg=COLOR_BUTTON_HOVER, anchor='w').pack(side='left', padx=20)
+        else:
+            tk.Label(line_frame, text="", bg=COLOR_BUTTON).pack(side='left', padx=20)
+    
+    def generar_oracion_simple(self, palabra, significado):
+        plantillas = [
+            f"I need to practice {palabra} more.",
+            f"The word {palabra} means {significado}.",
+            f"Can you use {palabra} in a sentence?",
+            f"I will remember {palabra} now.",
+            f"This {palabra} is important to learn."
+        ]
+        return random.choice(plantillas)
+    
+    def palabra_anterior_caligrafia(self):
+        if self.lista_caligrafia and self.indice_caligrafia > 0:
+            self.indice_caligrafia -= 1
+            self.actualizar_caligrafia()
+    
+    def palabra_siguiente_caligrafia(self):
+        if self.lista_caligrafia and self.indice_caligrafia < len(self.lista_caligrafia) - 1:
+            self.indice_caligrafia += 1
+            self.actualizar_caligrafia()
+    
+
     
     def editar_palabra(self):
         seleccion = self.tree.selection()
@@ -1298,6 +1336,7 @@ class DiccionarioApp:
         palabra_actual = str(item['values'][0])
         significado_actual = str(item['values'][1])
         pronunciacion_actual = '' if item['values'][2] == '-' else str(item['values'][2])
+        notas_actual = '' if len(item['values']) < 4 or item['values'][3] == '-' else str(item['values'][3])
         
         # Ventana de edición
         ventana = tk.Toplevel(self.root)
@@ -1319,13 +1358,12 @@ class DiccionarioApp:
         entry_significado.insert(0, significado_actual)
         entry_significado.pack(pady=(0,15), ipady=8)
         
-        ttk.Label(container, text="🔊 Pronunciación", style='Title.TLabel').pack(pady=(0,5))
+        ttk.Label(container, text="🔊 Pronunciación (opcional)", style='Title.TLabel').pack(pady=(0,5))
         entry_pronunciacion = ttk.Entry(container, width=45, font=(FONT_FAMILY, 11))
         entry_pronunciacion.insert(0, pronunciacion_actual)
         entry_pronunciacion.pack(pady=(0,15), ipady=8)
         
-        notas_actual = '' if 'notas' not in self.datos[palabra_actual] else self.datos[palabra_actual].get('notas', '')
-        ttk.Label(container, text="📝 Notas", style='Title.TLabel').pack(pady=(0,5))
+        ttk.Label(container, text="📝 Notas (opcional)", style='Title.TLabel').pack(pady=(0,5))
         entry_notas = ttk.Entry(container, width=45, font=(FONT_FAMILY, 11))
         entry_notas.insert(0, notas_actual)
         entry_notas.pack(pady=(0,25), ipady=8)
@@ -1397,31 +1435,7 @@ class DiccionarioApp:
             else:
                 messagebox.showerror("Error", "No se pudo eliminar la palabra")
     
-    def guardar_pronunciacion(self):
-        palabra = self.entry_palabra_pron.get().strip()
-        pronunciacion = self.entry_pronunciacion.get().strip()
-        
-        if not palabra or not pronunciacion:
-            messagebox.showwarning("Advertencia", "Completa todos los campos")
-            return
-        
-        if len(pronunciacion) > 200:
-            messagebox.showwarning("Advertencia", "Pronunciación demasiado larga (máximo 200 caracteres)")
-            return
-        
-        if palabra not in self.datos:
-            messagebox.showerror("Error", f"'{palabra}' no existe en el vocabulario")
-            return
-        
-        self.datos[palabra]['pronunciacion'] = pronunciacion
-        
-        if guardar_datos(self.datos):
-            messagebox.showinfo("Éxito", f"Pronunciación de '{palabra}' guardada")
-            self.entry_palabra_pron.delete(0, tk.END)
-            self.entry_pronunciacion.delete(0, tk.END)
-            self.mostrar_todas()
-        else:
-            messagebox.showerror("Error", "No se pudo guardar la pronunciación")
+
 
     def crear_pestaña_ayuda(self):
         frame = ttk.Frame(self.notebook)
@@ -1468,8 +1482,7 @@ class DiccionarioApp:
                 bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=(10,15))
         
         manual_text = [
-            ("📚 Vocabulario", "Agrega, edita y elimina palabras. Usa la búsqueda para encontrar rápidamente. Doble clic para editar."),
-            ("🔊 Pronunciación", "Agrega la pronunciación fonética de cualquier palabra de tu vocabulario."),
+            ("📚 Vocabulario", "Agrega, edita y elimina palabras. Usa la búsqueda para encontrar rápidamente. Doble clic para editar. Puedes agregar pronunciación al editar."),
             ("🎯 Práctica", "Modo quiz para practicar. Elige entre Inglés→Español o Español→Inglés."),
             ("✍️ Caligrafía", "Practica escribiendo palabras y oraciones de ejemplo."),
             ("📍 Preposiciones", "Consulta 47 preposiciones en inglés con sus traducciones."),
@@ -1522,7 +1535,7 @@ class DiccionarioApp:
         tk.Label(about_frame, text="ℹ️ Acerca de English Memory", font=(FONT_FAMILY, 16, 'bold'), 
                 bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=(10,10))
         
-        tk.Label(about_frame, text="Versión: 1.0", font=(FONT_FAMILY, 11), 
+        tk.Label(about_frame, text="Versión: 1.2", font=(FONT_FAMILY, 11), 
                 bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
         tk.Label(about_frame, text="Desarrollado por: Agilize Soluciones", font=(FONT_FAMILY, 11), 
                 bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)

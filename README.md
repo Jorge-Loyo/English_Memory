@@ -1,20 +1,20 @@
-# 📚 English Memory v1.1
+# 📚 English Memory v1.2
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/tu-usuario/english-memory)
-[![Version](https://img.shields.io/badge/version-1.1.0-green.svg)](https://github.com/tu-usuario/english-memory/releases)
+[![Version](https://img.shields.io/badge/version-1.2.0-green.svg)](https://github.com/tu-usuario/english-memory/releases)
 
 Aplicación educativa multiplataforma para aprender y organizar vocabulario en inglés.
 
-![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.1)
+![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.2)
 
 ## 🌟 Características Destacadas
 
-- 🎯 **Modo Práctica Interactivo** - Quiz bidireccional inglés ↔ español
+- 🎯 **Modo Práctica Interactivo** - Quiz con validación de respuestas y seguimiento de errores
 - 📚 **Gestión Completa** - Agrega, edita y organiza tu vocabulario
 - 🔊 **Pronunciación Fonética** - Aprende la pronunciación correcta
-- ✍️ **Práctica de Caligrafía** - Mejora tu escritura con oraciones
+- ✍️ **Práctica de Caligrafía** - Método de repetición espaciada con palabras erróneas
 - 📝 **Gramática Esencial** - Pronombres, verbos auxiliares, artículos y más
 - 📊 **Estadísticas** - Monitorea tu progreso
 - 💾 **Datos Seguros** - Almacenamiento local automático
@@ -209,10 +209,11 @@ La aplicación usa:
 
 ## 🔄 Actualizaciones
 
-**Versión 1.1** (2024)
-- Nueva pestaña de Gramática
-- Ventana redimensionable y minimizable
-- Compatible con "Acoplar ventana" de Windows
+**Versión 1.2** (2024)
+- Validación de respuestas en práctica
+- Caligrafía con repetición espaciada
+- Columna de Notas en vocabulario
+- Pestaña de Pronunciación eliminada (integrada)
 
 **Versión 1.0** (2024)
 - Lanzamiento inicial
@@ -258,7 +259,7 @@ MIT License - Copyright (c) 2024 Agilize Soluciones
 
 ## 📊 Estado del Proyecto
 
-✅ **Versión Estable:** 1.1.0  
+✅ **Versión Estable:** 1.2.0  
 🚧 **En Desarrollo:** Nuevas funcionalidades planeadas  
 🐛 **Bugs Conocidos:** Ninguno reportado  
 
