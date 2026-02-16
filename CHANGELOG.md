@@ -14,6 +14,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Sistema de backups con retención de últimos 10 archivos
 - Pestaña de Verbos con 100 verbos irregulares
 - Pestaña de Conjugación con 6 tiempos verbales
+- **Pestaña de Contracciones con 93 contracciones en inglés**
 - Contador de backups en Estadísticas
 - Botones Exportar/Importar CSV movidos a Estadísticas
 - Modo de práctica en Caligrafía: Palabras Erróneas o Todo el Vocabulario
@@ -25,7 +26,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Caligrafía mejorada con selector de modo (erróneas/todas)
 - Botón de pronunciación en Caligrafía para reforzar aprendizaje
 - Interfaz preparada para temas claro/oscuro
-- Total de 11 pestañas funcionales
+- **Total de 12 pestañas funcionales**
 - Mejor organización de botones en Vocabulario
 
 ### 🐛 Corregido

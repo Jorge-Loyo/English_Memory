@@ -157,6 +157,7 @@ class DiccionarioApp:
         self.crear_pestaña_dias_meses()
         self.crear_pestaña_numeros()
         self.crear_pestaña_gramatica()
+        self.crear_pestaña_contracciones()
         self.crear_pestaña_verbos()
         self.crear_pestaña_conjugacion()
         self.crear_pestaña_estadisticas()
@@ -220,6 +221,7 @@ class DiccionarioApp:
             ("📅", "Días/Meses"),
             ("🔢", "Números"),
             ("📝", "Gramática"),
+            ("🔗", "Contracciones"),
             ("📘", "Verbos"),
             ("⏰", "Conjugación"),
             ("📊", "Estadísticas"),
@@ -237,8 +239,8 @@ class DiccionarioApp:
         try:
             tab_id = self.notebook.index(f"@{event.x},{event.y}")
             tooltips = ["Vocabulario", "Práctica", "Caligrafía", 
-                       "Preposiciones", "Días/Meses", "Números", "Gramática", 
-                       "Verbos", "Conjugación", "Estadísticas", "Ayuda"]
+                       "Preposiciones", "Días/Meses", "Números", "Gramática",
+                       "Contracciones", "Verbos", "Conjugación", "Estadísticas", "Ayuda"]
             
             if hasattr(self, '_tooltip_window'):
                 self._tooltip_window.destroy()
@@ -1215,6 +1217,171 @@ class DiccionarioApp:
                     bg=COLOR_BG, fg=COLOR_FG, width=30, anchor='w').pack(side='left', padx=5)
             tk.Label(cuant_item, text=f"Ej: {ej}", font=(FONT_FAMILY, 9, 'italic'), 
                     bg=COLOR_BG, fg=COLOR_BUTTON_HOVER, anchor='w').pack(side='left', padx=5)
+    
+    def crear_pestaña_contracciones(self):
+        frame = ttk.Frame(self.notebook)
+        self.notebook.add(frame, text="🔗")
+        
+        # Búsqueda
+        frame_buscar = ttk.Frame(frame)
+        frame_buscar.pack(fill='x', padx=20, pady=15)
+        
+        ttk.Label(frame_buscar, text="🔍", font=(FONT_FAMILY, 14)).pack(side='left', padx=(0,5))
+        self.entry_buscar_contr = ttk.Entry(frame_buscar, width=30, font=(FONT_FAMILY, 11))
+        self.entry_buscar_contr.pack(side='left', padx=5, ipady=5)
+        self.entry_buscar_contr.bind('<KeyRelease>', self._on_search_contr_keyrelease)
+        self._search_contr_timer = None
+        
+        # Tabla de contracciones
+        columns = ('Contracción', 'Palabras Originales', 'Español')
+        self.tree_contr = ttk.Treeview(frame, columns=columns, show='headings', height=20)
+        
+        self.tree_contr.heading('Contracción', text='🔗 Contracción')
+        self.tree_contr.heading('Palabras Originales', text='🔤 Palabras Originales')
+        self.tree_contr.heading('Español', text='🇪🇸 Español')
+        
+        self.tree_contr.column('Contracción', width=200, minwidth=150)
+        self.tree_contr.column('Palabras Originales', width=300, minwidth=200)
+        self.tree_contr.column('Español', width=400, minwidth=250)
+        
+        scrollbar = ttk.Scrollbar(frame, orient='vertical', command=self.tree_contr.yview)
+        self.tree_contr.configure(yscrollcommand=scrollbar.set)
+        
+        self.tree_contr.pack(side='left', fill='both', expand=True, padx=(20,0), pady=(0,20))
+        scrollbar.pack(side='right', fill='y', pady=(0,20), padx=(0,20))
+        
+        # Datos de contracciones
+        self.contracciones = [
+            # Contracciones con BE
+            ("I'm", "I am", "yo soy/estoy"),
+            ("you're", "you are", "tú eres/estás"),
+            ("he's", "he is", "él es/está"),
+            ("she's", "she is", "ella es/está"),
+            ("it's", "it is", "eso es/está"),
+            ("we're", "we are", "nosotros somos/estamos"),
+            ("they're", "they are", "ellos son/están"),
+            ("that's", "that is", "eso es"),
+            ("there's", "there is", "hay"),
+            ("here's", "here is", "aquí está"),
+            ("who's", "who is", "quién es"),
+            ("what's", "what is", "qué es"),
+            ("where's", "where is", "dónde está"),
+            ("when's", "when is", "cuándo es"),
+            ("how's", "how is", "cómo está"),
+            ("why's", "why is", "por qué es"),
+            
+            # Contracciones con HAVE
+            ("I've", "I have", "yo he/tengo"),
+            ("you've", "you have", "tú has/tienes"),
+            ("we've", "we have", "nosotros hemos/tenemos"),
+            ("they've", "they have", "ellos han/tienen"),
+            ("could've", "could have", "podría haber"),
+            ("should've", "should have", "debería haber"),
+            ("would've", "would have", "habría"),
+            ("might've", "might have", "podría haber"),
+            ("must've", "must have", "debe haber"),
+            
+            # Contracciones con WILL
+            ("I'll", "I will", "yo haré/iré"),
+            ("you'll", "you will", "tú harás/irás"),
+            ("he'll", "he will", "él hará/irá"),
+            ("she'll", "she will", "ella hará/irá"),
+            ("it'll", "it will", "eso hará"),
+            ("we'll", "we will", "nosotros haremos/iremos"),
+            ("they'll", "they will", "ellos harán/irán"),
+            ("that'll", "that will", "eso hará"),
+            ("there'll", "there will", "habrá"),
+            
+            # Contracciones con WOULD/HAD
+            ("I'd", "I would/had", "yo haría/había"),
+            ("you'd", "you would/had", "tú harías/habías"),
+            ("he'd", "he would/had", "él haría/había"),
+            ("she'd", "she would/had", "ella haría/había"),
+            ("it'd", "it would/had", "eso haría/había"),
+            ("we'd", "we would/had", "nosotros haríamos/habíamos"),
+            ("they'd", "they would/had", "ellos harían/habían"),
+            ("that'd", "that would/had", "eso haría/había"),
+            ("there'd", "there would/had", "habría"),
+            
+            # Contracciones negativas con BE
+            ("isn't", "is not", "no es/está"),
+            ("aren't", "are not", "no son/están"),
+            ("wasn't", "was not", "no era/estaba"),
+            ("weren't", "were not", "no eran/estaban"),
+            ("ain't", "am/is/are not", "no soy/es/son (informal)"),
+            
+            # Contracciones negativas con HAVE
+            ("hasn't", "has not", "no ha"),
+            ("haven't", "have not", "no he/han"),
+            ("hadn't", "had not", "no había"),
+            
+            # Contracciones negativas con WILL/WOULD
+            ("won't", "will not", "no haré/iré"),
+            ("wouldn't", "would not", "no haría"),
+            ("shan't", "shall not", "no deberé (formal)"),
+            
+            # Contracciones negativas con DO
+            ("don't", "do not", "no hago/haces"),
+            ("doesn't", "does not", "no hace"),
+            ("didn't", "did not", "no hice/hizo"),
+            
+            # Contracciones negativas con modales
+            ("can't", "cannot", "no puedo/puede"),
+            ("couldn't", "could not", "no pude/podía"),
+            ("shouldn't", "should not", "no debería"),
+            ("mustn't", "must not", "no debe"),
+            ("mightn't", "might not", "podría no"),
+            ("needn't", "need not", "no necesita"),
+            ("daren't", "dare not", "no se atreve"),
+            ("oughtn't", "ought not", "no debería"),
+            
+            # Contracciones informales
+            ("let's", "let us", "vamos a/dejemos"),
+            ("y'all", "you all", "ustedes (informal)"),
+            ("ma'am", "madam", "señora"),
+            ("o'clock", "of the clock", "en punto"),
+            ("'cause", "because", "porque (informal)"),
+            ("gonna", "going to", "voy a (informal)"),
+            ("wanna", "want to", "quiero (informal)"),
+            ("gotta", "got to", "tengo que (informal)"),
+            ("gimme", "give me", "dame (informal)"),
+            ("lemme", "let me", "déjame (informal)"),
+            ("kinda", "kind of", "tipo de (informal)"),
+            ("sorta", "sort of", "algo así (informal)"),
+            ("dunno", "don't know", "no sé (informal)"),
+            ("woulda", "would have", "habría (informal)"),
+            ("coulda", "could have", "podría haber (informal)"),
+            ("shoulda", "should have", "debería haber (informal)")
+        ]
+        
+        self.mostrar_todas_contracciones()
+    
+    def mostrar_todas_contracciones(self):
+        for item in self.tree_contr.get_children():
+            self.tree_contr.delete(item)
+        
+        for contraccion, original, espanol in self.contracciones:
+            self.tree_contr.insert('', 'end', values=(contraccion, original, espanol))
+    
+    def _on_search_contr_keyrelease(self, event):
+        if self._search_contr_timer:
+            self.root.after_cancel(self._search_contr_timer)
+        self._search_contr_timer = self.root.after(300, self.buscar_contraccion)
+    
+    def buscar_contraccion(self):
+        busqueda = self.entry_buscar_contr.get().strip().lower()
+        
+        for item in self.tree_contr.get_children():
+            self.tree_contr.delete(item)
+        
+        if not busqueda:
+            self.mostrar_todas_contracciones()
+            return
+        
+        for contraccion, original, espanol in self.contracciones:
+            if (busqueda in contraccion.lower() or busqueda in original.lower() or 
+                busqueda in espanol.lower()):
+                self.tree_contr.insert('', 'end', values=(contraccion, original, espanol))
     
     def crear_pestaña_verbos(self):
         frame = ttk.Frame(self.notebook)

@@ -40,6 +40,7 @@ Aplicación educativa multiplataforma para aprender y organizar vocabulario en i
 - 📅 **Días/Meses**: 58 términos relacionados con tiempo
 - 🔢 **Números**: Conversor + reglas importantes
 - 📝 **Gramática**: Pronombres, verbos auxiliares, artículos, demostrativos, cuantificadores
+- 🔗 **Contracciones**: 93 contracciones formales e informales
 - 📘 **Verbos**: 100 verbos irregulares comunes
 - ⏰ **Conjugación**: 6 tiempos verbales (Present, Past, Perfect, Future, Modals)
 - 📊 **Estadísticas**: Métricas de tu vocabulario y backups
@@ -220,6 +221,7 @@ La aplicación usa:
 - 💾 Backup automático cada 5 minutos
 - 📘 100 verbos irregulares
 - ⏰ Conjugación de verbos (6 tiempos)
+- 🔗 93 contracciones en inglés (formales e informales)
 - 📊 Estadísticas mejoradas con contador de backups
 - ✍️ Caligrafía con dos modos: Palabras Erróneas o Todo el Vocabulario
 - 📤 Botones Exportar/Importar movidos a Estadísticas
