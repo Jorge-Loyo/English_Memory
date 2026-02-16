@@ -1,5 +1,5 @@
 """
-English Memory v1.1
+English Memory v1.3.1
 ===================
 
 Aplicación educativa multiplataforma para aprender y organizar vocabulario en inglés.
@@ -31,7 +31,7 @@ Soporte:
 - Teléfono: +54 11 6168-2555
 
 Desarrollado por: Agilize Soluciones
-Versión: 1.3
+Versión: 1.3.1
 Fecha: 2024
 Licencia: Uso educativo gratuito
 """
@@ -123,7 +123,7 @@ def guardar_datos(datos):
 class DiccionarioApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("📚 English Memory v1.3")
+        self.root.title("📚 English Memory v1.3.1")
         self.root.geometry("1200x700")
         self.root.configure(bg=COLOR_BG)
         self.datos = cargar_datos()
@@ -137,7 +137,7 @@ class DiccionarioApp:
         header.pack(fill='x', padx=20, pady=(20,10))
         header_title = tk.Frame(header, bg=COLOR_BG)
         header_title.pack()
-        tk.Label(header_title, text="📚 English Memory v1.3", 
+        tk.Label(header_title, text="📚 English Memory v1.3.1", 
                 font=(FONT_FAMILY, 24, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT).pack(side='left')
         ttk.Button(header_title, text="🌓", command=self.toggle_tema, width=3).pack(side='left', padx=10)
         tk.Label(header, text="Aprende y organiza tu vocabulario en inglés", 
@@ -2034,15 +2034,15 @@ class DiccionarioApp:
         tk.Label(about_frame, text="ℹ️ Acerca de English Memory", font=(FONT_FAMILY, 16, 'bold'), 
                 bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=(10,10))
         
-        tk.Label(about_frame, text="Versión: 1.3", font=(FONT_FAMILY, 11), 
+        tk.Label(about_frame, text="Versión: 1.3.1", font=(FONT_FAMILY, 11), 
                 bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
         tk.Label(about_frame, text="Desarrollado por: Agilize Soluciones", font=(FONT_FAMILY, 11), 
                 bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
         tk.Label(about_frame, text="Aplicación educativa para aprendizaje de inglés", font=(FONT_FAMILY, 10), 
                 bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
         
-        # Nuevas características v1.3
-        tk.Label(about_frame, text="\n✨ Novedades v1.3:", font=(FONT_FAMILY, 11, 'bold'), 
+        # Nuevas características v1.3.1
+        tk.Label(about_frame, text="\n✨ Novedades v1.3.1:", font=(FONT_FAMILY, 11, 'bold'), 
                 bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=(10,5))
         
         novedades = [
@@ -2050,7 +2050,8 @@ class DiccionarioApp:
             "• Pronunciación TTS (si está disponible)",
             "• Botón para cambiar tema claro/oscuro",
             "• 100 verbos irregulares",
-            "• Conjugación de verbos por tiempo"
+            "• Conjugación de verbos por tiempo",
+            "• 93 contracciones en inglés"
         ]
         
         for novedad in novedades:

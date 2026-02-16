@@ -1,13 +1,13 @@
-# 📚 English Memory v1.3
+# 📚 English Memory v1.3.1
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/tu-usuario/english-memory)
-[![Version](https://img.shields.io/badge/version-1.3.0-green.svg)](https://github.com/tu-usuario/english-memory/releases)
+[![Version](https://img.shields.io/badge/version-1.3.1-green.svg)](https://github.com/tu-usuario/english-memory/releases)
 
 Aplicación educativa multiplataforma para aprender y organizar vocabulario en inglés.
 
-![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.3)
+![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.3.1)
 
 ## 🌟 Características Destacadas
 
@@ -215,13 +215,17 @@ La aplicación usa:
 
 ## 🔄 Actualizaciones
 
-**Versión 1.3** (2024)
+**Versión 1.3.1** (2024)
+- 🔗 93 contracciones en inglés (formales e informales)
+- 🔍 Búsqueda en tiempo real de contracciones
+- 📚 12 pestañas funcionales
+
+**Versión 1.3.0** (2024)
 - 🔊 Pronunciación TTS integrada (pyttsx3) en Vocabulario, Práctica y Caligrafía
 - 🌓 Toggle tema claro/oscuro (en desarrollo)
 - 💾 Backup automático cada 5 minutos
 - 📘 100 verbos irregulares
 - ⏰ Conjugación de verbos (6 tiempos)
-- 🔗 93 contracciones en inglés (formales e informales)
 - 📊 Estadísticas mejoradas con contador de backups
 - ✍️ Caligrafía con dos modos: Palabras Erróneas o Todo el Vocabulario
 - 📤 Botones Exportar/Importar movidos a Estadísticas
@@ -273,7 +277,7 @@ MIT License - Copyright (c) 2024 Agilize Soluciones
 
 ## 📊 Estado del Proyecto
 
-✅ **Versión Estable:** 1.3.0  
+✅ **Versión Estable:** 1.3.1  
 🚧 **En Desarrollo:** Nuevas funcionalidades planeadas  
 🐛 **Bugs Conocidos:** Ninguno reportado  
 
@@ -281,7 +285,7 @@ MIT License - Copyright (c) 2024 Agilize Soluciones
 
 <div align="center">
 
-**English Memory v1.0** - Aprende inglés de manera efectiva 🚀
+**English Memory v1.3.1** - Aprende inglés de manera efectiva 🚀
 
 Hecho con ❤️ por [Agilize Soluciones](https://agilizesoluciones.com)
 

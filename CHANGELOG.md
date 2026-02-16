@@ -5,6 +5,19 @@ Todos los cambios notables en este proyecto serán documentados aquí.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.3.1] - 2024-01-24
+
+### ✨ Agregado
+- Pestaña de Contracciones con 93 contracciones en inglés
+- Contracciones formales (I'm, you're, he's, etc.)
+- Contracciones negativas (isn't, don't, can't, etc.)
+- Contracciones informales (gonna, wanna, gotta, etc.)
+- Búsqueda en tiempo real de contracciones
+
+### 🔧 Mejorado
+- Total de 12 pestañas funcionales
+- Documentación actualizada
+
 ## [1.3.0] - 2024-01-23
 
 ### ✨ Agregado
