@@ -1,23 +1,25 @@
-# 📚 English Memory v1.2
+# 📚 English Memory v1.3
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/tu-usuario/english-memory)
-[![Version](https://img.shields.io/badge/version-1.2.0-green.svg)](https://github.com/tu-usuario/english-memory/releases)
+[![Version](https://img.shields.io/badge/version-1.3.0-green.svg)](https://github.com/tu-usuario/english-memory/releases)
 
 Aplicación educativa multiplataforma para aprender y organizar vocabulario en inglés.
 
-![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.2)
+![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.3)
 
 ## 🌟 Características Destacadas
 
 - 🎯 **Modo Práctica Interactivo** - Quiz con validación de respuestas y seguimiento de errores
 - 📚 **Gestión Completa** - Agrega, edita y organiza tu vocabulario
-- 🔊 **Pronunciación Fonética** - Aprende la pronunciación correcta
+- 🔊 **Pronunciación TTS** - Text-to-speech integrado para escuchar palabras
 - ✍️ **Práctica de Caligrafía** - Método de repetición espaciada con palabras erróneas
-- 📝 **Gramática Esencial** - Pronombres, verbos auxiliares, artículos y más
-- 📊 **Estadísticas** - Monitorea tu progreso
-- 💾 **Datos Seguros** - Almacenamiento local automático
+- 📘 **100 Verbos Irregulares** - Lista completa con conjugaciones
+- ⏰ **Conjugación de Verbos** - 6 tiempos verbales con ejemplos
+- 🌓 **Tema Claro/Oscuro** - Cambia entre temas según tu preferencia
+- 💾 **Backup Automático** - Respaldo cada 5 minutos
+- 📊 **Estadísticas Avanzadas** - Monitorea tu progreso y backups
 - 🌐 **Multiplataforma** - Windows y Linux
 
 ## ✨ Características
@@ -28,18 +30,20 @@ Aplicación educativa multiplataforma para aprender y organizar vocabulario en i
 - 🗑️ Eliminar palabras
 - 🔍 Búsqueda en tiempo real
 - 📊 Ordenar por columnas
-- 📤 Exportar a CSV
-- 📥 Importar desde CSV
+- 🔊 Pronunciación TTS integrada
 
 ### 🎓 Herramientas de Aprendizaje
-- 🔊 **Pronunciación**: Gestiona la pronunciación fonética de palabras
-- 🎯 **Práctica**: Modo quiz (Inglés ↔ Español)
-- ✍️ **Caligrafía**: Practica escritura con oraciones de ejemplo
+- 🔊 **Pronunciación TTS**: Text-to-speech en Vocabulario, Práctica y Caligrafía
+- 🎯 **Práctica**: Modo quiz (Inglés ↔ Español) con validación
+- ✍️ **Caligrafía**: Dos modos - Palabras Erróneas o Todo el Vocabulario
 - 📍 **Preposiciones**: 47 preposiciones con traducciones
 - 📅 **Días/Meses**: 58 términos relacionados con tiempo
 - 🔢 **Números**: Conversor + reglas importantes
 - 📝 **Gramática**: Pronombres, verbos auxiliares, artículos, demostrativos, cuantificadores
-- 📊 **Estadísticas**: Métricas de tu vocabulario
+- 📘 **Verbos**: 100 verbos irregulares comunes
+- ⏰ **Conjugación**: 6 tiempos verbales (Present, Past, Perfect, Future, Modals)
+- 📊 **Estadísticas**: Métricas de tu vocabulario y backups
+- 📤 **Exportar/Importar CSV**: Desde la pestaña de Estadísticas
 
 ## 🖥️ Compatibilidad
 
@@ -205,22 +209,30 @@ La aplicación usa:
 
 - Python 3.7+
 - tkinter (incluido en Python)
+- pyttsx3 2.90+ (para pronunciación TTS)
 - PyInstaller 5.13.2+ (solo para crear ejecutable)
 
 ## 🔄 Actualizaciones
+
+**Versión 1.3** (2024)
+- 🔊 Pronunciación TTS integrada (pyttsx3) en Vocabulario, Práctica y Caligrafía
+- 🌓 Toggle tema claro/oscuro (en desarrollo)
+- 💾 Backup automático cada 5 minutos
+- 📘 100 verbos irregulares
+- ⏰ Conjugación de verbos (6 tiempos)
+- 📊 Estadísticas mejoradas con contador de backups
+- ✍️ Caligrafía con dos modos: Palabras Erróneas o Todo el Vocabulario
+- 📤 Botones Exportar/Importar movidos a Estadísticas
 
 **Versión 1.2** (2024)
 - Validación de respuestas en práctica
 - Caligrafía con repetición espaciada
 - Columna de Notas en vocabulario
-- Pestaña de Pronunciación eliminada (integrada)
 
 **Versión 1.0** (2024)
 - Lanzamiento inicial
 - Gestión completa de vocabulario
-- 9 pestañas de herramientas
 - Soporte multiplataforma
-- Exportar/Importar CSV
 
 ## 🤝 Contribuir
 
@@ -259,7 +271,7 @@ MIT License - Copyright (c) 2024 Agilize Soluciones
 
 ## 📊 Estado del Proyecto
 
-✅ **Versión Estable:** 1.2.0  
+✅ **Versión Estable:** 1.3.0  
 🚧 **En Desarrollo:** Nuevas funcionalidades planeadas  
 🐛 **Bugs Conocidos:** Ninguno reportado  
 

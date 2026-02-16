@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "=================================================="
-echo "  Creando English Memory v1.2 para Linux"
+echo "  Creando English Memory v1.3 para Linux"
 echo "=================================================="
 echo ""
 

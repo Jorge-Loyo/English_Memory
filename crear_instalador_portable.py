@@ -1,5 +1,5 @@
 """
-Crea un paquete portable de English Memory para instalar en otras PCs
+Crea un paquete portable de English Memory v1.3 para instalar en otras PCs
 """
 import os
 import shutil

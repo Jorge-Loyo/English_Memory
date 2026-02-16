@@ -11,7 +11,7 @@ long_description = (this_directory / "README.md").read_text(encoding='utf-8')
 
 setup(
     name='english-memory',
-    version='1.2.0',
+    version='1.3.0',
     author='Agilize Soluciones',
     author_email='administrador@agilizesoluciones.com',
     description='Aplicación educativa para aprender y organizar vocabulario en inglés',

@@ -31,7 +31,7 @@ Soporte:
 - Teléfono: +54 11 6168-2555
 
 Desarrollado por: Agilize Soluciones
-Versión: 1.2
+Versión: 1.3
 Fecha: 2024
 Licencia: Uso educativo gratuito
 """
@@ -46,6 +46,13 @@ from tkinter import filedialog
 import threading
 import time
 import platform
+import shutil
+from datetime import datetime
+try:
+    import pyttsx3
+    TTS_DISPONIBLE = True
+except:
+    TTS_DISPONIBLE = False
 
 # Detectar sistema operativo y configurar ruta apropiada
 if platform.system() == 'Windows':
@@ -56,13 +63,27 @@ else:  # Linux, macOS
 APP_DIR.mkdir(parents=True, exist_ok=True)
 ARCHIVO_DATOS = APP_DIR / 'palabras.json'
 
-# Colores modernos - Tema morado/violeta
-COLOR_BG = '#1a1625'
-COLOR_FG = '#e9e4f0'
-COLOR_ACCENT = '#a78bfa'
+# Colores modernos - Tema oscuro
+COLOR_BG_DARK = '#1a1625'
+COLOR_FG_DARK = '#e9e4f0'
+COLOR_ACCENT_DARK = '#a78bfa'
+COLOR_BUTTON_DARK = '#2d2438'
+COLOR_BUTTON_HOVER_DARK = '#3d3149'
+
+# Colores modernos - Tema claro
+COLOR_BG_LIGHT = '#f5f5f5'
+COLOR_FG_LIGHT = '#1a1625'
+COLOR_ACCENT_LIGHT = '#7c3aed'
+COLOR_BUTTON_LIGHT = '#e9e4f0'
+COLOR_BUTTON_HOVER_LIGHT = '#d4d4d8'
+
+# Colores actuales (por defecto oscuro)
+COLOR_BG = COLOR_BG_DARK
+COLOR_FG = COLOR_FG_DARK
+COLOR_ACCENT = COLOR_ACCENT_DARK
 COLOR_ACCENT_DARK = '#7c3aed'
-COLOR_BUTTON = '#2d2438'
-COLOR_BUTTON_HOVER = '#3d3149'
+COLOR_BUTTON = COLOR_BUTTON_DARK
+COLOR_BUTTON_HOVER = COLOR_BUTTON_HOVER_DARK
 COLOR_SUCCESS = '#34d399'
 COLOR_ERROR = '#f87171'
 
@@ -102,10 +123,11 @@ def guardar_datos(datos):
 class DiccionarioApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("📚 English Memory v1.2")
+        self.root.title("📚 English Memory v1.3")
         self.root.geometry("1200x700")
         self.root.configure(bg=COLOR_BG)
         self.datos = cargar_datos()
+        self.modo_oscuro = True
         
         # Estilo moderno
         self.configurar_estilos()
@@ -113,8 +135,11 @@ class DiccionarioApp:
         # Header
         header = tk.Frame(root, bg=COLOR_BG)
         header.pack(fill='x', padx=20, pady=(20,10))
-        tk.Label(header, text="📚 English Memory v1.2", 
-                font=(FONT_FAMILY, 24, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT).pack()
+        header_title = tk.Frame(header, bg=COLOR_BG)
+        header_title.pack()
+        tk.Label(header_title, text="📚 English Memory v1.3", 
+                font=(FONT_FAMILY, 24, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT).pack(side='left')
+        ttk.Button(header_title, text="🌓", command=self.toggle_tema, width=3).pack(side='left', padx=10)
         tk.Label(header, text="Aprende y organiza tu vocabulario en inglés", 
                 font=(FONT_FAMILY, 10), bg=COLOR_BG, fg=COLOR_FG).pack()
         tk.Label(header, text=f"📁 Datos guardados en: {APP_DIR}", 
@@ -139,6 +164,9 @@ class DiccionarioApp:
         
         # Tooltips para pestañas
         self.crear_tooltips_pestañas()
+        
+        # Backup automático cada 5 minutos
+        self.programar_backup()
     
     def configurar_estilos(self):
         style = ttk.Style()
@@ -230,6 +258,44 @@ class DiccionarioApp:
             self._tooltip_window.destroy()
             delattr(self, '_tooltip_window')
     
+    def toggle_tema(self):
+        self.modo_oscuro = not self.modo_oscuro
+        messagebox.showinfo("Tema", "Función de cambio de tema en desarrollo.\nPor ahora solo está disponible el tema oscuro.")
+    
+    def pronunciar_palabra(self, palabra):
+        if TTS_DISPONIBLE:
+            try:
+                engine = pyttsx3.init()
+                engine.setProperty('rate', 150)
+                engine.say(palabra)
+                engine.runAndWait()
+                engine.stop()
+            except:
+                pass
+    
+    def programar_backup(self):
+        self.hacer_backup()
+        self.root.after(300000, self.programar_backup)  # 5 minutos
+    
+    def hacer_backup(self):
+        try:
+            backup_dir = APP_DIR / 'backups'
+            backup_dir.mkdir(exist_ok=True)
+            
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            backup_file = backup_dir / f'palabras_backup_{timestamp}.json'
+            
+            if ARCHIVO_DATOS.exists():
+                shutil.copy2(ARCHIVO_DATOS, backup_file)
+                
+                # Mantener solo los últimos 10 backups
+                backups = sorted(backup_dir.glob('palabras_backup_*.json'))
+                if len(backups) > 10:
+                    for old_backup in backups[:-10]:
+                        old_backup.unlink()
+        except:
+            pass
+    
     def crear_pestaña_consultar(self):
         frame = ttk.Frame(self.notebook)
         self.notebook.add(frame, text="📖")
@@ -245,8 +311,8 @@ class DiccionarioApp:
         ttk.Button(frame_acciones, text="➕ Agregar", command=self.abrir_modal_agregar).pack(side='left', padx=2)
         ttk.Button(frame_acciones, text="✏️ Editar", command=self.editar_palabra).pack(side='left', padx=2)
         ttk.Button(frame_acciones, text="🗑️ Eliminar", command=self.eliminar_palabra).pack(side='left', padx=2)
-        ttk.Button(frame_acciones, text="📤 Exportar", command=self.exportar_csv).pack(side='left', padx=2)
-        ttk.Button(frame_acciones, text="📥 Importar", command=self.importar_csv).pack(side='left', padx=2)
+        if TTS_DISPONIBLE:
+            ttk.Button(frame_acciones, text="🔊 TTS", command=self.pronunciar_seleccionada).pack(side='left', padx=2)
         
         # Fila 1: Búsqueda
         frame_search = tk.Frame(frame_buscar, bg=COLOR_BG)
@@ -290,6 +356,16 @@ class DiccionarioApp:
         
         self.mostrar_todas()
         self.orden_actual = {'columna': None, 'reverso': False}
+    
+    def pronunciar_seleccionada(self):
+        seleccion = self.tree.selection()
+        if not seleccion:
+            messagebox.showwarning("Advertencia", "Selecciona una palabra")
+            return
+        
+        item = self.tree.item(seleccion[0])
+        palabra = item['values'][0]
+        self.pronunciar_palabra(palabra)
     
 
     def abrir_modal_agregar(self):
@@ -528,6 +604,8 @@ class DiccionarioApp:
         btn_frame.pack(pady=20)
         ttk.Button(btn_frame, text="✓ Verificar", command=self.verificar_respuesta).pack(side='left', padx=5)
         ttk.Button(btn_frame, text="🔄 Nueva Palabra", command=self.nueva_palabra_practica).pack(side='left', padx=5)
+        if TTS_DISPONIBLE:
+            ttk.Button(btn_frame, text="🔊 Pronunciar", command=lambda: self.pronunciar_palabra(self.palabra_actual_practica) if hasattr(self, 'palabra_actual_practica') else None).pack(side='left', padx=5)
         
         self.nueva_palabra_practica()
     
@@ -1138,21 +1216,199 @@ class DiccionarioApp:
             tk.Label(cuant_item, text=f"Ej: {ej}", font=(FONT_FAMILY, 9, 'italic'), 
                     bg=COLOR_BG, fg=COLOR_BUTTON_HOVER, anchor='w').pack(side='left', padx=5)
     
+    def crear_pestaña_verbos(self):
+        frame = ttk.Frame(self.notebook)
+        self.notebook.add(frame, text="📘")
+        
+        frame_buscar = ttk.Frame(frame)
+        frame_buscar.pack(fill='x', padx=20, pady=15)
+        
+        ttk.Label(frame_buscar, text="🔍", font=(FONT_FAMILY, 14)).pack(side='left', padx=(0,5))
+        self.entry_buscar_verbos = ttk.Entry(frame_buscar, width=30, font=(FONT_FAMILY, 11))
+        self.entry_buscar_verbos.pack(side='left', padx=5, ipady=5)
+        self.entry_buscar_verbos.bind('<KeyRelease>', self._on_search_verbos_keyrelease)
+        self._search_verbos_timer = None
+        
+        columns = ('Infinitivo', 'Pasado', 'Participio', 'Español')
+        self.tree_verbos = ttk.Treeview(frame, columns=columns, show='headings', height=20)
+        
+        self.tree_verbos.heading('Infinitivo', text='🇬🇧 Infinitivo')
+        self.tree_verbos.heading('Pasado', text='⏪ Pasado')
+        self.tree_verbos.heading('Participio', text='✅ Participio')
+        self.tree_verbos.heading('Español', text='🇪🇸 Español')
+        
+        self.tree_verbos.column('Infinitivo', width=200, minwidth=150)
+        self.tree_verbos.column('Pasado', width=200, minwidth=150)
+        self.tree_verbos.column('Participio', width=200, minwidth=150)
+        self.tree_verbos.column('Español', width=300, minwidth=200)
+        
+        scrollbar = ttk.Scrollbar(frame, orient='vertical', command=self.tree_verbos.yview)
+        self.tree_verbos.configure(yscrollcommand=scrollbar.set)
+        
+        self.tree_verbos.pack(side='left', fill='both', expand=True, padx=(20,0), pady=(0,20))
+        scrollbar.pack(side='right', fill='y', pady=(0,20), padx=(0,20))
+        
+        self.verbos_irregulares = [
+            ('be', 'was/were', 'been', 'ser/estar'),('have', 'had', 'had', 'tener/haber'),
+            ('do', 'did', 'done', 'hacer'),('say', 'said', 'said', 'decir'),
+            ('go', 'went', 'gone', 'ir'),('get', 'got', 'gotten/got', 'obtener/conseguir'),
+            ('make', 'made', 'made', 'hacer'),('know', 'knew', 'known', 'saber/conocer'),
+            ('think', 'thought', 'thought', 'pensar'),('take', 'took', 'taken', 'tomar/llevar'),
+            ('see', 'saw', 'seen', 'ver'),('come', 'came', 'come', 'venir'),
+            ('want', 'wanted', 'wanted', 'querer'),('give', 'gave', 'given', 'dar'),
+            ('use', 'used', 'used', 'usar'),('find', 'found', 'found', 'encontrar'),
+            ('tell', 'told', 'told', 'decir/contar'),('ask', 'asked', 'asked', 'preguntar'),
+            ('work', 'worked', 'worked', 'trabajar'),('seem', 'seemed', 'seemed', 'parecer'),
+            ('feel', 'felt', 'felt', 'sentir'),('try', 'tried', 'tried', 'intentar'),
+            ('leave', 'left', 'left', 'dejar/salir'),('call', 'called', 'called', 'llamar'),
+            ('keep', 'kept', 'kept', 'mantener'),('let', 'let', 'let', 'dejar/permitir'),
+            ('begin', 'began', 'begun', 'comenzar'),('show', 'showed', 'shown', 'mostrar'),
+            ('hear', 'heard', 'heard', 'oír'),('play', 'played', 'played', 'jugar'),
+            ('run', 'ran', 'run', 'correr'),('move', 'moved', 'moved', 'mover'),
+            ('live', 'lived', 'lived', 'vivir'),('believe', 'believed', 'believed', 'creer'),
+            ('bring', 'brought', 'brought', 'traer'),('happen', 'happened', 'happened', 'suceder'),
+            ('write', 'wrote', 'written', 'escribir'),('sit', 'sat', 'sat', 'sentarse'),
+            ('stand', 'stood', 'stood', 'estar de pie'),('lose', 'lost', 'lost', 'perder'),
+            ('pay', 'paid', 'paid', 'pagar'),('meet', 'met', 'met', 'conocer/encontrar'),
+            ('include', 'included', 'included', 'incluir'),('continue', 'continued', 'continued', 'continuar'),
+            ('set', 'set', 'set', 'establecer'),('learn', 'learned/learnt', 'learned/learnt', 'aprender'),
+            ('change', 'changed', 'changed', 'cambiar'),('lead', 'led', 'led', 'liderar/conducir'),
+            ('understand', 'understood', 'understood', 'entender'),('watch', 'watched', 'watched', 'mirar/ver'),
+            ('follow', 'followed', 'followed', 'seguir'),('stop', 'stopped', 'stopped', 'parar'),
+            ('create', 'created', 'created', 'crear'),('speak', 'spoke', 'spoken', 'hablar'),
+            ('read', 'read', 'read', 'leer'),('spend', 'spent', 'spent', 'gastar/pasar tiempo'),
+            ('grow', 'grew', 'grown', 'crecer'),('open', 'opened', 'opened', 'abrir'),
+            ('walk', 'walked', 'walked', 'caminar'),('win', 'won', 'won', 'ganar'),
+            ('teach', 'taught', 'taught', 'enseñar'),('offer', 'offered', 'offered', 'ofrecer'),
+            ('remember', 'remembered', 'remembered', 'recordar'),('consider', 'considered', 'considered', 'considerar'),
+            ('appear', 'appeared', 'appeared', 'aparecer'),('buy', 'bought', 'bought', 'comprar'),
+            ('serve', 'served', 'served', 'servir'),('die', 'died', 'died', 'morir'),
+            ('send', 'sent', 'sent', 'enviar'),('build', 'built', 'built', 'construir'),
+            ('stay', 'stayed', 'stayed', 'quedarse'),('fall', 'fell', 'fallen', 'caer'),
+            ('cut', 'cut', 'cut', 'cortar'),('reach', 'reached', 'reached', 'alcanzar'),
+            ('kill', 'killed', 'killed', 'matar'),('raise', 'raised', 'raised', 'levantar/criar'),
+            ('pass', 'passed', 'passed', 'pasar'),('sell', 'sold', 'sold', 'vender'),
+            ('decide', 'decided', 'decided', 'decidir'),('return', 'returned', 'returned', 'regresar'),
+            ('explain', 'explained', 'explained', 'explicar'),('hope', 'hoped', 'hoped', 'esperar'),
+            ('develop', 'developed', 'developed', 'desarrollar'),('carry', 'carried', 'carried', 'llevar/cargar'),
+            ('break', 'broke', 'broken', 'romper'),('receive', 'received', 'received', 'recibir'),
+            ('agree', 'agreed', 'agreed', 'estar de acuerdo'),('support', 'supported', 'supported', 'apoyar'),
+            ('hit', 'hit', 'hit', 'golpear'),('produce', 'produced', 'produced', 'producir'),
+            ('eat', 'ate', 'eaten', 'comer'),('cover', 'covered', 'covered', 'cubrir'),
+            ('catch', 'caught', 'caught', 'atrapar'),('draw', 'drew', 'drawn', 'dibujar'),
+            ('choose', 'chose', 'chosen', 'elegir'),('wear', 'wore', 'worn', 'usar/llevar puesto'),
+            ('drive', 'drove', 'driven', 'conducir'),('sing', 'sang', 'sung', 'cantar'),
+            ('swim', 'swam', 'swum', 'nadar'),('fly', 'flew', 'flown', 'volar'),
+            ('drink', 'drank', 'drunk', 'beber'),('ride', 'rode', 'ridden', 'montar'),
+            ('throw', 'threw', 'thrown', 'lanzar'),('forget', 'forgot', 'forgotten', 'olvidar')
+        ]
+        self.mostrar_todos_verbos()
+    
+    def mostrar_todos_verbos(self):
+        for item in self.tree_verbos.get_children():
+            self.tree_verbos.delete(item)
+        for infinitivo, pasado, participio, espanol in self.verbos_irregulares:
+            self.tree_verbos.insert('', 'end', values=(infinitivo, pasado, participio, espanol))
+    
+    def _on_search_verbos_keyrelease(self, event):
+        if self._search_verbos_timer:
+            self.root.after_cancel(self._search_verbos_timer)
+        self._search_verbos_timer = self.root.after(300, self.buscar_verbos)
+    
+    def buscar_verbos(self):
+        busqueda = self.entry_buscar_verbos.get().strip().lower()
+        for item in self.tree_verbos.get_children():
+            self.tree_verbos.delete(item)
+        if not busqueda:
+            self.mostrar_todos_verbos()
+            return
+        for infinitivo, pasado, participio, espanol in self.verbos_irregulares:
+            if (busqueda in infinitivo.lower() or busqueda in pasado.lower() or 
+                busqueda in participio.lower() or busqueda in espanol.lower()):
+                self.tree_verbos.insert('', 'end', values=(infinitivo, pasado, participio, espanol))
+    
+    def crear_pestaña_conjugacion(self):
+        frame = ttk.Frame(self.notebook)
+        self.notebook.add(frame, text="⏰")
+        canvas = tk.Canvas(frame, bg=COLOR_BG, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(frame, orient="vertical", command=canvas.yview)
+        content = tk.Frame(canvas, bg=COLOR_BG)
+        content.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.create_window((0, 0), window=content, anchor="nw", width=1000)
+        canvas.configure(yscrollcommand=scrollbar.set)
+        def _on_mousewheel_conj(event):
+            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        canvas.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", _on_mousewheel_conj))
+        canvas.bind("<Leave>", lambda e: canvas.unbind_all("<MouseWheel>"))
+        canvas.pack(side="left", fill="both", expand=True, padx=20, pady=20)
+        scrollbar.pack(side="right", fill="y", pady=20)
+        
+        for tiempo, titulo, uso, ejemplos in [
+            ('present', '🕒 Simple Present', 'Acciones habituales', [
+                ('Afirmativo', 'I/You/We/They work', 'He/She/It works'),
+                ('Negativo', "don't work", "doesn't work"),
+                ('Interrogativo', 'Do...work?', 'Does...work?')
+            ]),
+            ('continuous', '🔄 Present Continuous', 'Acciones en progreso', [
+                ('Afirmativo', 'I am | You/We/They are | He/She/It is working', ''),
+                ('Negativo', "I'm not | aren't | isn't working", ''),
+                ('Interrogativo', 'Am I? | Are you? | Is he? working', '')
+            ]),
+            ('past', '⏪ Simple Past', 'Acciones completadas', [
+                ('Afirmativo', 'I/You/He/She/It/We/They worked', ''),
+                ('Negativo', "didn't work", ''),
+                ('Interrogativo', 'Did...work?', '')
+            ]),
+            ('perfect', '✅ Present Perfect', 'Pasado con relevancia', [
+                ('Afirmativo', 'I/You/We/They have | He/She/It has worked', ''),
+                ('Negativo', "haven't | hasn't worked", ''),
+                ('Interrogativo', 'Have...? | Has...? worked', '')
+            ]),
+            ('future', '⏩ Future Simple', 'Acciones futuras', [
+                ('Afirmativo', 'I/You/He/She/It/We/They will work', ''),
+                ('Negativo', "won't work", ''),
+                ('Interrogativo', 'Will...work?', '')
+            ])
+        ]:
+            f = tk.Frame(content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+            f.pack(fill='x', padx=20, pady=(0,20), ipady=15)
+            ttk.Label(f, text=titulo, font=(FONT_FAMILY, 16, 'bold'), foreground=COLOR_ACCENT, background=COLOR_BUTTON).pack(pady=(10,5))
+            tk.Label(f, text=f"Uso: {uso}", font=(FONT_FAMILY, 11), bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=5)
+            for tipo, forma1, forma2 in ejemplos:
+                item = tk.Frame(f, bg=COLOR_BG, relief='solid', borderwidth=1)
+                item.pack(fill='x', padx=20, pady=5)
+                tk.Label(item, text=tipo, font=(FONT_FAMILY, 11, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT, width=15).pack(side='left', padx=10, pady=8)
+                tk.Label(item, text=forma1, font=(FONT_FAMILY, 10), bg=COLOR_BG, fg=COLOR_FG, anchor='w').pack(side='left', padx=5)
+                if forma2:
+                    tk.Label(item, text=forma2, font=(FONT_FAMILY, 10), bg=COLOR_BG, fg=COLOR_FG, anchor='w').pack(side='left', padx=5)
+        
+        modal_frame = tk.Frame(content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+        modal_frame.pack(fill='x', padx=20, pady=(0,20), ipady=15)
+        ttk.Label(modal_frame, text="🔑 Modal Verbs", font=(FONT_FAMILY, 16, 'bold'), foreground=COLOR_ACCENT, background=COLOR_BUTTON).pack(pady=(10,15))
+        for modal, sig, ej in [('can','poder','I can swim'),('could','podría','I could help'),('may','permiso','May I?'),
+                               ('might','posibilidad','It might rain'),('must','obligación','You must study'),
+                               ('should','consejo','You should rest'),('would','condicional','I would like'),('will','futuro','I will go')]:
+            item = tk.Frame(modal_frame, bg=COLOR_BG, relief='solid', borderwidth=1)
+            item.pack(fill='x', padx=20, pady=3)
+            tk.Label(item, text=modal, font=(FONT_FAMILY, 11, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT, width=10, anchor='w').pack(side='left', padx=10, pady=5)
+            tk.Label(item, text=sig, font=(FONT_FAMILY, 10), bg=COLOR_BG, fg=COLOR_FG, width=20, anchor='w').pack(side='left', padx=5)
+            tk.Label(item, text=f"Ej: {ej}", font=(FONT_FAMILY, 9, 'italic'), bg=COLOR_BG, fg=COLOR_BUTTON_HOVER, anchor='w').pack(side='left', padx=5)
+    
     def crear_pestaña_estadisticas(self):
         frame = ttk.Frame(self.notebook)
         self.notebook.add(frame, text="📊")
         
-        container = tk.Frame(frame, bg=COLOR_BG)
-        container.place(relx=0.5, rely=0.5, anchor='center')
+        self.container_stats = tk.Frame(frame, bg=COLOR_BG)
+        self.container_stats.place(relx=0.5, rely=0.5, anchor='center')
         
-        ttk.Label(container, text="📊 Estadísticas del Vocabulario", 
+        ttk.Label(self.container_stats, text="📊 Estadísticas del Vocabulario", 
                  font=(FONT_FAMILY, 20, 'bold'), foreground=COLOR_ACCENT, 
                  background=COLOR_BG).pack(pady=(0,30))
         
-        self.stats_frame = tk.Frame(container, bg=COLOR_BG)
+        self.stats_frame = tk.Frame(self.container_stats, bg=COLOR_BG)
         self.stats_frame.pack()
         
-        ttk.Button(container, text="🔄 Actualizar", command=self.actualizar_estadisticas).pack(pady=20)
+        ttk.Button(self.container_stats, text="🔄 Actualizar", command=self.actualizar_estadisticas).pack(pady=20)
         
         self.actualizar_estadisticas()
         self.cargar_palabras_caligrafia()
@@ -1170,7 +1426,8 @@ class DiccionarioApp:
             ("📚 Total de palabras", total, COLOR_ACCENT),
             ("🔊 Con pronunciación", con_pronunciacion, COLOR_SUCCESS),
             ("❌ Sin pronunciación", sin_pronunciacion, COLOR_ERROR),
-            ("📝 Con notas", con_notas, COLOR_FG)
+            ("📝 Con notas", con_notas, COLOR_FG),
+            ("💾 Backups guardados", self.contar_backups(), COLOR_ACCENT)
         ]
         
         for texto, valor, color in stats:
@@ -1181,6 +1438,21 @@ class DiccionarioApp:
                     bg=COLOR_BG, fg=COLOR_FG).pack(side='left', padx=20)
             tk.Label(frame_stat, text=str(valor), font=(FONT_FAMILY, 24, 'bold'), 
                     bg=COLOR_BG, fg=color).pack(side='right', padx=20)
+        
+        # Botones de exportar/importar
+        btn_frame = tk.Frame(self.container_stats, bg=COLOR_BG)
+        btn_frame.pack(pady=20)
+        ttk.Button(btn_frame, text="📤 Exportar CSV", command=self.exportar_csv).pack(side='left', padx=5)
+        ttk.Button(btn_frame, text="📥 Importar CSV", command=self.importar_csv).pack(side='left', padx=5)
+    
+    def contar_backups(self):
+        try:
+            backup_dir = APP_DIR / 'backups'
+            if backup_dir.exists():
+                return len(list(backup_dir.glob('palabras_backup_*.json')))
+        except:
+            pass
+        return 0
     
     def crear_pestaña_caligrafia(self):
         frame = ttk.Frame(self.notebook)
@@ -1192,15 +1464,27 @@ class DiccionarioApp:
         frame_top = tk.Frame(frame, bg=COLOR_BG)
         frame_top.pack(fill='x', padx=30, pady=20)
         
-        ttk.Label(frame_top, text="✍️ Práctica de Caligrafía - Palabras Erróneas", 
+        ttk.Label(frame_top, text="✍️ Práctica de Caligrafía", 
                  font=(FONT_FAMILY, 18, 'bold'), foreground=COLOR_ACCENT, 
                  background=COLOR_BG).pack(pady=(0,10))
+        
+        # Selector de modo
+        modo_frame = tk.Frame(frame_top, bg=COLOR_BG)
+        modo_frame.pack(pady=10)
+        
+        self.modo_caligrafia = tk.StringVar(value='erroneas')
+        tk.Radiobutton(modo_frame, text="Palabras Erróneas", variable=self.modo_caligrafia,
+                      value='erroneas', bg=COLOR_BG, fg=COLOR_FG, selectcolor=COLOR_BUTTON,
+                      font=(FONT_FAMILY, 10), command=self.cargar_palabras_caligrafia).pack(side='left', padx=10)
+        tk.Radiobutton(modo_frame, text="Todo el Vocabulario", variable=self.modo_caligrafia,
+                      value='todas', bg=COLOR_BG, fg=COLOR_FG, selectcolor=COLOR_BUTTON,
+                      font=(FONT_FAMILY, 10), command=self.cargar_palabras_caligrafia).pack(side='left', padx=10)
         
         self.label_info_caligrafia = tk.Label(frame_top, text="", font=(FONT_FAMILY, 11), 
                                               bg=COLOR_BG, fg=COLOR_FG)
         self.label_info_caligrafia.pack(pady=5)
         
-        # Canvas con scroll (sin barra visible)
+        # Canvas con scroll
         canvas_cal = tk.Canvas(frame, bg=COLOR_BG, highlightthickness=0)
         self.frame_caligrafia_content = tk.Frame(canvas_cal, bg=COLOR_BG)
         
@@ -1225,15 +1509,23 @@ class DiccionarioApp:
         ttk.Button(btn_frame, text="◀ Anterior", command=self.palabra_anterior_caligrafia).pack(side='left', padx=5)
         ttk.Button(btn_frame, text="🔄 Actualizar", command=self.cargar_palabras_caligrafia).pack(side='left', padx=5)
         ttk.Button(btn_frame, text="Siguiente ▶", command=self.palabra_siguiente_caligrafia).pack(side='left', padx=5)
+        if TTS_DISPONIBLE:
+            ttk.Button(btn_frame, text="🔊 Pronunciar", command=self.pronunciar_palabra_caligrafia).pack(side='left', padx=5)
         
         self.cargar_palabras_caligrafia()
     
     def cargar_palabras_caligrafia(self):
-        # Solo palabras erróneas de práctica
-        if hasattr(self, 'palabras_erroneas') and self.palabras_erroneas:
-            self.lista_caligrafia = sorted(list(self.palabras_erroneas), key=str.lower)
+        modo = self.modo_caligrafia.get() if hasattr(self, 'modo_caligrafia') else 'erroneas'
+        
+        if modo == 'erroneas':
+            # Solo palabras erróneas de práctica
+            if hasattr(self, 'palabras_erroneas') and self.palabras_erroneas:
+                self.lista_caligrafia = sorted(list(self.palabras_erroneas), key=str.lower)
+            else:
+                self.lista_caligrafia = []
         else:
-            self.lista_caligrafia = []
+            # Todo el vocabulario
+            self.lista_caligrafia = sorted(list(self.datos.keys()), key=str.lower)
         
         self.indice_caligrafia = 0
         self.actualizar_caligrafia()
@@ -1244,8 +1536,13 @@ class DiccionarioApp:
             widget.destroy()
         
         if not self.lista_caligrafia:
-            tk.Label(self.frame_caligrafia_content, 
-                    text="🎯 No hay palabras erróneas aún\n\n¡Practica en la pestaña Práctica para generar palabras!", 
+            modo = self.modo_caligrafia.get() if hasattr(self, 'modo_caligrafia') else 'erroneas'
+            if modo == 'erroneas':
+                mensaje = "🎯 No hay palabras erróneas aún\n\n¡Practica en la pestaña Práctica para generar palabras!"
+            else:
+                mensaje = "📚 No hay palabras en el vocabulario\n\n¡Agrega palabras en la pestaña Vocabulario!"
+            
+            tk.Label(self.frame_caligrafia_content, text=mensaje,
                     font=(FONT_FAMILY, 14), bg=COLOR_BG, fg=COLOR_FG, 
                     justify='center').pack(expand=True, pady=100)
             self.label_info_caligrafia.config(text="")
@@ -1256,9 +1553,13 @@ class DiccionarioApp:
         pronunciacion = self.datos[palabra].get('pronunciacion', '')
         
         # Info superior
-        self.label_info_caligrafia.config(
-            text=f"Palabra {self.indice_caligrafia + 1} de {len(self.lista_caligrafia)} | Total erróneas: {len(self.palabras_erroneas)}"
-        )
+        modo = self.modo_caligrafia.get() if hasattr(self, 'modo_caligrafia') else 'erroneas'
+        if modo == 'erroneas':
+            info_texto = f"Palabra {self.indice_caligrafia + 1} de {len(self.lista_caligrafia)} | Total erróneas: {len(self.palabras_erroneas)}"
+        else:
+            info_texto = f"Palabra {self.indice_caligrafia + 1} de {len(self.lista_caligrafia)} | Total vocabulario: {len(self.datos)}"
+        
+        self.label_info_caligrafia.config(text=info_texto)
         
         # Tarjeta de palabra
         card_frame = tk.Frame(self.frame_caligrafia_content, bg=COLOR_BUTTON, relief='solid', borderwidth=2)
@@ -1349,6 +1650,11 @@ class DiccionarioApp:
         if self.lista_caligrafia and self.indice_caligrafia < len(self.lista_caligrafia) - 1:
             self.indice_caligrafia += 1
             self.actualizar_caligrafia()
+    
+    def pronunciar_palabra_caligrafia(self):
+        if self.lista_caligrafia and hasattr(self, 'indice_caligrafia'):
+            palabra = self.lista_caligrafia[self.indice_caligrafia]
+            self.pronunciar_palabra(palabra)
     
 
     
@@ -1561,12 +1867,30 @@ class DiccionarioApp:
         tk.Label(about_frame, text="ℹ️ Acerca de English Memory", font=(FONT_FAMILY, 16, 'bold'), 
                 bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=(10,10))
         
-        tk.Label(about_frame, text="Versión: 1.2", font=(FONT_FAMILY, 11), 
+        tk.Label(about_frame, text="Versión: 1.3", font=(FONT_FAMILY, 11), 
                 bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
         tk.Label(about_frame, text="Desarrollado por: Agilize Soluciones", font=(FONT_FAMILY, 11), 
                 bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
         tk.Label(about_frame, text="Aplicación educativa para aprendizaje de inglés", font=(FONT_FAMILY, 10), 
-                bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=(2,15))
+                bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
+        
+        # Nuevas características v1.3
+        tk.Label(about_frame, text="\n✨ Novedades v1.3:", font=(FONT_FAMILY, 11, 'bold'), 
+                bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=(10,5))
+        
+        novedades = [
+            "• Backup automático cada 5 minutos",
+            "• Pronunciación TTS (si está disponible)",
+            "• Botón para cambiar tema claro/oscuro",
+            "• 100 verbos irregulares",
+            "• Conjugación de verbos por tiempo"
+        ]
+        
+        for novedad in novedades:
+            tk.Label(about_frame, text=novedad, font=(FONT_FAMILY, 9), 
+                    bg=COLOR_BUTTON, fg=COLOR_FG, anchor='w').pack(padx=30, anchor='w')
+        
+        tk.Label(about_frame, text="", bg=COLOR_BUTTON).pack(pady=5)
 
 if __name__ == '__main__':
     root = tk.Tk()

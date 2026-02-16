@@ -5,6 +5,40 @@ Todos los cambios notables en este proyecto serán documentados aquí.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.3.0] - 2024-01-23
+
+### ✨ Agregado
+- Pronunciación TTS con pyttsx3 (botón en Vocabulario, Práctica y Caligrafía)
+- Botón toggle para cambiar entre tema claro/oscuro (en desarrollo)
+- Backup automático cada 5 minutos
+- Sistema de backups con retención de últimos 10 archivos
+- Pestaña de Verbos con 100 verbos irregulares
+- Pestaña de Conjugación con 6 tiempos verbales
+- Contador de backups en Estadísticas
+- Botones Exportar/Importar CSV movidos a Estadísticas
+- Modo de práctica en Caligrafía: Palabras Erróneas o Todo el Vocabulario
+- Sección de novedades en Ayuda
+
+### 🔧 Mejorado
+- TTS ahora se reinicializa en cada uso (corregido bug de uso único)
+- Estadísticas ahora muestran cantidad de backups guardados
+- Caligrafía mejorada con selector de modo (erróneas/todas)
+- Botón de pronunciación en Caligrafía para reforzar aprendizaje
+- Interfaz preparada para temas claro/oscuro
+- Total de 11 pestañas funcionales
+- Mejor organización de botones en Vocabulario
+
+### 🐛 Corregido
+- TTS funcionaba solo una vez, ahora funciona múltiples veces
+- Error de variable 'container' no definida en Estadísticas
+- Botones de Exportar/Importar mejor ubicados
+
+### 📚 Documentación
+- README actualizado con nuevas características
+- CHANGELOG actualizado
+- Versión actualizada en todos los archivos
+- Plan v2.0 creado con arquitectura MVC
+
 ## [1.2.0] - 2024-01-22
 
 ### ✨ Agregado
