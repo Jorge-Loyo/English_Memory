@@ -132,6 +132,8 @@ class DiccionarioApp:
         self.crear_pestaña_dias_meses()
         self.crear_pestaña_numeros()
         self.crear_pestaña_gramatica()
+        self.crear_pestaña_verbos()
+        self.crear_pestaña_conjugacion()
         self.crear_pestaña_estadisticas()
         self.crear_pestaña_ayuda()
         
@@ -190,6 +192,8 @@ class DiccionarioApp:
             ("📅", "Días/Meses"),
             ("🔢", "Números"),
             ("📝", "Gramática"),
+            ("📘", "Verbos"),
+            ("⏰", "Conjugación"),
             ("📊", "Estadísticas"),
             ("❓", "Ayuda")
         ]
@@ -206,7 +210,7 @@ class DiccionarioApp:
             tab_id = self.notebook.index(f"@{event.x},{event.y}")
             tooltips = ["Vocabulario", "Práctica", "Caligrafía", 
                        "Preposiciones", "Días/Meses", "Números", "Gramática", 
-                       "Estadísticas", "Ayuda"]
+                       "Verbos", "Conjugación", "Estadísticas", "Ayuda"]
             
             if hasattr(self, '_tooltip_window'):
                 self._tooltip_window.destroy()
