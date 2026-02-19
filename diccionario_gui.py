@@ -1120,6 +1120,37 @@ class DiccionarioApp:
                 tk.Label(table_frame, text=value, font=(FONT_FAMILY, 9), 
                         bg=bg, fg=COLOR_FG, width=12, relief='solid', borderwidth=1).grid(row=row, column=col, sticky='ew')
         
+        # Pronombres reflexivos
+        reflex_frame = tk.Frame(content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
+        reflex_frame.pack(fill='x', padx=20, pady=(0,20), ipady=15)
+        
+        ttk.Label(reflex_frame, text="🪞 Pronombres Reflexivos", font=(FONT_FAMILY, 16, 'bold'), 
+                 foreground=COLOR_ACCENT, background=COLOR_BUTTON).pack(pady=(10,15))
+        
+        reflexivos = [
+            ('myself', 'yo mismo/a, me', 'I hurt myself'),
+            ('yourself', 'tú mismo/a, te', 'You can do it yourself'),
+            ('himself', 'él mismo, se', 'He looked at himself'),
+            ('herself', 'ella misma, se', 'She taught herself'),
+            ('itself', 'sí mismo/a (cosa)', 'The door closed itself'),
+            ('ourselves', 'nosotros mismos/as, nos', 'We enjoyed ourselves'),
+            ('yourselves', 'ustedes mismos/as, se', 'You all can help yourselves'),
+            ('themselves', 'ellos mismos/as, se', 'They prepared themselves')
+        ]
+        
+        reflex_content = tk.Frame(reflex_frame, bg=COLOR_BUTTON)
+        reflex_content.pack(padx=30, pady=(0,15), fill='x')
+        
+        for reflexivo, espanol, ejemplo in reflexivos:
+            item_frame = tk.Frame(reflex_content, bg=COLOR_BG, relief='solid', borderwidth=1)
+            item_frame.pack(fill='x', pady=3)
+            tk.Label(item_frame, text=reflexivo, font=(FONT_FAMILY, 11, 'bold'), 
+                    bg=COLOR_BG, fg=COLOR_ACCENT, width=15, anchor='w').pack(side='left', padx=10, pady=5)
+            tk.Label(item_frame, text=espanol, font=(FONT_FAMILY, 10), 
+                    bg=COLOR_BG, fg=COLOR_FG, width=25, anchor='w').pack(side='left', padx=5)
+            tk.Label(item_frame, text=f"Ej: {ejemplo}", font=(FONT_FAMILY, 9, 'italic'), 
+                    bg=COLOR_BG, fg=COLOR_BUTTON_HOVER, anchor='w').pack(side='left', padx=5)
+        
         # Verbos auxiliares
         aux_frame = tk.Frame(content, bg=COLOR_BUTTON, relief='solid', borderwidth=1)
         aux_frame.pack(fill='x', padx=20, pady=(0,20), ipady=15)
@@ -1981,14 +2012,18 @@ class DiccionarioApp:
                 bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=(10,15))
         
         manual_text = [
-            ("📚 Vocabulario", "Agrega, edita y elimina palabras. Usa la búsqueda para encontrar rápidamente. Doble clic para editar. Puedes agregar pronunciación al editar."),
-            ("🎯 Práctica", "Modo quiz para practicar. Elige entre Inglés→Español o Español→Inglés."),
-            ("✍️ Caligrafía", "Practica escribiendo palabras y oraciones de ejemplo."),
-            ("📍 Preposiciones", "Consulta 47 preposiciones en inglés con sus traducciones."),
-            ("📅 Días/Meses", "Días de la semana, meses del año y términos relacionados."),
-            ("🔢 Números", "Conversor de números a texto en inglés + reglas importantes."),
-            ("📄 Exportar/Importar", "Guarda tu vocabulario en CSV o importa palabras desde un archivo."),
-            ("💾 Respaldos", "Tus datos están en " + str(APP_DIR) + ". Copia esta carpeta para hacer respaldo.")
+            ("📚 Vocabulario", "Agrega, edita y elimina palabras. Usa la búsqueda para encontrar rápidamente. Doble clic para editar. Puedes agregar pronunciación y notas."),
+            ("🎯 Práctica", "Modo quiz para practicar. Elige entre Inglés→Español o Español→Inglés. Usa TTS para escuchar la pronunciación."),
+            ("✍️ Caligrafía", "Practica escribiendo palabras erróneas o todo el vocabulario. Método de repetición espaciada con oraciones de ejemplo."),
+            ("📍 Preposiciones", "Consulta 47 preposiciones en inglés con sus traducciones y ejemplos de uso."),
+            ("📅 Días/Meses", "Días de la semana, meses del año y 58 términos relacionados con tiempo."),
+            ("🔢 Números", "Conversor de números a texto en inglés + reglas importantes sobre ordinales, decimales y fracciones."),
+            ("📝 Gramática", "Pronombres personales, posesivos y reflexivos. Verbos auxiliares, artículos, demostrativos y cuantificadores."),
+            ("🔗 Contracciones", "93 contracciones en inglés: formales (I'm, you're) e informales (gonna, wanna). Con palabras originales y traducción."),
+            ("📘 Verbos", "100 verbos irregulares más comunes con infinitivo, pasado, participio y traducción al español."),
+            ("⏰ Conjugación", "6 tiempos verbales (Present, Past, Perfect, Future, Continuous) + Modal Verbs con ejemplos."),
+            ("📊 Estadísticas", "Métricas de tu vocabulario: total de palabras, pronunciaciones, notas y backups. Exporta/Importa CSV desde aquí."),
+            ("💾 Respaldos", "Backup automático cada 5 minutos. Tus datos están en " + str(APP_DIR) + ". Copia esta carpeta para hacer respaldo manual.")
         ]
         
         manual_content = tk.Frame(manual_frame, bg=COLOR_BUTTON)
