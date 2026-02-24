@@ -54,44 +54,41 @@ try:
 except:
     TTS_DISPONIBLE = False
 
-# Detectar sistema operativo y configurar ruta apropiada
-if platform.system() == 'Windows':
-    APP_DIR = Path.home() / 'AppData' / 'Local' / 'DiccionarioPersonal'
-else:  # Linux, macOS
-    APP_DIR = Path.home() / '.local' / 'share' / 'DiccionarioPersonal'
+# Imports modularizados
+from src.controllers import VocabularioController, PracticaController
+from src.utils import AppConfig, TTSHelper
+from src.data import PREPOSICIONES, DIAS_MESES, CONTRACCIONES, TODOS_VERBOS, PRONOMBRES, AUXILIARES, ARTICULOS, DEMOSTRATIVOS, CUANTIFICADORES
 
-APP_DIR.mkdir(parents=True, exist_ok=True)
-ARCHIVO_DATOS = APP_DIR / 'palabras.json'
+# Detectar sistema operativo y configurar ruta apropiada
+APP_DIR = AppConfig.APP_DIR
+ARCHIVO_DATOS = AppConfig.ARCHIVO_DATOS
 
 # Colores modernos - Tema oscuro
-COLOR_BG_DARK = '#1a1625'
-COLOR_FG_DARK = '#e9e4f0'
-COLOR_ACCENT_DARK = '#a78bfa'
-COLOR_BUTTON_DARK = '#2d2438'
-COLOR_BUTTON_HOVER_DARK = '#3d3149'
+COLOR_BG_DARK = AppConfig.COLOR_BG_DARK
+COLOR_FG_DARK = AppConfig.COLOR_FG_DARK
+COLOR_ACCENT_DARK = AppConfig.COLOR_ACCENT_DARK
+COLOR_BUTTON_DARK = AppConfig.COLOR_BUTTON_DARK
+COLOR_BUTTON_HOVER_DARK = AppConfig.COLOR_BUTTON_HOVER_DARK
 
 # Colores modernos - Tema claro
-COLOR_BG_LIGHT = '#f5f5f5'
-COLOR_FG_LIGHT = '#1a1625'
-COLOR_ACCENT_LIGHT = '#7c3aed'
-COLOR_BUTTON_LIGHT = '#e9e4f0'
-COLOR_BUTTON_HOVER_LIGHT = '#d4d4d8'
+COLOR_BG_LIGHT = AppConfig.COLOR_BG_LIGHT
+COLOR_FG_LIGHT = AppConfig.COLOR_FG_LIGHT
+COLOR_ACCENT_LIGHT = AppConfig.COLOR_ACCENT_LIGHT
+COLOR_BUTTON_LIGHT = AppConfig.COLOR_BUTTON_LIGHT
+COLOR_BUTTON_HOVER_LIGHT = AppConfig.COLOR_BUTTON_HOVER_LIGHT
 
 # Colores actuales (por defecto oscuro)
-COLOR_BG = COLOR_BG_DARK
-COLOR_FG = COLOR_FG_DARK
-COLOR_ACCENT = COLOR_ACCENT_DARK
+COLOR_BG = AppConfig.COLOR_BG
+COLOR_FG = AppConfig.COLOR_FG
+COLOR_ACCENT = AppConfig.COLOR_ACCENT
 COLOR_ACCENT_DARK = '#7c3aed'
-COLOR_BUTTON = COLOR_BUTTON_DARK
-COLOR_BUTTON_HOVER = COLOR_BUTTON_HOVER_DARK
-COLOR_SUCCESS = '#34d399'
-COLOR_ERROR = '#f87171'
+COLOR_BUTTON = AppConfig.COLOR_BUTTON
+COLOR_BUTTON_HOVER = AppConfig.COLOR_BUTTON_HOVER
+COLOR_SUCCESS = AppConfig.COLOR_SUCCESS
+COLOR_ERROR = AppConfig.COLOR_ERROR
 
 # Fuente según sistema operativo
-if platform.system() == 'Windows':
-    FONT_FAMILY = 'Segoe UI'
-else:  # Linux, macOS
-    FONT_FAMILY = 'Sans'
+FONT_FAMILY = AppConfig.FONT_FAMILY
 
 def cargar_datos():
     if ARCHIVO_DATOS.exists():
