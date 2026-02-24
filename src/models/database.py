@@ -144,3 +144,48 @@ class Database:
                 LIMIT ?
             """, (palabra, limite))
             return [dict(row) for row in cursor.fetchall()]
+    
+    def agregar_categoria(self, nombre, descripcion=None, color=None):
+        """Agregar nueva categoría"""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO categorias (nombre, descripcion, color)
+                VALUES (?, ?, ?)
+            """, (nombre, descripcion, color))
+            return cursor.lastrowid
+    
+    def asignar_categoria(self, palabra, categoria_id):
+        """Asignar categoría a palabra"""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT OR IGNORE INTO palabra_categoria (palabra, categoria_id)
+                VALUES (?, ?)
+            """, (palabra, categoria_id))
+    
+    def registrar_backup(self, ruta, tipo='automatico', tamanio=0):
+        """Registrar backup en BD"""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO backups (ruta, tipo, tamanio)
+                VALUES (?, ?, ?)
+            """, (ruta, tipo, tamanio))
+    
+    def obtener_config(self, clave, default=None):
+        """Obtener valor de configuración"""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT valor FROM configuracion WHERE clave = ?", (clave,))
+            row = cursor.fetchone()
+            return row['valor'] if row else default
+    
+    def guardar_config(self, clave, valor, tipo='string'):
+        """Guardar configuración"""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT OR REPLACE INTO configuracion (clave, valor, tipo)
+                VALUES (?, ?, ?)
+            """, (clave, str(valor), tipo))

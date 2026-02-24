@@ -113,6 +113,32 @@ class HybridStorage:
         """Obtener historial de prácticas de una palabra"""
         return self.stats_db.obtener_historial_palabra(palabra, limite)
     
+    # ========== CATEGORÍAS ==========
+    
+    def agregar_categoria(self, nombre, descripcion=None, color=None):
+        """Agregar nueva categoría"""
+        return self.stats_db.agregar_categoria(nombre, descripcion, color)
+    
+    def asignar_categoria(self, palabra, categoria_id):
+        """Asignar categoría a palabra"""
+        return self.stats_db.asignar_categoria(palabra, categoria_id)
+    
+    # ========== BACKUPS ==========
+    
+    def registrar_backup(self, ruta, tipo='automatico', tamanio=0):
+        """Registrar backup en BD"""
+        return self.stats_db.registrar_backup(ruta, tipo, tamanio)
+    
+    # ========== CONFIGURACIÓN ==========
+    
+    def obtener_config(self, clave, default=None):
+        """Obtener configuración"""
+        return self.stats_db.obtener_config(clave, default)
+    
+    def guardar_config(self, clave, valor, tipo='string'):
+        """Guardar configuración"""
+        return self.stats_db.guardar_config(clave, valor, tipo)
+    
     # ========== UTILIDADES ==========
     
     def exportar_csv(self, archivo):
