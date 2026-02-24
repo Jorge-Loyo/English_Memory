@@ -5,7 +5,7 @@ from pathlib import Path
 current_dir = Path(__file__).parent
 
 print("="*50)
-print("  Creando English Memory v1.3.1")
+print("  Creando English Memory v1.3.2")
 print("="*50)
 print()
 
@@ -15,6 +15,10 @@ PyInstaller.__main__.run([
     '--onefile',
     '--windowed',
     '--noconsole',
+    '--hidden-import=pyttsx3',
+    '--hidden-import=pyttsx3.drivers',
+    '--hidden-import=pyttsx3.drivers.sapi5',
+    '--collect-all=pyttsx3',
     '--clean',
     f'--distpath={current_dir / "dist"}',
     f'--workpath={current_dir / "build"}',

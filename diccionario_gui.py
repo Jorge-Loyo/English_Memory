@@ -1,5 +1,5 @@
 """
-English Memory v1.3.1
+English Memory v1.3.2
 ===================
 
 Aplicación educativa multiplataforma para aprender y organizar vocabulario en inglés.
@@ -31,8 +31,8 @@ Soporte:
 - Teléfono: +54 11 6168-2555
 
 Desarrollado por: Agilize Soluciones
-Versión: 1.3.1
-Fecha: 2024
+Versión: 1.3.2
+Fecha: 2025
 Licencia: Uso educativo gratuito
 """
 
@@ -123,7 +123,7 @@ def guardar_datos(datos):
 class DiccionarioApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("📚 English Memory v1.3.1")
+        self.root.title("📚 English Memory v1.3.2")
         self.root.geometry("1200x700")
         self.root.configure(bg=COLOR_BG)
         self.datos = cargar_datos()
@@ -137,7 +137,7 @@ class DiccionarioApp:
         header.pack(fill='x', padx=20, pady=(20,10))
         header_title = tk.Frame(header, bg=COLOR_BG)
         header_title.pack()
-        tk.Label(header_title, text="📚 English Memory v1.3.1", 
+        tk.Label(header_title, text="📚 English Memory v1.3.2", 
                 font=(FONT_FAMILY, 24, 'bold'), bg=COLOR_BG, fg=COLOR_ACCENT).pack(side='left')
         ttk.Button(header_title, text="🌓", command=self.toggle_tema, width=3).pack(side='left', padx=10)
         tk.Label(header, text="Aprende y organiza tu vocabulario en inglés", 
@@ -265,15 +265,17 @@ class DiccionarioApp:
         messagebox.showinfo("Tema", "Función de cambio de tema en desarrollo.\nPor ahora solo está disponible el tema oscuro.")
     
     def pronunciar_palabra(self, palabra):
-        if TTS_DISPONIBLE:
-            try:
-                engine = pyttsx3.init()
-                engine.setProperty('rate', 150)
-                engine.say(palabra)
-                engine.runAndWait()
-                engine.stop()
-            except:
-                pass
+        if not TTS_DISPONIBLE:
+            messagebox.showinfo("TTS no disponible", "La pronunciación TTS no está disponible.\nInstala pyttsx3: pip install pyttsx3")
+            return
+        try:
+            engine = pyttsx3.init()
+            engine.setProperty('rate', 150)
+            engine.say(palabra)
+            engine.runAndWait()
+            engine.stop()
+        except Exception as e:
+            messagebox.showerror("Error TTS", f"Error al pronunciar: {str(e)}")
     
     def programar_backup(self):
         self.hacer_backup()
@@ -313,8 +315,7 @@ class DiccionarioApp:
         ttk.Button(frame_acciones, text="➕ Agregar", command=self.abrir_modal_agregar).pack(side='left', padx=2)
         ttk.Button(frame_acciones, text="✏️ Editar", command=self.editar_palabra).pack(side='left', padx=2)
         ttk.Button(frame_acciones, text="🗑️ Eliminar", command=self.eliminar_palabra).pack(side='left', padx=2)
-        if TTS_DISPONIBLE:
-            ttk.Button(frame_acciones, text="🔊 TTS", command=self.pronunciar_seleccionada).pack(side='left', padx=2)
+        ttk.Button(frame_acciones, text="🔊 Pronunciar", command=self.pronunciar_seleccionada).pack(side='left', padx=2)
         
         # Fila 1: Búsqueda
         frame_search = tk.Frame(frame_buscar, bg=COLOR_BG)
@@ -364,7 +365,6 @@ class DiccionarioApp:
         if not seleccion:
             messagebox.showwarning("Advertencia", "Selecciona una palabra")
             return
-        
         item = self.tree.item(seleccion[0])
         palabra = item['values'][0]
         self.pronunciar_palabra(palabra)
@@ -606,8 +606,7 @@ class DiccionarioApp:
         btn_frame.pack(pady=20)
         ttk.Button(btn_frame, text="✓ Verificar", command=self.verificar_respuesta).pack(side='left', padx=5)
         ttk.Button(btn_frame, text="🔄 Nueva Palabra", command=self.nueva_palabra_practica).pack(side='left', padx=5)
-        if TTS_DISPONIBLE:
-            ttk.Button(btn_frame, text="🔊 Pronunciar", command=lambda: self.pronunciar_palabra(self.palabra_actual_practica) if hasattr(self, 'palabra_actual_practica') else None).pack(side='left', padx=5)
+        ttk.Button(btn_frame, text="🔊 Pronunciar", command=lambda: self.pronunciar_palabra(self.palabra_actual_practica) if hasattr(self, 'palabra_actual_practica') else None).pack(side='left', padx=5)
         
         self.nueva_palabra_practica()
     
@@ -682,6 +681,7 @@ class DiccionarioApp:
         self.entry_buscar_prep.pack(side='left', padx=5, ipady=5)
         self.entry_buscar_prep.bind('<KeyRelease>', self._on_search_prep_keyrelease)
         self._search_prep_timer = None
+        ttk.Button(frame_buscar, text="🔊 Pronunciar", command=self.pronunciar_preposicion_seleccionada).pack(side='left', padx=5)
         
         # Tabla de preposiciones
         columns = ('Inglés', 'Español')
@@ -779,6 +779,15 @@ class DiccionarioApp:
             if busqueda in prep.lower() or busqueda in trad.lower():
                 self.tree_prep.insert('', 'end', values=(prep, trad))
     
+    def pronunciar_preposicion_seleccionada(self):
+        seleccion = self.tree_prep.selection()
+        if not seleccion:
+            messagebox.showwarning("Advertencia", "Selecciona una preposición")
+            return
+        item = self.tree_prep.item(seleccion[0])
+        palabra = item['values'][0]
+        self.pronunciar_palabra(palabra)
+    
     def crear_pestaña_dias_meses(self):
         frame = ttk.Frame(self.notebook)
         self.notebook.add(frame, text="📅")
@@ -792,6 +801,7 @@ class DiccionarioApp:
         self.entry_buscar_dias.pack(side='left', padx=5, ipady=5)
         self.entry_buscar_dias.bind('<KeyRelease>', self._on_search_dias_keyrelease)
         self._search_dias_timer = None
+        ttk.Button(frame_buscar, text="🔊 Pronunciar", command=self.pronunciar_dia_seleccionado).pack(side='left', padx=5)
         
         # Tabla
         columns = ('Inglés', 'Español', 'Categoría')
@@ -901,6 +911,15 @@ class DiccionarioApp:
             if busqueda in ingles.lower() or busqueda in espanol.lower() or busqueda in categoria.lower():
                 self.tree_dias.insert('', 'end', values=(ingles, espanol, categoria))
     
+    def pronunciar_dia_seleccionado(self):
+        seleccion = self.tree_dias.selection()
+        if not seleccion:
+            messagebox.showwarning("Advertencia", "Selecciona un día/mes")
+            return
+        item = self.tree_dias.item(seleccion[0])
+        palabra = item['values'][0]
+        self.pronunciar_palabra(palabra)
+    
     def crear_pestaña_numeros(self):
         frame = ttk.Frame(self.notebook)
         self.notebook.add(frame, text="🔢")
@@ -936,6 +955,7 @@ class DiccionarioApp:
         self.entry_numero = ttk.Entry(input_frame, width=20, font=(FONT_FAMILY, 12))
         self.entry_numero.pack(side='left', padx=5, ipady=5)
         ttk.Button(input_frame, text="✓ Convertir", command=self.convertir_numero).pack(side='left', padx=5)
+        ttk.Button(input_frame, text="🔊 Pronunciar", command=self.pronunciar_numero).pack(side='left', padx=5)
         
         self.label_resultado = tk.Label(conversor_frame, text="", font=(FONT_FAMILY, 14, 'bold'), 
                                         bg=COLOR_BUTTON, fg=COLOR_SUCCESS, wraplength=800)
@@ -1067,6 +1087,17 @@ class DiccionarioApp:
             if resto > 0:
                 resultado += ' ' + convertir_centenas(resto)
             return resultado
+    
+    def pronunciar_numero(self):
+        try:
+            num = int(self.entry_numero.get().strip())
+            if num < 0 or num > 999999999:
+                messagebox.showwarning("Advertencia", "Ingresa un número entre 0 y 999,999,999")
+                return
+            resultado = self.numero_a_texto(num)
+            self.pronunciar_palabra(resultado)
+        except ValueError:
+            messagebox.showwarning("Advertencia", "Ingresa un número válido")
     
     def crear_pestaña_gramatica(self):
         frame = ttk.Frame(self.notebook)
@@ -1262,6 +1293,7 @@ class DiccionarioApp:
         self.entry_buscar_contr.pack(side='left', padx=5, ipady=5)
         self.entry_buscar_contr.bind('<KeyRelease>', self._on_search_contr_keyrelease)
         self._search_contr_timer = None
+        ttk.Button(frame_buscar, text="🔊 Pronunciar", command=self.pronunciar_contraccion_seleccionada).pack(side='left', padx=5)
         
         # Tabla de contracciones
         columns = ('Contracción', 'Palabras Originales', 'Español')
@@ -1414,6 +1446,15 @@ class DiccionarioApp:
                 busqueda in espanol.lower()):
                 self.tree_contr.insert('', 'end', values=(contraccion, original, espanol))
     
+    def pronunciar_contraccion_seleccionada(self):
+        seleccion = self.tree_contr.selection()
+        if not seleccion:
+            messagebox.showwarning("Advertencia", "Selecciona una contracción")
+            return
+        item = self.tree_contr.item(seleccion[0])
+        palabra = item['values'][0]
+        self.pronunciar_palabra(palabra)
+    
     def crear_pestaña_verbos(self):
         frame = ttk.Frame(self.notebook)
         self.notebook.add(frame, text="📘")
@@ -1426,19 +1467,22 @@ class DiccionarioApp:
         self.entry_buscar_verbos.pack(side='left', padx=5, ipady=5)
         self.entry_buscar_verbos.bind('<KeyRelease>', self._on_search_verbos_keyrelease)
         self._search_verbos_timer = None
+        ttk.Button(frame_buscar, text="🔊 Pronunciar", command=self.pronunciar_verbo_seleccionado).pack(side='left', padx=5)
         
-        columns = ('Infinitivo', 'Pasado', 'Participio', 'Español')
+        columns = ('Infinitivo', 'Pasado', 'Participio', 'Español', 'Tipo')
         self.tree_verbos = ttk.Treeview(frame, columns=columns, show='headings', height=20)
         
         self.tree_verbos.heading('Infinitivo', text='🇬🇧 Infinitivo')
         self.tree_verbos.heading('Pasado', text='⏪ Pasado')
         self.tree_verbos.heading('Participio', text='✅ Participio')
         self.tree_verbos.heading('Español', text='🇪🇸 Español')
+        self.tree_verbos.heading('Tipo', text='📋 Tipo')
         
-        self.tree_verbos.column('Infinitivo', width=200, minwidth=150)
-        self.tree_verbos.column('Pasado', width=200, minwidth=150)
-        self.tree_verbos.column('Participio', width=200, minwidth=150)
-        self.tree_verbos.column('Español', width=300, minwidth=200)
+        self.tree_verbos.column('Infinitivo', width=180, minwidth=120)
+        self.tree_verbos.column('Pasado', width=180, minwidth=120)
+        self.tree_verbos.column('Participio', width=180, minwidth=120)
+        self.tree_verbos.column('Español', width=250, minwidth=150)
+        self.tree_verbos.column('Tipo', width=120, minwidth=100)
         
         scrollbar = ttk.Scrollbar(frame, orient='vertical', command=self.tree_verbos.yview)
         self.tree_verbos.configure(yscrollcommand=scrollbar.set)
@@ -1446,67 +1490,211 @@ class DiccionarioApp:
         self.tree_verbos.pack(side='left', fill='both', expand=True, padx=(20,0), pady=(0,20))
         scrollbar.pack(side='right', fill='y', pady=(0,20), padx=(0,20))
         
-        self.verbos_irregulares = [
-            ('be', 'was/were', 'been', 'ser/estar'),('have', 'had', 'had', 'tener/haber'),
-            ('do', 'did', 'done', 'hacer'),('say', 'said', 'said', 'decir'),
-            ('go', 'went', 'gone', 'ir'),('get', 'got', 'gotten/got', 'obtener/conseguir'),
-            ('make', 'made', 'made', 'hacer'),('know', 'knew', 'known', 'saber/conocer'),
-            ('think', 'thought', 'thought', 'pensar'),('take', 'took', 'taken', 'tomar/llevar'),
-            ('see', 'saw', 'seen', 'ver'),('come', 'came', 'come', 'venir'),
-            ('want', 'wanted', 'wanted', 'querer'),('give', 'gave', 'given', 'dar'),
-            ('use', 'used', 'used', 'usar'),('find', 'found', 'found', 'encontrar'),
-            ('tell', 'told', 'told', 'decir/contar'),('ask', 'asked', 'asked', 'preguntar'),
-            ('work', 'worked', 'worked', 'trabajar'),('seem', 'seemed', 'seemed', 'parecer'),
-            ('feel', 'felt', 'felt', 'sentir'),('try', 'tried', 'tried', 'intentar'),
-            ('leave', 'left', 'left', 'dejar/salir'),('call', 'called', 'called', 'llamar'),
-            ('keep', 'kept', 'kept', 'mantener'),('let', 'let', 'let', 'dejar/permitir'),
-            ('begin', 'began', 'begun', 'comenzar'),('show', 'showed', 'shown', 'mostrar'),
-            ('hear', 'heard', 'heard', 'oír'),('play', 'played', 'played', 'jugar'),
-            ('run', 'ran', 'run', 'correr'),('move', 'moved', 'moved', 'mover'),
-            ('live', 'lived', 'lived', 'vivir'),('believe', 'believed', 'believed', 'creer'),
-            ('bring', 'brought', 'brought', 'traer'),('happen', 'happened', 'happened', 'suceder'),
-            ('write', 'wrote', 'written', 'escribir'),('sit', 'sat', 'sat', 'sentarse'),
-            ('stand', 'stood', 'stood', 'estar de pie'),('lose', 'lost', 'lost', 'perder'),
-            ('pay', 'paid', 'paid', 'pagar'),('meet', 'met', 'met', 'conocer/encontrar'),
-            ('include', 'included', 'included', 'incluir'),('continue', 'continued', 'continued', 'continuar'),
-            ('set', 'set', 'set', 'establecer'),('learn', 'learned/learnt', 'learned/learnt', 'aprender'),
-            ('change', 'changed', 'changed', 'cambiar'),('lead', 'led', 'led', 'liderar/conducir'),
-            ('understand', 'understood', 'understood', 'entender'),('watch', 'watched', 'watched', 'mirar/ver'),
-            ('follow', 'followed', 'followed', 'seguir'),('stop', 'stopped', 'stopped', 'parar'),
-            ('create', 'created', 'created', 'crear'),('speak', 'spoke', 'spoken', 'hablar'),
-            ('read', 'read', 'read', 'leer'),('spend', 'spent', 'spent', 'gastar/pasar tiempo'),
-            ('grow', 'grew', 'grown', 'crecer'),('open', 'opened', 'opened', 'abrir'),
-            ('walk', 'walked', 'walked', 'caminar'),('win', 'won', 'won', 'ganar'),
-            ('teach', 'taught', 'taught', 'enseñar'),('offer', 'offered', 'offered', 'ofrecer'),
-            ('remember', 'remembered', 'remembered', 'recordar'),('consider', 'considered', 'considered', 'considerar'),
-            ('appear', 'appeared', 'appeared', 'aparecer'),('buy', 'bought', 'bought', 'comprar'),
-            ('serve', 'served', 'served', 'servir'),('die', 'died', 'died', 'morir'),
-            ('send', 'sent', 'sent', 'enviar'),('build', 'built', 'built', 'construir'),
-            ('stay', 'stayed', 'stayed', 'quedarse'),('fall', 'fell', 'fallen', 'caer'),
-            ('cut', 'cut', 'cut', 'cortar'),('reach', 'reached', 'reached', 'alcanzar'),
-            ('kill', 'killed', 'killed', 'matar'),('raise', 'raised', 'raised', 'levantar/criar'),
-            ('pass', 'passed', 'passed', 'pasar'),('sell', 'sold', 'sold', 'vender'),
-            ('decide', 'decided', 'decided', 'decidir'),('return', 'returned', 'returned', 'regresar'),
-            ('explain', 'explained', 'explained', 'explicar'),('hope', 'hoped', 'hoped', 'esperar'),
-            ('develop', 'developed', 'developed', 'desarrollar'),('carry', 'carried', 'carried', 'llevar/cargar'),
-            ('break', 'broke', 'broken', 'romper'),('receive', 'received', 'received', 'recibir'),
-            ('agree', 'agreed', 'agreed', 'estar de acuerdo'),('support', 'supported', 'supported', 'apoyar'),
-            ('hit', 'hit', 'hit', 'golpear'),('produce', 'produced', 'produced', 'producir'),
-            ('eat', 'ate', 'eaten', 'comer'),('cover', 'covered', 'covered', 'cubrir'),
-            ('catch', 'caught', 'caught', 'atrapar'),('draw', 'drew', 'drawn', 'dibujar'),
-            ('choose', 'chose', 'chosen', 'elegir'),('wear', 'wore', 'worn', 'usar/llevar puesto'),
-            ('drive', 'drove', 'driven', 'conducir'),('sing', 'sang', 'sung', 'cantar'),
-            ('swim', 'swam', 'swum', 'nadar'),('fly', 'flew', 'flown', 'volar'),
-            ('drink', 'drank', 'drunk', 'beber'),('ride', 'rode', 'ridden', 'montar'),
-            ('throw', 'threw', 'thrown', 'lanzar'),('forget', 'forgot', 'forgotten', 'olvidar')
+        self.todos_verbos = [
+            ('be', 'was/were', 'been', 'ser/estar', 'Irregular'),('have', 'had', 'had', 'tener/haber', 'Irregular'),
+            ('do', 'did', 'done', 'hacer', 'Irregular'),('say', 'said', 'said', 'decir', 'Irregular'),
+            ('go', 'went', 'gone', 'ir', 'Irregular'),('get', 'got', 'gotten/got', 'obtener/conseguir', 'Irregular'),
+            ('make', 'made', 'made', 'hacer', 'Irregular'),('know', 'knew', 'known', 'saber/conocer', 'Irregular'),
+            ('think', 'thought', 'thought', 'pensar', 'Irregular'),('take', 'took', 'taken', 'tomar/llevar', 'Irregular'),
+            ('see', 'saw', 'seen', 'ver', 'Irregular'),('come', 'came', 'come', 'venir', 'Irregular'),
+            ('give', 'gave', 'given', 'dar', 'Irregular'),('find', 'found', 'found', 'encontrar', 'Irregular'),
+            ('tell', 'told', 'told', 'decir/contar', 'Irregular'),('feel', 'felt', 'felt', 'sentir', 'Irregular'),
+            ('leave', 'left', 'left', 'dejar/salir', 'Irregular'),('keep', 'kept', 'kept', 'mantener', 'Irregular'),
+            ('let', 'let', 'let', 'dejar/permitir', 'Irregular'),('begin', 'began', 'begun', 'comenzar', 'Irregular'),
+            ('hear', 'heard', 'heard', 'oír', 'Irregular'),('run', 'ran', 'run', 'correr', 'Irregular'),
+            ('bring', 'brought', 'brought', 'traer', 'Irregular'),('write', 'wrote', 'written', 'escribir', 'Irregular'),
+            ('sit', 'sat', 'sat', 'sentarse', 'Irregular'),('stand', 'stood', 'stood', 'estar de pie', 'Irregular'),
+            ('lose', 'lost', 'lost', 'perder', 'Irregular'),('pay', 'paid', 'paid', 'pagar', 'Irregular'),
+            ('meet', 'met', 'met', 'conocer/encontrar', 'Irregular'),('set', 'set', 'set', 'establecer', 'Irregular'),
+            ('lead', 'led', 'led', 'liderar/conducir', 'Irregular'),('understand', 'understood', 'understood', 'entender', 'Irregular'),
+            ('speak', 'spoke', 'spoken', 'hablar', 'Irregular'),('read', 'read', 'read', 'leer', 'Irregular'),
+            ('spend', 'spent', 'spent', 'gastar/pasar tiempo', 'Irregular'),('grow', 'grew', 'grown', 'crecer', 'Irregular'),
+            ('win', 'won', 'won', 'ganar', 'Irregular'),('teach', 'taught', 'taught', 'enseñar', 'Irregular'),
+            ('buy', 'bought', 'bought', 'comprar', 'Irregular'),('send', 'sent', 'sent', 'enviar', 'Irregular'),
+            ('build', 'built', 'built', 'construir', 'Irregular'),('fall', 'fell', 'fallen', 'caer', 'Irregular'),
+            ('cut', 'cut', 'cut', 'cortar', 'Irregular'),('sell', 'sold', 'sold', 'vender', 'Irregular'),
+            ('carry', 'carried', 'carried', 'llevar/cargar', 'Irregular'),('break', 'broke', 'broken', 'romper', 'Irregular'),
+            ('agree', 'agreed', 'agreed', 'estar de acuerdo', 'Irregular'),('hit', 'hit', 'hit', 'golpear', 'Irregular'),
+            ('eat', 'ate', 'eaten', 'comer', 'Irregular'),('cover', 'covered', 'covered', 'cubrir', 'Irregular'),
+            ('catch', 'caught', 'caught', 'atrapar', 'Irregular'),('draw', 'drew', 'drawn', 'dibujar', 'Irregular'),
+            ('choose', 'chose', 'chosen', 'elegir', 'Irregular'),('wear', 'wore', 'worn', 'usar/llevar puesto', 'Irregular'),
+            ('drive', 'drove', 'driven', 'conducir', 'Irregular'),('sing', 'sang', 'sung', 'cantar', 'Irregular'),
+            ('swim', 'swam', 'swum', 'nadar', 'Irregular'),('fly', 'flew', 'flown', 'volar', 'Irregular'),
+            ('drink', 'drank', 'drunk', 'beber', 'Irregular'),('ride', 'rode', 'ridden', 'montar', 'Irregular'),
+            ('throw', 'threw', 'thrown', 'lanzar', 'Irregular'),('forget', 'forgot', 'forgotten', 'olvidar', 'Irregular'),
+            ('become', 'became', 'become', 'convertirse', 'Irregular'),('hold', 'held', 'held', 'sostener', 'Irregular'),
+            ('put', 'put', 'put', 'poner', 'Irregular'),('mean', 'meant', 'meant', 'significar', 'Irregular'),
+            ('show', 'showed', 'shown', 'mostrar', 'Irregular'),('lie', 'lay', 'lain', 'yacer/acostarse', 'Irregular'),
+            ('lay', 'laid', 'laid', 'poner/colocar', 'Irregular'),('rise', 'rose', 'risen', 'levantarse', 'Irregular'),
+            ('shake', 'shook', 'shaken', 'sacudir', 'Irregular'),('wake', 'woke', 'woken', 'despertar', 'Irregular'),
+            ('blow', 'blew', 'blown', 'soplar', 'Irregular'),('hide', 'hid', 'hidden', 'esconder', 'Irregular'),
+            ('bite', 'bit', 'bitten', 'morder', 'Irregular'),('fight', 'fought', 'fought', 'pelear', 'Irregular'),
+            ('freeze', 'froze', 'frozen', 'congelar', 'Irregular'),('steal', 'stole', 'stolen', 'robar', 'Irregular'),
+            ('tear', 'tore', 'torn', 'rasgar', 'Irregular'),('swear', 'swore', 'sworn', 'jurar', 'Irregular'),
+            ('bear', 'bore', 'born/borne', 'soportar/dar a luz', 'Irregular'),('beat', 'beat', 'beaten', 'golpear/vencer', 'Irregular'),
+            ('bend', 'bent', 'bent', 'doblar', 'Irregular'),('bind', 'bound', 'bound', 'atar', 'Irregular'),
+            ('bleed', 'bled', 'bled', 'sangrar', 'Irregular'),('breed', 'bred', 'bred', 'criar', 'Irregular'),
+            ('burst', 'burst', 'burst', 'estallar', 'Irregular'),('cast', 'cast', 'cast', 'lanzar/echar', 'Irregular'),
+            ('cling', 'clung', 'clung', 'aferrarse', 'Irregular'),('creep', 'crept', 'crept', 'arrastrarse', 'Irregular'),
+            ('deal', 'dealt', 'dealt', 'tratar/repartir', 'Irregular'),('dig', 'dug', 'dug', 'cavar', 'Irregular'),
+            ('feed', 'fed', 'fed', 'alimentar', 'Irregular'),('flee', 'fled', 'fled', 'huir', 'Irregular'),
+            ('forbid', 'forbade', 'forbidden', 'prohibir', 'Irregular'),('forgive', 'forgave', 'forgiven', 'perdonar', 'Irregular'),
+            ('grind', 'ground', 'ground', 'moler', 'Irregular'),('hang', 'hung', 'hung', 'colgar', 'Irregular'),
+            ('hurt', 'hurt', 'hurt', 'herir/doler', 'Irregular'),('kneel', 'knelt', 'knelt', 'arrodillarse', 'Irregular'),
+            ('lean', 'leant/leaned', 'leant/leaned', 'apoyarse', 'Irregular'),('leap', 'leapt/leaped', 'leapt/leaped', 'saltar', 'Irregular'),
+            ('lend', 'lent', 'lent', 'prestar', 'Irregular'),('light', 'lit', 'lit', 'encender', 'Irregular'),
+            ('quit', 'quit', 'quit', 'renunciar', 'Irregular'),('seek', 'sought', 'sought', 'buscar', 'Irregular'),
+            ('shine', 'shone', 'shone', 'brillar', 'Irregular'),('shoot', 'shot', 'shot', 'disparar', 'Irregular'),
+            ('shrink', 'shrank', 'shrunk', 'encoger', 'Irregular'),('shut', 'shut', 'shut', 'cerrar', 'Irregular'),
+            ('sink', 'sank', 'sunk', 'hundir', 'Irregular'),('slide', 'slid', 'slid', 'deslizar', 'Irregular'),
+            ('sling', 'slung', 'slung', 'lanzar', 'Irregular'),('slit', 'slit', 'slit', 'cortar/rajar', 'Irregular'),
+            ('sow', 'sowed', 'sown', 'sembrar', 'Irregular'),('spin', 'spun', 'spun', 'girar', 'Irregular'),
+            ('spit', 'spat', 'spat', 'escupir', 'Irregular'),('split', 'split', 'split', 'dividir', 'Irregular'),
+            ('spread', 'spread', 'spread', 'extender', 'Irregular'),('spring', 'sprang', 'sprung', 'saltar', 'Irregular'),
+            ('stick', 'stuck', 'stuck', 'pegar', 'Irregular'),('sting', 'stung', 'stung', 'picar', 'Irregular'),
+            ('stink', 'stank', 'stunk', 'apestar', 'Irregular'),('strike', 'struck', 'struck', 'golpear', 'Irregular'),
+            ('string', 'strung', 'strung', 'ensartar', 'Irregular'),('strive', 'strove', 'striven', 'esforzarse', 'Irregular'),
+            ('swear', 'swore', 'sworn', 'jurar', 'Irregular'),('sweep', 'swept', 'swept', 'barrer', 'Irregular'),
+            ('swell', 'swelled', 'swollen', 'hinchar', 'Irregular'),('swing', 'swung', 'swung', 'balancear', 'Irregular'),
+            ('weep', 'wept', 'wept', 'llorar', 'Irregular'),('wind', 'wound', 'wound', 'enrollar', 'Irregular'),
+            ('wring', 'wrung', 'wrung', 'retorcer', 'Irregular'),('can', 'could', '-', 'poder', 'Modal'),
+            ('may', 'might', '-', 'poder/permiso', 'Modal'),('must', 'must', '-', 'deber', 'Modal'),
+            ('shall', 'should', '-', 'deber', 'Modal'),('will', 'would', '-', 'futuro/condicional', 'Modal'),
+            ('accept', 'accepted', 'accepted', 'aceptar', 'Regular'),('add', 'added', 'added', 'agregar', 'Regular'),
+            ('allow', 'allowed', 'allowed', 'permitir', 'Regular'),('answer', 'answered', 'answered', 'responder', 'Regular'),
+            ('appear', 'appeared', 'appeared', 'aparecer', 'Regular'),('apply', 'applied', 'applied', 'aplicar', 'Regular'),
+            ('arrive', 'arrived', 'arrived', 'llegar', 'Regular'),('ask', 'asked', 'asked', 'preguntar', 'Regular'),
+            ('attend', 'attended', 'attended', 'asistir', 'Regular'),('avoid', 'avoided', 'avoided', 'evitar', 'Regular'),
+            ('bake', 'baked', 'baked', 'hornear', 'Regular'),('believe', 'believed', 'believed', 'creer', 'Regular'),
+            ('belong', 'belonged', 'belonged', 'pertenecer', 'Regular'),('boil', 'boiled', 'boiled', 'hervir', 'Regular'),
+            ('borrow', 'borrowed', 'borrowed', 'pedir prestado', 'Regular'),('brush', 'brushed', 'brushed', 'cepillar', 'Regular'),
+            ('call', 'called', 'called', 'llamar', 'Regular'),('cancel', 'cancelled', 'cancelled', 'cancelar', 'Regular'),
+            ('care', 'cared', 'cared', 'cuidar', 'Regular'),('celebrate', 'celebrated', 'celebrated', 'celebrar', 'Regular'),
+            ('change', 'changed', 'changed', 'cambiar', 'Regular'),('charge', 'charged', 'charged', 'cobrar', 'Regular'),
+            ('check', 'checked', 'checked', 'revisar', 'Regular'),('claim', 'claimed', 'claimed', 'reclamar', 'Regular'),
+            ('clean', 'cleaned', 'cleaned', 'limpiar', 'Regular'),('clear', 'cleared', 'cleared', 'despejar', 'Regular'),
+            ('climb', 'climbed', 'climbed', 'escalar', 'Regular'),('close', 'closed', 'closed', 'cerrar', 'Regular'),
+            ('collect', 'collected', 'collected', 'coleccionar', 'Regular'),('compare', 'compared', 'compared', 'comparar', 'Regular'),
+            ('complain', 'complained', 'complained', 'quejarse', 'Regular'),('complete', 'completed', 'completed', 'completar', 'Regular'),
+            ('confirm', 'confirmed', 'confirmed', 'confirmar', 'Regular'),('connect', 'connected', 'connected', 'conectar', 'Regular'),
+            ('consider', 'considered', 'considered', 'considerar', 'Regular'),('contain', 'contained', 'contained', 'contener', 'Regular'),
+            ('continue', 'continued', 'continued', 'continuar', 'Regular'),('control', 'controlled', 'controlled', 'controlar', 'Regular'),
+            ('cook', 'cooked', 'cooked', 'cocinar', 'Regular'),('copy', 'copied', 'copied', 'copiar', 'Regular'),
+            ('cost', 'costed', 'costed', 'costar', 'Regular'),('count', 'counted', 'counted', 'contar', 'Regular'),
+            ('cover', 'covered', 'covered', 'cubrir', 'Regular'),('create', 'created', 'created', 'crear', 'Regular'),
+            ('cross', 'crossed', 'crossed', 'cruzar', 'Regular'),('cry', 'cried', 'cried', 'llorar', 'Regular'),
+            ('damage', 'damaged', 'damaged', 'dañar', 'Regular'),('dance', 'danced', 'danced', 'bailar', 'Regular'),
+            ('decide', 'decided', 'decided', 'decidir', 'Regular'),('deliver', 'delivered', 'delivered', 'entregar', 'Regular'),
+            ('depend', 'depended', 'depended', 'depender', 'Regular'),('describe', 'described', 'described', 'describir', 'Regular'),
+            ('design', 'designed', 'designed', 'diseñar', 'Regular'),('destroy', 'destroyed', 'destroyed', 'destruir', 'Regular'),
+            ('develop', 'developed', 'developed', 'desarrollar', 'Regular'),('die', 'died', 'died', 'morir', 'Regular'),
+            ('discover', 'discovered', 'discovered', 'descubrir', 'Regular'),('discuss', 'discussed', 'discussed', 'discutir', 'Regular'),
+            ('divide', 'divided', 'divided', 'dividir', 'Regular'),('doubt', 'doubted', 'doubted', 'dudar', 'Regular'),
+            ('dress', 'dressed', 'dressed', 'vestir', 'Regular'),('drop', 'dropped', 'dropped', 'dejar caer', 'Regular'),
+            ('dry', 'dried', 'dried', 'secar', 'Regular'),('earn', 'earned', 'earned', 'ganar', 'Regular'),
+            ('employ', 'employed', 'employed', 'emplear', 'Regular'),('encourage', 'encouraged', 'encouraged', 'animar', 'Regular'),
+            ('end', 'ended', 'ended', 'terminar', 'Regular'),('enjoy', 'enjoyed', 'enjoyed', 'disfrutar', 'Regular'),
+            ('enter', 'entered', 'entered', 'entrar', 'Regular'),('escape', 'escaped', 'escaped', 'escapar', 'Regular'),
+            ('examine', 'examined', 'examined', 'examinar', 'Regular'),('exist', 'existed', 'existed', 'existir', 'Regular'),
+            ('expect', 'expected', 'expected', 'esperar', 'Regular'),('experience', 'experienced', 'experienced', 'experimentar', 'Regular'),
+            ('explain', 'explained', 'explained', 'explicar', 'Regular'),('express', 'expressed', 'expressed', 'expresar', 'Regular'),
+            ('face', 'faced', 'faced', 'enfrentar', 'Regular'),('fail', 'failed', 'failed', 'fallar', 'Regular'),
+            ('fear', 'feared', 'feared', 'temer', 'Regular'),('fill', 'filled', 'filled', 'llenar', 'Regular'),
+            ('finish', 'finished', 'finished', 'terminar', 'Regular'),('fix', 'fixed', 'fixed', 'arreglar', 'Regular'),
+            ('follow', 'followed', 'followed', 'seguir', 'Regular'),('force', 'forced', 'forced', 'forzar', 'Regular'),
+            ('form', 'formed', 'formed', 'formar', 'Regular'),('gain', 'gained', 'gained', 'ganar', 'Regular'),
+            ('guess', 'guessed', 'guessed', 'adivinar', 'Regular'),('happen', 'happened', 'happened', 'suceder', 'Regular'),
+            ('hate', 'hated', 'hated', 'odiar', 'Regular'),('help', 'helped', 'helped', 'ayudar', 'Regular'),
+            ('hope', 'hoped', 'hoped', 'esperar', 'Regular'),('identify', 'identified', 'identified', 'identificar', 'Regular'),
+            ('imagine', 'imagined', 'imagined', 'imaginar', 'Regular'),('improve', 'improved', 'improved', 'mejorar', 'Regular'),
+            ('include', 'included', 'included', 'incluir', 'Regular'),('increase', 'increased', 'increased', 'aumentar', 'Regular'),
+            ('inform', 'informed', 'informed', 'informar', 'Regular'),('intend', 'intended', 'intended', 'intentar', 'Regular'),
+            ('introduce', 'introduced', 'introduced', 'presentar', 'Regular'),('invite', 'invited', 'invited', 'invitar', 'Regular'),
+            ('involve', 'involved', 'involved', 'involucrar', 'Regular'),('join', 'joined', 'joined', 'unirse', 'Regular'),
+            ('judge', 'judged', 'judged', 'juzgar', 'Regular'),('jump', 'jumped', 'jumped', 'saltar', 'Regular'),
+            ('kick', 'kicked', 'kicked', 'patear', 'Regular'),('kill', 'killed', 'killed', 'matar', 'Regular'),
+            ('kiss', 'kissed', 'kissed', 'besar', 'Regular'),('knock', 'knocked', 'knocked', 'golpear', 'Regular'),
+            ('land', 'landed', 'landed', 'aterrizar', 'Regular'),('last', 'lasted', 'lasted', 'durar', 'Regular'),
+            ('laugh', 'laughed', 'laughed', 'reír', 'Regular'),('learn', 'learned', 'learned', 'aprender', 'Regular'),
+            ('like', 'liked', 'liked', 'gustar', 'Regular'),('limit', 'limited', 'limited', 'limitar', 'Regular'),
+            ('listen', 'listened', 'listened', 'escuchar', 'Regular'),('live', 'lived', 'lived', 'vivir', 'Regular'),
+            ('lock', 'locked', 'locked', 'cerrar con llave', 'Regular'),('look', 'looked', 'looked', 'mirar', 'Regular'),
+            ('love', 'loved', 'loved', 'amar', 'Regular'),('manage', 'managed', 'managed', 'manejar', 'Regular'),
+            ('mark', 'marked', 'marked', 'marcar', 'Regular'),('marry', 'married', 'married', 'casarse', 'Regular'),
+            ('matter', 'mattered', 'mattered', 'importar', 'Regular'),('measure', 'measured', 'measured', 'medir', 'Regular'),
+            ('mention', 'mentioned', 'mentioned', 'mencionar', 'Regular'),('miss', 'missed', 'missed', 'extrañar', 'Regular'),
+            ('mix', 'mixed', 'mixed', 'mezclar', 'Regular'),('move', 'moved', 'moved', 'mover', 'Regular'),
+            ('name', 'named', 'named', 'nombrar', 'Regular'),('need', 'needed', 'needed', 'necesitar', 'Regular'),
+            ('note', 'noted', 'noted', 'notar', 'Regular'),('notice', 'noticed', 'noticed', 'notar', 'Regular'),
+            ('obtain', 'obtained', 'obtained', 'obtener', 'Regular'),('occur', 'occurred', 'occurred', 'ocurrir', 'Regular'),
+            ('offer', 'offered', 'offered', 'ofrecer', 'Regular'),('open', 'opened', 'opened', 'abrir', 'Regular'),
+            ('operate', 'operated', 'operated', 'operar', 'Regular'),('order', 'ordered', 'ordered', 'ordenar', 'Regular'),
+            ('organize', 'organized', 'organized', 'organizar', 'Regular'),('own', 'owned', 'owned', 'poseer', 'Regular'),
+            ('pack', 'packed', 'packed', 'empacar', 'Regular'),('paint', 'painted', 'painted', 'pintar', 'Regular'),
+            ('park', 'parked', 'parked', 'estacionar', 'Regular'),('pass', 'passed', 'passed', 'pasar', 'Regular'),
+            ('perform', 'performed', 'performed', 'realizar', 'Regular'),('pick', 'picked', 'picked', 'recoger', 'Regular'),
+            ('place', 'placed', 'placed', 'colocar', 'Regular'),('plan', 'planned', 'planned', 'planear', 'Regular'),
+            ('plant', 'planted', 'planted', 'plantar', 'Regular'),('play', 'played', 'played', 'jugar', 'Regular'),
+            ('please', 'pleased', 'pleased', 'complacer', 'Regular'),('point', 'pointed', 'pointed', 'señalar', 'Regular'),
+            ('practice', 'practiced', 'practiced', 'practicar', 'Regular'),('pray', 'prayed', 'prayed', 'rezar', 'Regular'),
+            ('prefer', 'preferred', 'preferred', 'preferir', 'Regular'),('prepare', 'prepared', 'prepared', 'preparar', 'Regular'),
+            ('present', 'presented', 'presented', 'presentar', 'Regular'),('press', 'pressed', 'pressed', 'presionar', 'Regular'),
+            ('prevent', 'prevented', 'prevented', 'prevenir', 'Regular'),('print', 'printed', 'printed', 'imprimir', 'Regular'),
+            ('produce', 'produced', 'produced', 'producir', 'Regular'),('program', 'programmed', 'programmed', 'programar', 'Regular'),
+            ('promise', 'promised', 'promised', 'prometer', 'Regular'),('protect', 'protected', 'protected', 'proteger', 'Regular'),
+            ('prove', 'proved', 'proved', 'probar', 'Regular'),('provide', 'provided', 'provided', 'proveer', 'Regular'),
+            ('pull', 'pulled', 'pulled', 'jalar', 'Regular'),('push', 'pushed', 'pushed', 'empujar', 'Regular'),
+            ('raise', 'raised', 'raised', 'levantar', 'Regular'),('rain', 'rained', 'rained', 'llover', 'Regular'),
+            ('reach', 'reached', 'reached', 'alcanzar', 'Regular'),('realize', 'realized', 'realized', 'darse cuenta', 'Regular'),
+            ('receive', 'received', 'received', 'recibir', 'Regular'),('recognize', 'recognized', 'recognized', 'reconocer', 'Regular'),
+            ('record', 'recorded', 'recorded', 'grabar', 'Regular'),('reduce', 'reduced', 'reduced', 'reducir', 'Regular'),
+            ('refer', 'referred', 'referred', 'referir', 'Regular'),('reflect', 'reflected', 'reflected', 'reflejar', 'Regular'),
+            ('refuse', 'refused', 'refused', 'rechazar', 'Regular'),('regard', 'regarded', 'regarded', 'considerar', 'Regular'),
+            ('relate', 'related', 'related', 'relacionar', 'Regular'),('relax', 'relaxed', 'relaxed', 'relajar', 'Regular'),
+            ('remain', 'remained', 'remained', 'permanecer', 'Regular'),('remember', 'remembered', 'remembered', 'recordar', 'Regular'),
+            ('remove', 'removed', 'removed', 'remover', 'Regular'),('repair', 'repaired', 'repaired', 'reparar', 'Regular'),
+            ('repeat', 'repeated', 'repeated', 'repetir', 'Regular'),('replace', 'replaced', 'replaced', 'reemplazar', 'Regular'),
+            ('reply', 'replied', 'replied', 'responder', 'Regular'),('report', 'reported', 'reported', 'reportar', 'Regular'),
+            ('represent', 'represented', 'represented', 'representar', 'Regular'),('require', 'required', 'required', 'requerir', 'Regular'),
+            ('rest', 'rested', 'rested', 'descansar', 'Regular'),('result', 'resulted', 'resulted', 'resultar', 'Regular'),
+            ('return', 'returned', 'returned', 'regresar', 'Regular'),('reveal', 'revealed', 'revealed', 'revelar', 'Regular'),
+            ('roll', 'rolled', 'rolled', 'rodar', 'Regular'),('rule', 'ruled', 'ruled', 'gobernar', 'Regular'),
+            ('save', 'saved', 'saved', 'guardar', 'Regular'),('search', 'searched', 'searched', 'buscar', 'Regular'),
+            ('seem', 'seemed', 'seemed', 'parecer', 'Regular'),('select', 'selected', 'selected', 'seleccionar', 'Regular'),
+            ('serve', 'served', 'served', 'servir', 'Regular'),('settle', 'settled', 'settled', 'establecerse', 'Regular'),
+            ('share', 'shared', 'shared', 'compartir', 'Regular'),('shout', 'shouted', 'shouted', 'gritar', 'Regular'),
+            ('show', 'showed', 'showed', 'mostrar', 'Regular'),('sign', 'signed', 'signed', 'firmar', 'Regular'),
+            ('smile', 'smiled', 'smiled', 'sonreír', 'Regular'),('smoke', 'smoked', 'smoked', 'fumar', 'Regular'),
+            ('snow', 'snowed', 'snowed', 'nevar', 'Regular'),('sound', 'sounded', 'sounded', 'sonar', 'Regular'),
+            ('start', 'started', 'started', 'empezar', 'Regular'),('state', 'stated', 'stated', 'declarar', 'Regular'),
+            ('stay', 'stayed', 'stayed', 'quedarse', 'Regular'),('step', 'stepped', 'stepped', 'pisar', 'Regular'),
+            ('stop', 'stopped', 'stopped', 'parar', 'Regular'),('store', 'stored', 'stored', 'almacenar', 'Regular'),
+            ('study', 'studied', 'studied', 'estudiar', 'Regular'),('succeed', 'succeeded', 'succeeded', 'tener éxito', 'Regular'),
+            ('suffer', 'suffered', 'suffered', 'sufrir', 'Regular'),('suggest', 'suggested', 'suggested', 'sugerir', 'Regular'),
+            ('suit', 'suited', 'suited', 'convenir', 'Regular'),('supply', 'supplied', 'supplied', 'suministrar', 'Regular'),
+            ('support', 'supported', 'supported', 'apoyar', 'Regular'),('suppose', 'supposed', 'supposed', 'suponer', 'Regular'),
+            ('surprise', 'surprised', 'surprised', 'sorprender', 'Regular'),('talk', 'talked', 'talked', 'hablar', 'Regular'),
+            ('taste', 'tasted', 'tasted', 'probar', 'Regular'),('thank', 'thanked', 'thanked', 'agradecer', 'Regular'),
+            ('touch', 'touched', 'touched', 'tocar', 'Regular'),('train', 'trained', 'trained', 'entrenar', 'Regular'),
+            ('travel', 'travelled', 'travelled', 'viajar', 'Regular'),('treat', 'treated', 'treated', 'tratar', 'Regular'),
+            ('trust', 'trusted', 'trusted', 'confiar', 'Regular'),('try', 'tried', 'tried', 'intentar', 'Regular'),
+            ('turn', 'turned', 'turned', 'girar', 'Regular'),('type', 'typed', 'typed', 'escribir a máquina', 'Regular'),
+            ('use', 'used', 'used', 'usar', 'Regular'),('visit', 'visited', 'visited', 'visitar', 'Regular'),
+            ('vote', 'voted', 'voted', 'votar', 'Regular'),('wait', 'waited', 'waited', 'esperar', 'Regular'),
+            ('walk', 'walked', 'walked', 'caminar', 'Regular'),('want', 'wanted', 'wanted', 'querer', 'Regular'),
+            ('warn', 'warned', 'warned', 'advertir', 'Regular'),('wash', 'washed', 'washed', 'lavar', 'Regular'),
+            ('waste', 'wasted', 'wasted', 'desperdiciar', 'Regular'),('watch', 'watched', 'watched', 'ver', 'Regular'),
+            ('welcome', 'welcomed', 'welcomed', 'dar la bienvenida', 'Regular'),('wish', 'wished', 'wished', 'desear', 'Regular'),
+            ('wonder', 'wondered', 'wondered', 'preguntarse', 'Regular'),('work', 'worked', 'worked', 'trabajar', 'Regular'),
+            ('worry', 'worried', 'worried', 'preocuparse', 'Regular'),('yell', 'yelled', 'yelled', 'gritar', 'Regular')
         ]
         self.mostrar_todos_verbos()
     
     def mostrar_todos_verbos(self):
         for item in self.tree_verbos.get_children():
             self.tree_verbos.delete(item)
-        for infinitivo, pasado, participio, espanol in self.verbos_irregulares:
-            self.tree_verbos.insert('', 'end', values=(infinitivo, pasado, participio, espanol))
+        for infinitivo, pasado, participio, espanol, tipo in self.todos_verbos:
+            self.tree_verbos.insert('', 'end', values=(infinitivo, pasado, participio, espanol, tipo))
     
     def _on_search_verbos_keyrelease(self, event):
         if self._search_verbos_timer:
@@ -1520,10 +1708,19 @@ class DiccionarioApp:
         if not busqueda:
             self.mostrar_todos_verbos()
             return
-        for infinitivo, pasado, participio, espanol in self.verbos_irregulares:
+        for infinitivo, pasado, participio, espanol, tipo in self.todos_verbos:
             if (busqueda in infinitivo.lower() or busqueda in pasado.lower() or 
-                busqueda in participio.lower() or busqueda in espanol.lower()):
-                self.tree_verbos.insert('', 'end', values=(infinitivo, pasado, participio, espanol))
+                busqueda in participio.lower() or busqueda in espanol.lower() or busqueda in tipo.lower()):
+                self.tree_verbos.insert('', 'end', values=(infinitivo, pasado, participio, espanol, tipo))
+    
+    def pronunciar_verbo_seleccionado(self):
+        seleccion = self.tree_verbos.selection()
+        if not seleccion:
+            messagebox.showwarning("Advertencia", "Selecciona un verbo")
+            return
+        item = self.tree_verbos.item(seleccion[0])
+        palabra = item['values'][0]
+        self.pronunciar_palabra(palabra)
     
     def crear_pestaña_conjugacion(self):
         frame = ttk.Frame(self.notebook)
@@ -1707,8 +1904,7 @@ class DiccionarioApp:
         ttk.Button(btn_frame, text="◀ Anterior", command=self.palabra_anterior_caligrafia).pack(side='left', padx=5)
         ttk.Button(btn_frame, text="🔄 Actualizar", command=self.cargar_palabras_caligrafia).pack(side='left', padx=5)
         ttk.Button(btn_frame, text="Siguiente ▶", command=self.palabra_siguiente_caligrafia).pack(side='left', padx=5)
-        if TTS_DISPONIBLE:
-            ttk.Button(btn_frame, text="🔊 Pronunciar", command=self.pronunciar_palabra_caligrafia).pack(side='left', padx=5)
+        ttk.Button(btn_frame, text="🔊 Pronunciar", command=self.pronunciar_palabra_caligrafia).pack(side='left', padx=5)
         
         self.cargar_palabras_caligrafia()
     
@@ -2020,7 +2216,7 @@ class DiccionarioApp:
             ("🔢 Números", "Conversor de números a texto en inglés + reglas importantes sobre ordinales, decimales y fracciones."),
             ("📝 Gramática", "Pronombres personales, posesivos y reflexivos. Verbos auxiliares, artículos, demostrativos y cuantificadores."),
             ("🔗 Contracciones", "93 contracciones en inglés: formales (I'm, you're) e informales (gonna, wanna). Con palabras originales y traducción."),
-            ("📘 Verbos", "100 verbos irregulares más comunes con infinitivo, pasado, participio y traducción al español."),
+            ("📘 Verbos", "368 verbos en inglés (124 irregulares + 239 regulares + 5 modales) con infinitivo, pasado, participio y tipo."),
             ("⏰ Conjugación", "6 tiempos verbales (Present, Past, Perfect, Future, Continuous) + Modal Verbs con ejemplos."),
             ("📊 Estadísticas", "Métricas de tu vocabulario: total de palabras, pronunciaciones, notas y backups. Exporta/Importa CSV desde aquí."),
             ("💾 Respaldos", "Backup automático cada 5 minutos. Tus datos están en " + str(APP_DIR) + ". Copia esta carpeta para hacer respaldo manual.")
@@ -2069,24 +2265,24 @@ class DiccionarioApp:
         tk.Label(about_frame, text="ℹ️ Acerca de English Memory", font=(FONT_FAMILY, 16, 'bold'), 
                 bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=(10,10))
         
-        tk.Label(about_frame, text="Versión: 1.3.1", font=(FONT_FAMILY, 11), 
+        tk.Label(about_frame, text="Versión: 1.3.2", font=(FONT_FAMILY, 11), 
                 bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
         tk.Label(about_frame, text="Desarrollado por: Agilize Soluciones", font=(FONT_FAMILY, 11), 
                 bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
         tk.Label(about_frame, text="Aplicación educativa para aprendizaje de inglés", font=(FONT_FAMILY, 10), 
                 bg=COLOR_BUTTON, fg=COLOR_FG).pack(pady=2)
         
-        # Nuevas características v1.3.1
-        tk.Label(about_frame, text="\n✨ Novedades v1.3.1:", font=(FONT_FAMILY, 11, 'bold'), 
+        # Nuevas características v1.3.2
+        tk.Label(about_frame, text="\n✨ Novedades v1.3.2:", font=(FONT_FAMILY, 11, 'bold'), 
                 bg=COLOR_BUTTON, fg=COLOR_ACCENT).pack(pady=(10,5))
         
         novedades = [
+            "• 368 verbos totales (124 irregulares + 239 regulares + 5 modales)",
+            "• Verbo modal CAN y otros modales agregados",
+            "• Más de 200 verbos regulares nuevos",
+            "• 68 verbos irregulares adicionales",
             "• Backup automático cada 5 minutos",
-            "• Pronunciación TTS (si está disponible)",
-            "• Botón para cambiar tema claro/oscuro",
-            "• 100 verbos irregulares",
-            "• Conjugación de verbos por tiempo",
-            "• 93 contracciones en inglés"
+            "• Pronunciación TTS integrada"
         ]
         
         for novedad in novedades:

@@ -1,5 +1,5 @@
 """
-Crea un paquete portable de English Memory v1.3 para instalar en otras PCs
+Crea un paquete portable de English Memory v1.3.2 para instalar en otras PCs
 """
 import os
 import shutil
@@ -25,7 +25,7 @@ def crear_instalador():
     install_script = instalador_dir / "INSTALAR.bat"
     install_script.write_text('''@echo off
 echo ========================================
-echo   English Memory v1.0 - Instalador
+echo   English Memory v1.3.2 - Instalador
 echo ========================================
 echo.
 
@@ -101,7 +101,7 @@ pause
     # Crear README
     readme = instalador_dir / "LEEME.txt"
     readme.write_text('''╔════════════════════════════════════════════════════════════╗
-║          ENGLISH MEMORY v1.0 - INSTALADOR PORTABLE         ║
+║          ENGLISH MEMORY v1.3.2 - INSTALADOR PORTABLE         ║
 ╚════════════════════════════════════════════════════════════╝
 
 CONTENIDO:

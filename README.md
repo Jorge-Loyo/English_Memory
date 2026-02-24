@@ -1,13 +1,13 @@
-# 📚 English Memory v1.3.1
+# 📚 English Memory v1.3.2
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/tu-usuario/english-memory)
-[![Version](https://img.shields.io/badge/version-1.3.1-green.svg)](https://github.com/tu-usuario/english-memory/releases)
+[![Version](https://img.shields.io/badge/version-1.3.2-green.svg)](https://github.com/tu-usuario/english-memory/releases)
 
 Aplicación educativa multiplataforma para aprender y organizar vocabulario en inglés.
 
-![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.3.1)
+![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.3.2)
 
 ## 🌟 Características Destacadas
 
@@ -15,7 +15,7 @@ Aplicación educativa multiplataforma para aprender y organizar vocabulario en i
 - 📚 **Gestión Completa** - Agrega, edita y organiza tu vocabulario
 - 🔊 **Pronunciación TTS** - Text-to-speech integrado para escuchar palabras
 - ✍️ **Práctica de Caligrafía** - Método de repetición espaciada con palabras erróneas
-- 📘 **100 Verbos Irregulares** - Lista completa con conjugaciones
+- 📘 **368 Verbos** - 124 irregulares + 239 regulares + 5 modales con conjugaciones
 - ⏰ **Conjugación de Verbos** - 6 tiempos verbales con ejemplos
 - 🌓 **Tema Claro/Oscuro** - Cambia entre temas según tu preferencia
 - 💾 **Backup Automático** - Respaldo cada 5 minutos
@@ -41,7 +41,7 @@ Aplicación educativa multiplataforma para aprender y organizar vocabulario en i
 - 🔢 **Números**: Conversor + reglas importantes
 - 📝 **Gramática**: Pronombres, verbos auxiliares, artículos, demostrativos, cuantificadores
 - 🔗 **Contracciones**: 93 contracciones formales e informales
-- 📘 **Verbos**: 100 verbos irregulares comunes
+- 📘 **Verbos**: 368 verbos (124 irregulares + 239 regulares + 5 modales)
 - ⏰ **Conjugación**: 6 tiempos verbales (Present, Past, Perfect, Future, Modals)
 - 📊 **Estadísticas**: Métricas de tu vocabulario y backups
 - 📤 **Exportar/Importar CSV**: Desde la pestaña de Estadísticas
@@ -215,6 +215,12 @@ La aplicación usa:
 
 ## 🔄 Actualizaciones
 
+**Versión 1.3.2** (2025)
+- 📘 368 verbos totales (124 irregulares + 239 regulares + 5 modales)
+- ✅ Verbo modal CAN y otros modales agregados
+- ➕ Más de 200 verbos regulares nuevos
+- 🔤 68 verbos irregulares adicionales
+
 **Versión 1.3.1** (2024)
 - 🔗 93 contracciones en inglés (formales e informales)
 - 🔍 Búsqueda en tiempo real de contracciones
@@ -277,7 +283,7 @@ MIT License - Copyright (c) 2024 Agilize Soluciones
 
 ## 📊 Estado del Proyecto
 
-✅ **Versión Estable:** 1.3.1  
+✅ **Versión Estable:** 1.3.2  
 🚧 **En Desarrollo:** Nuevas funcionalidades planeadas  
 🐛 **Bugs Conocidos:** Ninguno reportado  
 
@@ -285,7 +291,7 @@ MIT License - Copyright (c) 2024 Agilize Soluciones
 
 <div align="center">
 
-**English Memory v1.3.1** - Aprende inglés de manera efectiva 🚀
+**English Memory v1.3.2** - Aprende inglés de manera efectiva 🚀
 
 Hecho con ❤️ por [Agilize Soluciones](https://agilizesoluciones.com)
 

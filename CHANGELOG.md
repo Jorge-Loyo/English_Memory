@@ -5,6 +5,19 @@ Todos los cambios notables en este proyecto serán documentados aquí.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.3.2] - 2025-01-27
+
+### ✨ Agregado
+- 368 verbos totales (124 irregulares + 239 regulares + 5 modales)
+- Verbo modal CAN y otros modales (may, must, shall, will)
+- Más de 200 verbos regulares nuevos
+- 68 verbos irregulares adicionales
+
+### 🔧 Mejorado
+- Lista de verbos ampliada significativamente
+- Mejor cobertura de verbos comunes en inglés
+- Documentación actualizada con nuevos totales
+
 ## [1.3.1] - 2024-01-24
 
 ### ✨ Agregado
