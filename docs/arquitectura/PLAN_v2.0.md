@@ -600,7 +600,7 @@ services:
 |------|----------|-------------------|--------|
 | **v1.4.0** | ✅ | Sistema híbrido JSON+SQLite, estadísticas avanzadas | ✅ COMPLETADO |
 | **Fase 1A** | ✅ | Expandir BD: categorías, backups, configuración | ✅ COMPLETADO |
-| **Fase 2** | ✅ | MainWindow + VocabularioView modulares | ✅ COMPLETADO |
+| **Fase 2** | ✅ | MainWindow + Views modulares + Tooltips | ✅ COMPLETADO |
 | **Fase 3** | ✅ | Sistema de plugins (BasePlugin, PluginManager) | ✅ COMPLETADO |
 | **Fase 4** | 2 semanas | API REST, sincronización | 🔜 SIGUIENTE |
 | **Fase 5** | 1-2 semanas | Tests automatizados, CI/CD | ⏳ Pendiente |
@@ -704,9 +704,12 @@ services:
 
 ### ✅ Fase 2: Refactorización MVC (COMPLETADO)
 1. ✅ Controllers: VocabularioController, PracticaController
-2. ✅ Views modulares: MainWindow, VocabularioView
-3. ✅ Utils: AppConfig, TTSHelper
+2. ✅ Views modulares: MainWindow, VocabularioView, PracticaView, CaligrafiaView, etc.
+3. ✅ Utils: AppConfig, TTSHelper, AppStyles
 4. ✅ Data: Datos estáticos extraídos
+5. ✅ Tooltips estilizados en tabs (fondo gris, texto blanco)
+6. ✅ Scroll con rueda del mouse en todas las vistas
+7. ✅ Tabla de pronombres mejorada con formato de columnas
 
 ### ✅ Fase 3: Sistema de Plugins (COMPLETADO)
 1. ✅ BasePlugin: Clase abstracta
