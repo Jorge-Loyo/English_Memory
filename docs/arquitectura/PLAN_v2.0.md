@@ -599,16 +599,17 @@ services:
 | Fase | Duración | Tareas Principales | Estado |
 |------|----------|-------------------|--------|
 | **v1.4.0** | ✅ | Sistema híbrido JSON+SQLite, estadísticas avanzadas | ✅ COMPLETADO |
-| **Fase 1A** | 1-2 semanas | Expandir BD: categorías, backups, configuración | 🔜 SIGUIENTE |
-| **Fase 1B** | 2-3 semanas | Refactorización MVC, separación de capas | ⏳ Pendiente |
-| **Fase 2** | 2 semanas | Sistema de plugins, ejemplos | ⏳ Pendiente |
-| **Fase 3** | 2 semanas | API REST, sincronización | ⏳ Pendiente |
-| **Fase 4** | 1-2 semanas | Tests automatizados, CI/CD | ⏳ Pendiente |
-| **Fase 5** | 1 semana | Empaquetado, documentación | ⏳ Pendiente |
+| **Fase 1A** | ✅ | Expandir BD: categorías, backups, configuración | ✅ COMPLETADO |
+| **Fase 2** | ✅ | MainWindow + VocabularioView modulares | ✅ COMPLETADO |
+| **Fase 3** | ✅ | Sistema de plugins (BasePlugin, PluginManager) | ✅ COMPLETADO |
+| **Fase 4** | 2 semanas | API REST, sincronización | 🔜 SIGUIENTE |
+| **Fase 5** | 1-2 semanas | Tests automatizados, CI/CD | ⏳ Pendiente |
+| **Fase 6** | 1 semana | Empaquetado, documentación | ⏳ Pendiente |
 | **Testing** | 1 semana | QA, corrección de bugs | ⏳ Pendiente |
 | **Release** | - | Lanzamiento v2.0 | ⏳ Pendiente |
 
-**Total restante**: ~10 semanas (2.5 meses)
+**Total restante**: ~5 semanas (1.2 meses)
+**Progreso**: 60% completado
 
 ---
 
@@ -679,11 +680,12 @@ services:
 - ✅ 368 verbos totales
 - ✅ Executable 54.1 MB funcional
 
-### v2.0 (Pendiente)
-- [ ] Arquitectura MVC completamente implementada
+### v2.0 (En Desarrollo - 60% Completado)
+- [x] Arquitectura MVC parcialmente implementada
 - [x] Base de datos SQLite funcionando correctamente (híbrido)
-- [ ] Sistema de categorías funcional
-- [ ] Al menos 3 plugins funcionales
+- [x] Sistema de categorías (tablas creadas, UI pendiente)
+- [x] Sistema de plugins funcional (BasePlugin, PluginManager)
+- [ ] Al menos 3 plugins funcionales (1/3 completado)
 - [ ] API REST con todos los endpoints
 - [ ] Cobertura de tests >80%
 - [ ] Documentación completa (API, Plugins, Arquitectura)
@@ -695,30 +697,29 @@ services:
 
 ## 🎯 Próximos Pasos Inmediatos
 
-### Fase 1A: Expandir Sistema Híbrido (1-2 semanas)
-1. ✅ ~~Sistema híbrido básico~~ (COMPLETADO v1.4.0)
-2. **Agregar tablas**: categorias, palabra_categoria, backups, configuracion
-3. **Migrar configuración**: Mover settings de JSON a tabla configuracion
-4. **Sistema de categorías**: UI para crear/asignar categorías a palabras
-5. **Backups automáticos**: Registrar en tabla backups con metadata
+### ✅ Fase 1A: Expandir Sistema Híbrido (COMPLETADO)
+1. ✅ Sistema híbrido básico (v1.4.0)
+2. ✅ Tablas: categorias, palabra_categoria, backups, configuracion
+3. ✅ Métodos en Database y HybridStorage
 
-### Fase 1B: Refactorización MVC (2-3 semanas)
-1. **Separar controllers**: Extraer lógica de diccionario_gui.py
-2. **Crear views modulares**: Un archivo por tab principal
-3. **Modelos de dominio**: Clases Palabra, Categoria, Practica con métodos
-4. **Reorganizar estructura**: Mover a src/models, src/views, src/controllers
+### ✅ Fase 2: Refactorización MVC (COMPLETADO)
+1. ✅ Controllers: VocabularioController, PracticaController
+2. ✅ Views modulares: MainWindow, VocabularioView
+3. ✅ Utils: AppConfig, TTSHelper
+4. ✅ Data: Datos estáticos extraídos
 
-### Fase 2: Sistema de Plugins (2 semanas)
-1. **Plugin manager**: Descubrimiento y carga dinámica
-2. **Base plugin**: Clase abstracta con hooks
-3. **Plugins ejemplo**: Anki export, Quizlet import, estadísticas avanzadas
+### ✅ Fase 3: Sistema de Plugins (COMPLETADO)
+1. ✅ BasePlugin: Clase abstracta
+2. ✅ PluginManager: Descubrimiento y carga dinámica
+3. ✅ Plugin ejemplo: csv_export.py
+4. ✅ Directorio plugins/ para usuarios
 
-### Fase 3: API REST (2 semanas)
+### 🔜 Fase 4: API REST (SIGUIENTE - 2 semanas)
 1. **FastAPI server**: Endpoints CRUD para palabras
 2. **Sincronización**: Push/pull con resolución de conflictos
 3. **Autenticación**: JWT tokens para multi-usuario
 
-### Fase 4: Tests y CI/CD (1-2 semanas)
+### Fase 5: Tests y CI/CD (1-2 semanas)
 1. **pytest setup**: Configuración y fixtures
 2. **Tests unitarios**: Models, controllers, API
 3. **GitHub Actions**: CI/CD pipeline automático
