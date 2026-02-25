@@ -24,15 +24,22 @@ class GenericTableView(ttk.Frame):
         self.entry_buscar.pack(side='left', padx=5, ipady=5)
         self.entry_buscar.bind('<KeyRelease>', lambda e: self.buscar())
         
+        ttk.Button(frame_buscar, text="🔍 Buscar", command=self.buscar).pack(side='left', padx=5)
+        ttk.Button(frame_buscar, text="🧹 Limpiar", command=self.limpiar).pack(side='left', padx=5)
+        
         if self.tts:
             ttk.Button(frame_buscar, text="🔊 Pronunciar", command=self.pronunciar).pack(side='left', padx=5)
         
         # Tabla
         self.tree = ttk.Treeview(self, columns=self.columns, show='headings', height=20)
         
+        col_widths = {'Infinitivo': 150, 'Español': 180, 'Pasado': 150, 'Español Pasado': 150, 
+                      'Participio': 150, 'Español Participio': 150, 'Tipo': 100}
+        
         for col in self.columns:
             self.tree.heading(col, text=col)
-            self.tree.column(col, width=300)
+            width = col_widths.get(col, 200)
+            self.tree.column(col, width=width, minwidth=80)
         
         scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
@@ -60,6 +67,10 @@ class GenericTableView(ttk.Frame):
         for row in self.data:
             if any(query in str(val).lower() for val in row):
                 self.tree.insert('', 'end', values=row)
+    
+    def limpiar(self):
+        self.entry_buscar.delete(0, 'end')
+        self.cargar_datos()
     
     def pronunciar(self):
         if not self.tts or not self.tts.esta_disponible():

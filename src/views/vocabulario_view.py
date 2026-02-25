@@ -75,7 +75,7 @@ class VocabularioView(ttk.Frame):
             self.tree.delete(item)
         
         palabras = self.vocab_controller.obtener_todas()
-        for palabra in sorted(palabras.keys(), key=str.lower):
+        for palabra in sorted(palabras.keys(), key=lambda x: str(x).lower()):
             datos = palabras[palabra]
             self.tree.insert('', 'end', values=(
                 palabra,
@@ -161,9 +161,57 @@ class VocabularioView(ttk.Frame):
         
         item = self.tree.item(seleccion[0])
         palabra_actual = item['values'][0]
+        datos_actuales = self.vocab_controller.obtener_todas().get(palabra_actual, {})
         
-        # Similar a agregar_palabra pero con valores pre-llenados
-        messagebox.showinfo("Info", "Función editar en desarrollo")
+        ventana = tk.Toplevel(self)
+        ventana.title("✏️ Editar Palabra")
+        ventana.geometry("550x520")
+        ventana.configure(bg=AppConfig.COLOR_BG)
+        ventana.grab_set()
+        
+        container = tk.Frame(ventana, bg=AppConfig.COLOR_BG)
+        container.pack(expand=True, fill='both', padx=40, pady=30)
+        
+        ttk.Label(container, text="🇬🇧 Palabra en inglés").pack(pady=(0,5))
+        entry_palabra = ttk.Entry(container, width=45, font=(AppConfig.FONT_FAMILY, 11))
+        entry_palabra.insert(0, palabra_actual)
+        entry_palabra.pack(pady=(0,15), ipady=8)
+        entry_palabra.focus()
+        
+        ttk.Label(container, text="🇪🇸 Significado en español").pack(pady=(0,5))
+        entry_significado = ttk.Entry(container, width=45, font=(AppConfig.FONT_FAMILY, 11))
+        entry_significado.insert(0, datos_actuales.get('significado', ''))
+        entry_significado.pack(pady=(0,15), ipady=8)
+        
+        ttk.Label(container, text="🔊 Pronunciación (opcional)").pack(pady=(0,5))
+        entry_pronunciacion = ttk.Entry(container, width=45, font=(AppConfig.FONT_FAMILY, 11))
+        entry_pronunciacion.insert(0, datos_actuales.get('pronunciacion', ''))
+        entry_pronunciacion.pack(pady=(0,15), ipady=8)
+        
+        ttk.Label(container, text="📝 Notas (opcional)").pack(pady=(0,5))
+        entry_notas = ttk.Entry(container, width=45, font=(AppConfig.FONT_FAMILY, 11))
+        entry_notas.insert(0, datos_actuales.get('notas', ''))
+        entry_notas.pack(pady=(0,25), ipady=8)
+        
+        def guardar():
+            try:
+                self.vocab_controller.editar_palabra(
+                    palabra_actual,
+                    entry_palabra.get().strip(),
+                    entry_significado.get().strip(),
+                    entry_pronunciacion.get().strip() or None,
+                    entry_notas.get().strip() or None
+                )
+                messagebox.showinfo("Éxito", "Palabra actualizada")
+                ventana.destroy()
+                self.mostrar_todas()
+            except ValueError as e:
+                messagebox.showwarning("Advertencia", str(e))
+        
+        btn_frame = tk.Frame(container, bg=AppConfig.COLOR_BG)
+        btn_frame.pack(pady=10)
+        ttk.Button(btn_frame, text="💾 Guardar", command=guardar).pack(side='left', padx=5)
+        ttk.Button(btn_frame, text="❌ Cancelar", command=ventana.destroy).pack(side='left', padx=5)
     
     def eliminar_palabra(self):
         """Eliminar palabra seleccionada"""
@@ -173,11 +221,14 @@ class VocabularioView(ttk.Frame):
             return
         
         item = self.tree.item(seleccion[0])
-        palabra = item['values'][0]
+        palabra = str(item['values'][0])  # Convertir a string explícitamente
         
         if messagebox.askyesno("Confirmar", f"¿Eliminar '{palabra}'?"):
-            self.vocab_controller.eliminar_palabra(palabra)
-            self.mostrar_todas()
+            resultado = self.vocab_controller.eliminar_palabra(palabra)
+            if resultado:
+                self.mostrar_todas()
+            else:
+                messagebox.showerror("Error", f"No se pudo eliminar '{palabra}'")
     
     def pronunciar_seleccionada(self):
         """Pronunciar palabra seleccionada"""

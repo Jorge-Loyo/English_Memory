@@ -22,11 +22,11 @@ class VocabularioController:
         if notas and len(notas) > 1000:
             raise ValueError("Las notas no pueden exceder 1000 caracteres")
         
-        # Verificar duplicados
+        # Verificar duplicados (sin convertir a minúsculas)
         if self.storage.existe_palabra(ingles):
             raise ValueError(f"La palabra '{ingles}' ya existe")
         
-        # Agregar palabra
+        # Agregar palabra (sin convertir a minúsculas)
         return self.storage.agregar_palabra(ingles, espanol, pronunciacion, notas)
     
     def editar_palabra(self, palabra_actual, nueva_palabra, nuevo_significado, nueva_pronunciacion=None, nuevas_notas=None):

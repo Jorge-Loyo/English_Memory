@@ -67,7 +67,8 @@ class HybridStorage:
         """Eliminar palabra del vocabulario"""
         if palabra in self.vocabulario:
             del self.vocabulario[palabra]
-            return self._save_json()
+            self._save_json()
+            return True
         return False
     
     def obtener_palabra(self, palabra):
@@ -77,6 +78,10 @@ class HybridStorage:
     def obtener_todas_palabras(self):
         """Obtener todo el vocabulario"""
         return self.vocabulario
+    
+    def existe_palabra(self, palabra):
+        """Verificar si una palabra existe"""
+        return palabra in self.vocabulario
     
     def buscar_palabras(self, query):
         """Buscar palabras por texto"""

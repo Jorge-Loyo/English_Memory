@@ -7,6 +7,9 @@ from .caligrafia_view import CaligrafiaView
 from .numeros_view import NumerosView
 from .gramatica_view import GramaticaView, ConjugacionView
 from .estadisticas_view import EstadisticasView
+from .traductor_view import TraductorView
+from .diccionario_api_view import DiccionarioAPIView
 
 __all__ = ['MainWindow', 'VocabularioView', 'PracticaView', 'GenericTableView', 
-           'CaligrafiaView', 'NumerosView', 'GramaticaView', 'ConjugacionView', 'EstadisticasView']
+           'CaligrafiaView', 'NumerosView', 'GramaticaView', 'ConjugacionView', 'EstadisticasView',
+           'TraductorView', 'DiccionarioAPIView']

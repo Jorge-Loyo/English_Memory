@@ -4,7 +4,8 @@ from src.models import HybridStorage
 from src.controllers import VocabularioController, PracticaController
 from src.utils import AppConfig, TTSHelper, AppStyles
 from src.views import (MainWindow, VocabularioView, PracticaView, GenericTableView,
-                       CaligrafiaView, NumerosView, GramaticaView, ConjugacionView, EstadisticasView)
+                       CaligrafiaView, NumerosView, GramaticaView, ConjugacionView, EstadisticasView,
+                       TraductorView, DiccionarioAPIView)
 from src.data import PREPOSICIONES, DIAS_MESES, CONTRACCIONES, TODOS_VERBOS, VERBOS_FRASALES
 
 def main():
@@ -55,9 +56,9 @@ def main():
     main_window.agregar_tab(contr_view, "🔗", "Contracciones")
     
     # Tab 9: Verbos
-    verbos_data = [(v[0], v[1], v[2], v[3]) for v in TODOS_VERBOS]
+    verbos_data = [(v[0], v[1], v[2], v[3], v[4], v[5], v[6]) for v in TODOS_VERBOS]
     verbos_view = GenericTableView(main_window.notebook, "Verbos", 
-                                    ('Infinitivo', 'Pasado', 'Participio', 'Español'), verbos_data)
+                                    ('Infinitivo', 'Español', 'Pasado', 'Español Pasado', 'Participio', 'Español Participio', 'Tipo'), verbos_data)
     main_window.agregar_tab(verbos_view, "📘", "Verbos")
     
     # Tab 10: Verbos Frasales
@@ -69,21 +70,25 @@ def main():
     conjugacion_view = ConjugacionView(main_window.notebook)
     main_window.agregar_tab(conjugacion_view, "⏰", "Conjugación")
     
-    # Tab 11: Conjugación
-    conjugacion_view = ConjugacionView(main_window.notebook)
-    main_window.agregar_tab(conjugacion_view, "⏰", "Conjugación")
+    # Tab 12: Traductor
+    traductor_view = TraductorView(main_window.notebook, tts)
+    main_window.agregar_tab(traductor_view, "🌐", "Traductor")
     
-    # Tab 12: Estadísticas
+    # Tab 13: Diccionario
+    diccionario_view = DiccionarioAPIView(main_window.notebook, tts)
+    main_window.agregar_tab(diccionario_view, "📖", "Diccionario API")
+    
+    # Tab 14: Estadísticas
     stats_view = EstadisticasView(main_window.notebook, vocab_controller, storage)
     main_window.agregar_tab(stats_view, "📊", "Estadísticas")
     
-    # Tab 13: Estadísticas Avanzadas (placeholder)
+    # Tab 15: Estadísticas Avanzadas (placeholder)
     stats_adv_frame = tk.Frame(main_window.notebook, bg=AppConfig.COLOR_BG)
     tk.Label(stats_adv_frame, text="📈 Estadísticas Avanzadas\n\nGráficos en desarrollo", 
              font=(AppConfig.FONT_FAMILY, 16), bg=AppConfig.COLOR_BG, fg=AppConfig.COLOR_FG).pack(expand=True)
     main_window.agregar_tab(stats_adv_frame, "📈", "Estadísticas Avanzadas")
     
-    # Tab 14: Ayuda
+    # Tab 16: Ayuda
     ayuda_frame = tk.Frame(main_window.notebook, bg=AppConfig.COLOR_BG)
     ayuda_container = tk.Frame(ayuda_frame, bg=AppConfig.COLOR_BG)
     ayuda_container.pack(expand=True)
