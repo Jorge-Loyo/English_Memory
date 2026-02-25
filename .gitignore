@@ -25,10 +25,25 @@ wheels/
 
 # PyInstaller
 *.manifest
-*.spec
 
 # Datos locales
 palabras.json
+statistics.db
+*.db
+*.backup_*
+
+# Documentos internos (no subir a git)
+docs/ESTADO_ACTUAL.md
+docs/PLAN_MEJORAS_PRIORIZADAS.md
+docs/REPORTE_REVISION_MODULAR.md
+docs/MEJORAS_IMPLEMENTADAS_v1.5.0.md
+docs/PROPUESTA_ESTADISTICAS_AVANZADAS.md
+
+# Archivos obsoletos
+diccionario.py
+diccionario_gui.py
+main.py
+verbos_conjugacion.py
 
 # IDEs
 .vscode/

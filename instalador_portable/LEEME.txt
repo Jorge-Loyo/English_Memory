@@ -1,10 +1,10 @@
 ╔════════════════════════════════════════════════════════════╗
-║          ENGLISH MEMORY v1.3.2 - INSTALADOR PORTABLE         ║
+║          ENGLISH MEMORY v1.4.0 - INSTALADOR PORTABLE      ║
 ╚════════════════════════════════════════════════════════════╝
 
 CONTENIDO:
 ----------
-• English Memory.exe  - Aplicación principal
+• EnglishMemory.exe   - Aplicación principal
 • INSTALAR.bat        - Instalador automático
 • DESINSTALAR.bat     - Desinstalador
 • LEEME.txt           - Este archivo
@@ -22,13 +22,14 @@ REQUISITOS:
 -----------
 • Windows 7 o superior
 • No requiere Python ni dependencias adicionales
-• Aproximadamente 15 MB de espacio en disco
+• Aproximadamente 50 MB de espacio en disco
 
 
 UBICACIONES:
 ------------
 • Programa: %LOCALAPPDATA%\EnglishMemory
-• Datos: %LOCALAPPDATA%\DiccionarioPersonal
+• Datos: %LOCALAPPDATA%\EnglishMemory
+• Backups: %LOCALAPPDATA%\EnglishMemory\palabras.json.backup_*
 
 
 DESINSTALACIÓN:
@@ -38,12 +39,22 @@ Ejecuta "DESINSTALAR.bat" o elimina manualmente:
 • Accesos directos del Escritorio y Menú Inicio
 
 
+NOVEDADES v1.4.0:
+-----------------
+• Validación centralizada de datos
+• Sistema de backups automáticos
+• Pronunciación TTS mejorada
+• Diccionario con definiciones completas
+• Traductor con MyMemory API
+• Números ordinales y reglas completas
+
+
 SOPORTE:
 --------
-Email: administrador@agilizesoluciones.com
+Email: Jorgenayati@gmail.com
 Tel: +54 11 6168-2555
 
 
 ═══════════════════════════════════════════════════════════════
-Desarrollado por Agilize Soluciones | Licencia MIT
+Desarrollado por Agilize Soluciones | Uso Educativo
 ═══════════════════════════════════════════════════════════════

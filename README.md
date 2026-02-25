@@ -1,300 +1,248 @@
-# 📚 English Memory v1.3.2
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/tu-usuario/english-memory)
-[![Version](https://img.shields.io/badge/version-1.3.2-green.svg)](https://github.com/tu-usuario/english-memory/releases)
+# 📚 English Memory v1.4.0
 
 Aplicación educativa multiplataforma para aprender y organizar vocabulario en inglés.
 
-![English Memory](https://via.placeholder.com/800x400/1a1625/a78bfa?text=English+Memory+v1.3.2)
+![Version](https://img.shields.io/badge/version-1.4.0-blue)
+![Python](https://img.shields.io/badge/python-3.8+-green)
+![License](https://img.shields.io/badge/license-Educational-orange)
 
-## 🌟 Características Destacadas
+---
 
-- 🎯 **Modo Práctica Interactivo** - Quiz con validación de respuestas y seguimiento de errores
-- 📚 **Gestión Completa** - Agrega, edita y organiza tu vocabulario
-- 🔊 **Pronunciación TTS** - Text-to-speech integrado para escuchar palabras
-- ✍️ **Práctica de Caligrafía** - Método de repetición espaciada con palabras erróneas
-- 📘 **368 Verbos** - 124 irregulares + 239 regulares + 5 modales con conjugaciones
-- ⏰ **Conjugación de Verbos** - 6 tiempos verbales con ejemplos
-- 🌓 **Tema Claro/Oscuro** - Cambia entre temas según tu preferencia
-- 💾 **Backup Automático** - Respaldo cada 5 minutos
-- 📊 **Estadísticas Avanzadas** - Monitorea tu progreso y backups
-- 🌐 **Multiplataforma** - Windows y Linux
-
-## ✨ Características
+## ✨ Características Principales
 
 ### 📖 Gestión de Vocabulario
-- ➕ Agregar palabras con significado, pronunciación y notas
-- ✏️ Editar palabras (doble clic en la tabla)
-- 🗑️ Eliminar palabras
-- 🔍 Búsqueda en tiempo real
-- 📊 Ordenar por columnas
-- 🔊 Pronunciación TTS integrada
+- Agregar, editar y eliminar palabras
+- Búsqueda rápida y filtrado
+- Pronunciación fonética opcional
+- Notas personalizadas por palabra
+- Exportar/Importar CSV
 
-### 🎓 Herramientas de Aprendizaje
-- 🔊 **Pronunciación TTS**: Text-to-speech en Vocabulario, Práctica y Caligrafía
-- 🎯 **Práctica**: Modo quiz (Inglés ↔ Español) con validación
-- ✍️ **Caligrafía**: Dos modos - Palabras Erróneas o Todo el Vocabulario
-- 📍 **Preposiciones**: 47 preposiciones con traducciones
-- 📅 **Días/Meses**: 58 términos relacionados con tiempo
-- 🔢 **Números**: Conversor + reglas importantes
-- 📝 **Gramática**: Pronombres, verbos auxiliares, artículos, demostrativos, cuantificadores
-- 🔗 **Contracciones**: 93 contracciones formales e informales
-- 📘 **Verbos**: 368 verbos (124 irregulares + 239 regulares + 5 modales)
-- ⏰ **Conjugación**: 6 tiempos verbales (Present, Past, Perfect, Future, Modals)
-- 📊 **Estadísticas**: Métricas de tu vocabulario y backups
-- 📤 **Exportar/Importar CSV**: Desde la pestaña de Estadísticas
+### 🎯 Modos de Práctica
+- Quiz Inglés ↔ Español
+- Práctica de caligrafía con repetición espaciada
+- Seguimiento de palabras erróneas
+- Estadísticas de progreso
 
-## 🖥️ Compatibilidad
+### 📚 Recursos Educativos
+- **Preposiciones**: 47 preposiciones con traducciones
+- **Días/Meses**: 58 términos relacionados con tiempo
+- **Números**: Conversor + reglas de ordinales, decimales y fracciones
+- **Gramática**: Pronombres, verbos auxiliares, artículos, demostrativos
+- **Contracciones**: 93 contracciones formales e informales
+- **Verbos**: 368 verbos (124 irregulares + 239 regulares + 5 modales)
+- **Verbos Frasales**: Verbos frasales comunes con significados
+- **Conjugación**: 6 tiempos verbales + Modal Verbs
 
-- ✅ Windows 10/11
-- ✅ Linux (Ubuntu, Debian, Fedora, Arch, etc.)
-- ✅ macOS (compatible)
+### 🌐 Herramientas Integradas
+- **Traductor**: Bidireccional Inglés ↔ Español con MyMemory API
+- **Diccionario**: Definiciones completas con sinónimos y ejemplos
+- **Pronunciación TTS**: Text-to-Speech integrado (pyttsx3)
 
-## 📋 Tabla de Contenidos
+### 💾 Sistema de Respaldo
+- Backups automáticos antes de cada guardado
+- Mantiene últimos 10 backups
+- Validación centralizada de datos
+- Almacenamiento híbrido (JSON + SQLite)
 
-- [Inicio Rápido](#-inicio-rápido)
-- [Características](#-características)
-- [Instalación](#-instalación)
-- [Uso](#-uso)
-- [Documentación](#-documentación)
-- [Contribuir](#-contribuir)
-- [Soporte](#-soporte)
-- [Licencia](#-licencia)
+---
 
-## ⚡ Inicio Rápido
+## 🚀 Instalación
 
+### Opción 1: Ejecutable Portable (Windows)
+1. Descarga `EnglishMemory_Modular.exe` desde [Releases](../../releases)
+2. Ejecuta el archivo
+3. ¡Listo! No requiere instalación
+
+### Opción 2: Desde Código Fuente
+
+#### Requisitos
+- Python 3.8 o superior
+- pip (gestor de paquetes de Python)
+
+#### Pasos
 ```bash
 # Clonar repositorio
-git clone https://github.com/tu-usuario/english-memory.git
-cd english-memory
+git clone https://github.com/tu-usuario/English_Memory.git
+cd English_Memory
 
 # Instalar dependencias
 pip install -r requirements.txt
 
-# Ejecutar
-python diccionario_gui.py
+# Ejecutar aplicación
+python app_modular.py
 ```
-
-📖 Ver [QUICK_START.md](QUICK_START.md) para más detalles.
-
-## 🚀 Instalación
-
-### Opción 1: Ejecutable (Recomendado)
-
-#### Windows
-1. Ejecuta `crear_ejecutable.bat`
-2. El ejecutable estará en la carpeta `dist`
-3. Copia `English Memory.exe` donde quieras
-4. Crea un acceso directo en el escritorio
-
-#### Linux
-```bash
-chmod +x build_linux.sh
-./build_linux.sh
-cd dist
-./English\ Memory
-```
-
-### Opción 2: Ejecutar con Python
-
-#### Requisitos
-- Python 3.7 o superior
-- tkinter (incluido en Python)
-
-#### Windows
-```bash
-python diccionario_gui.py
-```
-
-#### Linux
-```bash
-# Instalar tkinter si es necesario
-sudo apt-get install python3-tk  # Ubuntu/Debian
-sudo dnf install python3-tkinter  # Fedora
-sudo pacman -S tk                 # Arch Linux
-
-# Ejecutar
-python3 diccionario_gui.py
-```
-
-## 📁 Ubicación de Datos
-
-Los datos se guardan automáticamente en:
-
-- **Windows**: `C:\Users\TuUsuario\AppData\Local\DiccionarioPersonal\palabras.json`
-- **Linux**: `~/.local/share/DiccionarioPersonal/palabras.json`
-- **macOS**: `~/.local/share/DiccionarioPersonal/palabras.json`
-
-## 📖 Manual de Usuario
-
-### Vocabulario
-1. **Agregar**: Click en "➕ Agregar", completa los campos y guarda
-2. **Editar**: Doble clic en cualquier palabra de la tabla
-3. **Eliminar**: Selecciona una palabra y click en "🗑️ Eliminar"
-4. **Buscar**: Escribe en el campo de búsqueda (busca en inglés y español)
-5. **Ordenar**: Click en los encabezados de columna
-
-### Pronunciación
-1. Escribe la palabra en inglés
-2. Escribe la pronunciación fonética
-3. Click en "💾 Guardar Pronunciación"
-
-### Práctica
-1. Selecciona el modo (Inglés→Español o Español→Inglés)
-2. Click en "🔄 Nueva Palabra" para practicar
-3. Click en "👁️ Ver Respuesta" para verificar
-
-### Caligrafía
-1. Selecciona una palabra del menú desplegable
-2. Practica escribiendo en las líneas
-3. Copia las oraciones de ejemplo
-
-### Exportar/Importar
-- **Exportar**: Click en "📤 Exportar" y elige ubicación
-- **Importar**: Click en "📥 Importar" y selecciona archivo CSV
-
-## 🔧 Respaldos
-
-### Método 1: Copiar carpeta de datos
-Copia la carpeta completa (ver ubicación arriba)
-
-### Método 2: Exportar CSV
-Usa la función "📤 Exportar" en la pestaña Vocabulario
-
-## 📞 Soporte Técnico
-
-¿Necesitas ayuda? Contáctanos:
-
-- 📧 **Email**: administrador@agilizesoluciones.com
-- 📱 **Teléfono**: +54 11 6168-2555
-
-Horario de atención: Lunes a Viernes, 9:00 - 18:00 (GMT-3)
-
-## 📋 Términos y Condiciones
-
-1. **Uso Educativo**: Aplicación gratuita con fines educativos
-2. **Privacidad**: Todos los datos se almacenan localmente
-3. **Respaldos**: Responsabilidad del usuario
-4. **Garantía**: Software proporcionado "tal cual"
-5. **Soporte**: Disponible por email/teléfono
-6. **Licencia**: Uso libre para fines educativos personales
-
-## 🐛 Solución de Problemas
-
-### Windows: "No se encuentra Python"
-Instala Python desde [python.org](https://www.python.org/downloads/)
-
-### Linux: "No module named tkinter"
-```bash
-sudo apt-get install python3-tk
-```
-
-### Linux: "Permission denied"
-```bash
-chmod +x "dist/English Memory"
-```
-
-### Los datos no se guardan
-Verifica permisos de escritura en la carpeta de datos
-
-## 🎨 Personalización
-
-La aplicación usa:
-- **Tema**: Oscuro (morado/violeta)
-- **Fuente Windows**: Segoe UI
-- **Fuente Linux**: Sans
-
-## 📦 Dependencias
-
-- Python 3.7+
-- tkinter (incluido en Python)
-- pyttsx3 2.90+ (para pronunciación TTS)
-- PyInstaller 5.13.2+ (solo para crear ejecutable)
-
-## 🔄 Actualizaciones
-
-**Versión 1.3.2** (2025)
-- 📘 368 verbos totales (124 irregulares + 239 regulares + 5 modales)
-- ✅ Verbo modal CAN y otros modales agregados
-- ➕ Más de 200 verbos regulares nuevos
-- 🔤 68 verbos irregulares adicionales
-
-**Versión 1.3.1** (2024)
-- 🔗 93 contracciones en inglés (formales e informales)
-- 🔍 Búsqueda en tiempo real de contracciones
-- 📚 12 pestañas funcionales
-
-**Versión 1.3.0** (2024)
-- 🔊 Pronunciación TTS integrada (pyttsx3) en Vocabulario, Práctica y Caligrafía
-- 🌓 Toggle tema claro/oscuro (en desarrollo)
-- 💾 Backup automático cada 5 minutos
-- 📘 100 verbos irregulares
-- ⏰ Conjugación de verbos (6 tiempos)
-- 📊 Estadísticas mejoradas con contador de backups
-- ✍️ Caligrafía con dos modos: Palabras Erróneas o Todo el Vocabulario
-- 📤 Botones Exportar/Importar movidos a Estadísticas
-
-**Versión 1.2** (2024)
-- Validación de respuestas en práctica
-- Caligrafía con repetición espaciada
-- Columna de Notas en vocabulario
-
-**Versión 1.0** (2024)
-- Lanzamiento inicial
-- Gestión completa de vocabulario
-- Soporte multiplataforma
-
-## 🤝 Contribuir
-
-¡Las contribuciones son bienvenidas! Por favor lee [CONTRIBUTING.md](CONTRIBUTING.md) para detalles.
-
-### 👥 Contribuidores
-
-Gracias a todos los que han contribuido a este proyecto.
-
-## 📚 Documentación
-
-- 📖 [README](README.md) - Documentación principal
-- ⚡ [QUICK_START](QUICK_START.md) - Inicio rápido
-- 📦 [INSTALL](INSTALL.md) - Guía de instalación
-- 🤝 [CONTRIBUTING](CONTRIBUTING.md) - Cómo contribuir
-- 📝 [CHANGELOG](CHANGELOG.md) - Historial de cambios
-
-## 👨‍💻 Desarrollador
-
-**Agilize Soluciones**
-- 🌐 Website: [agilizesoluciones.com](https://agilizesoluciones.com)
-- 📧 Email: administrador@agilizesoluciones.com
-- 📱 Teléfono: +54 11 6168-2555
-
-## ⭐ Agradecimientos
-
-Gracias a todos los usuarios y contribuidores que hacen posible este proyecto.
-
-## 📄 Licencia
-
-Este proyecto está licenciado bajo la Licencia MIT - ver [LICENSE](LICENSE) para detalles.
-
-```
-MIT License - Copyright (c) 2024 Agilize Soluciones
-```
-
-## 📊 Estado del Proyecto
-
-✅ **Versión Estable:** 1.3.2  
-🚧 **En Desarrollo:** Nuevas funcionalidades planeadas  
-🐛 **Bugs Conocidos:** Ninguno reportado  
 
 ---
 
-<div align="center">
+## 📦 Dependencias
 
-**English Memory v1.3.2** - Aprende inglés de manera efectiva 🚀
+```
+pyttsx3>=2.90          # Text-to-Speech
+requests>=2.31.0       # API calls
+beautifulsoup4>=4.12.0 # Web scraping
+```
 
-Hecho con ❤️ por [Agilize Soluciones](https://agilizesoluciones.com)
+---
 
-[Reportar Bug](https://github.com/tu-usuario/english-memory/issues) · [Solicitar Funcionalidad](https://github.com/tu-usuario/english-memory/issues) · [Documentación](https://github.com/tu-usuario/english-memory/wiki)
+## 🎨 Capturas de Pantalla
 
-</div>
+### Vocabulario
+Gestiona tu vocabulario personal con búsqueda rápida y edición intuitiva.
+
+### Práctica
+Modo quiz interactivo para reforzar el aprendizaje.
+
+### Recursos Educativos
+Acceso rápido a verbos, preposiciones, gramática y más.
+
+---
+
+## 📂 Estructura del Proyecto
+
+```
+English_Memory/
+├── app_modular.py              # Punto de entrada principal
+├── requirements.txt            # Dependencias
+├── EnglishMemory.spec         # Configuración PyInstaller
+├── src/
+│   ├── controllers/           # Lógica de negocio
+│   ├── models/                # Modelos de datos
+│   ├── views/                 # Interfaces de usuario
+│   ├── data/                  # Datos estáticos
+│   ├── integrations/          # APIs externas
+│   └── utils/                 # Utilidades
+├── docs/                      # Documentación
+└── dist/                      # Ejecutables compilados
+```
+
+---
+
+## 🛠️ Compilar Ejecutable
+
+```bash
+# Instalar PyInstaller
+pip install pyinstaller
+
+# Compilar
+pyinstaller EnglishMemory.spec
+
+# El ejecutable estará en dist/EnglishMemory_Modular.exe
+```
+
+---
+
+## 💡 Uso
+
+### Agregar Palabras
+1. Ve a la pestaña **Vocabulario**
+2. Clic en **➕ Agregar**
+3. Completa los campos (palabra, significado, pronunciación, notas)
+4. Clic en **💾 Guardar**
+
+### Practicar
+1. Ve a la pestaña **Práctica**
+2. Selecciona modo (Inglés→Español o Español→Inglés)
+3. Responde las preguntas
+4. Revisa tus estadísticas
+
+### Consultar Recursos
+- Navega por las pestañas: Verbos, Preposiciones, Gramática, etc.
+- Usa el botón **🔊 Pronunciar** para escuchar
+- Usa la búsqueda para filtrar contenido
+
+---
+
+## 📊 Almacenamiento de Datos
+
+### Windows
+```
+%LOCALAPPDATA%\EnglishMemory\
+├── palabras.json          # Vocabulario
+├── statistics.db          # Estadísticas
+└── palabras.json.backup_* # Backups automáticos
+```
+
+### Linux/macOS
+```
+~/.local/share/EnglishMemory/
+├── palabras.json
+├── statistics.db
+└── palabras.json.backup_*
+```
+
+---
+
+## 🤝 Contribuir
+
+¿Tienes ideas para mejorar la aplicación? ¡Nos encantaría escucharlas!
+
+### Reportar Errores o Sugerencias
+Envía un email a: **Jorgenayati@gmail.com**
+
+Incluye:
+- Descripción del problema o sugerencia
+- Pasos para reproducir (si es un error)
+- Capturas de pantalla (opcional)
+- Versión de la aplicación
+
+---
+
+## 📝 Changelog
+
+### v1.4.0 (2025-01-28)
+- ✅ Validación centralizada de datos
+- ✅ Sistema de backups automáticos
+- ✅ Pronunciación TTS mejorada (funciona múltiples veces)
+- ✅ Diccionario con definiciones completas
+- ✅ Traductor con MyMemory API
+- ✅ Números ordinales y reglas completas
+- ✅ Pronunciación en contracciones
+- ✅ Pestaña de Ayuda completa
+
+### v1.3.2
+- Agregados 368 verbos totales
+- Backup automático cada 5 minutos
+- Pronunciación TTS integrada
+
+---
+
+## 📄 Licencia
+
+Software de uso libre para fines educativos personales.
+
+**Términos:**
+- ✅ Uso educativo gratuito
+- ✅ Datos almacenados localmente
+- ✅ Sin recopilación de información personal
+- ❌ No redistribuir con fines comerciales
+
+---
+
+## 👨‍💻 Desarrollado por
+
+**Agilize Soluciones**
+
+📧 Contacto: Jorgenayati@gmail.com  
+📱 Teléfono: +54 11 6168-2555
+
+---
+
+## 🙏 Agradecimientos
+
+- **pyttsx3**: Text-to-Speech engine
+- **MyMemory API**: Servicio de traducción
+- **DictionaryAPI.dev**: Diccionario en inglés
+- Comunidad de Python por las excelentes librerías
+
+---
+
+## ⭐ ¿Te gusta el proyecto?
+
+Si encuentras útil esta aplicación, considera:
+- Darle una estrella ⭐ al repositorio
+- Compartirla con otros estudiantes de inglés
+- Enviar tus sugerencias para mejorarla
+
+---
+
+**English Memory** - Aprende inglés de forma organizada y efectiva 📚✨
