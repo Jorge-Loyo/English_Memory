@@ -5,6 +5,7 @@ Combina JSON (vocabulario) + SQLite (estadísticas)
 import json
 from pathlib import Path
 from .database import Database
+from src.utils import BackupManager
 
 class HybridStorage:
     def __init__(self, app_dir):
@@ -12,11 +13,25 @@ class HybridStorage:
         self.json_path = self.app_dir / 'palabras.json'
         self.db_path = self.app_dir / 'statistics.db'
         
+        # Inicializar gestor de backups
+        self.backup_manager = BackupManager(max_backups=10)
+        
+        # Crear backup inicial si existen archivos
+        self._crear_backup_inicial()
+        
         # Inicializar almacenamiento JSON (vocabulario)
         self.vocabulario = self._load_json()
         
         # Inicializar base de datos SQLite (estadísticas)
         self.stats_db = Database(self.db_path)
+    
+    def _crear_backup_inicial(self):
+        """Crear backup inicial al iniciar la aplicación"""
+        try:
+            if self.json_path.exists():
+                self.backup_manager.crear_backup(str(self.json_path))
+        except Exception:
+            pass  # Ignorar errores en backup inicial
     
     def _load_json(self):
         """Cargar vocabulario desde JSON"""
@@ -31,8 +46,13 @@ class HybridStorage:
         return {}
     
     def _save_json(self):
-        """Guardar vocabulario en JSON"""
+        """Guardar vocabulario en JSON con backup automático"""
         try:
+            # Crear backup antes de guardar
+            if self.json_path.exists():
+                self.backup_manager.crear_backup(str(self.json_path))
+            
+            # Guardar archivo
             with open(self.json_path, 'w', encoding='utf-8') as f:
                 json.dump(self.vocabulario, f, ensure_ascii=False, indent=2)
             return True

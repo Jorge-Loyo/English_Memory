@@ -1,4 +1,5 @@
 """Controlador de Vocabulario - Lógica de negocio"""
+from src.utils import Validator
 
 class VocabularioController:
     def __init__(self, storage):
@@ -6,48 +7,36 @@ class VocabularioController:
     
     def agregar_palabra(self, ingles, espanol, pronunciacion=None, notas=None):
         """Agregar nueva palabra con validaciones"""
-        # Validaciones
-        if not ingles or not espanol:
-            raise ValueError("Palabra y significado son obligatorios")
+        # Validar con Validator centralizado
+        ingles = Validator.validar_palabra(ingles, max_length=100)
+        espanol = Validator.validar_traduccion(espanol, max_length=500)
         
-        if len(ingles) > 100:
-            raise ValueError("La palabra no puede exceder 100 caracteres")
+        if pronunciacion:
+            pronunciacion = Validator.validar_traduccion(pronunciacion, max_length=200)
         
-        if len(espanol) > 500:
-            raise ValueError("El significado no puede exceder 500 caracteres")
+        if notas:
+            notas = Validator.validar_traduccion(notas, max_length=1000)
         
-        if pronunciacion and len(pronunciacion) > 200:
-            raise ValueError("La pronunciación no puede exceder 200 caracteres")
-        
-        if notas and len(notas) > 1000:
-            raise ValueError("Las notas no pueden exceder 1000 caracteres")
-        
-        # Verificar duplicados (sin convertir a minúsculas)
+        # Verificar duplicados
         if self.storage.existe_palabra(ingles):
             raise ValueError(f"La palabra '{ingles}' ya existe")
         
-        # Agregar palabra (sin convertir a minúsculas)
         return self.storage.agregar_palabra(ingles, espanol, pronunciacion, notas)
     
     def editar_palabra(self, palabra_actual, nueva_palabra, nuevo_significado, nueva_pronunciacion=None, nuevas_notas=None):
         """Editar palabra existente"""
-        # Validaciones
-        if not nueva_palabra or not nuevo_significado:
-            raise ValueError("Palabra y significado son obligatorios")
+        # Validar con Validator centralizado
+        nueva_palabra = Validator.validar_palabra(nueva_palabra, max_length=100)
+        nuevo_significado = Validator.validar_traduccion(nuevo_significado, max_length=500)
         
-        if len(nueva_palabra) > 100 or len(nuevo_significado) > 500:
-            raise ValueError("Palabra o significado demasiado largo")
+        if nueva_pronunciacion:
+            nueva_pronunciacion = Validator.validar_traduccion(nueva_pronunciacion, max_length=200)
         
-        if nueva_pronunciacion and len(nueva_pronunciacion) > 200:
-            raise ValueError("Pronunciación demasiado larga")
+        if nuevas_notas:
+            nuevas_notas = Validator.validar_traduccion(nuevas_notas, max_length=1000)
         
-        if nuevas_notas and len(nuevas_notas) > 1000:
-            raise ValueError("Notas demasiado largas")
-        
-        # Eliminar palabra anterior
+        # Eliminar palabra anterior y agregar actualizada
         self.storage.eliminar_palabra(palabra_actual)
-        
-        # Agregar palabra actualizada
         return self.storage.agregar_palabra(nueva_palabra, nuevo_significado, nueva_pronunciacion, nuevas_notas)
     
     def eliminar_palabra(self, palabra):

@@ -1,4 +1,4 @@
-"""Números View - Conversor de números"""
+"""Números View - Conversor de números y reglas"""
 import tkinter as tk
 from tkinter import ttk, messagebox
 from src.utils import AppConfig
@@ -28,7 +28,22 @@ class NumerosView(ttk.Frame):
         scrollbar.pack(side="right", fill="y", pady=20)
         
         # Conversor
-        conv = tk.Frame(content, bg=AppConfig.COLOR_BUTTON, relief='solid', borderwidth=1)
+        self._crear_conversor(content)
+        
+        # Números cardinales 1-20
+        self._crear_cardinales(content)
+        
+        # Números ordinales
+        self._crear_ordinales(content)
+        
+        # Decenas y centenas
+        self._crear_decenas_centenas(content)
+        
+        # Reglas de uso
+        self._crear_reglas(content)
+    
+    def _crear_conversor(self, parent):
+        conv = tk.Frame(parent, bg=AppConfig.COLOR_BUTTON, relief='solid', borderwidth=1)
         conv.pack(fill='x', padx=20, pady=(0,20), ipady=15)
         
         ttk.Label(conv, text="🔢 Conversor de Números", font=(AppConfig.FONT_FAMILY, 16, 'bold'), 
@@ -46,12 +61,12 @@ class NumerosView(ttk.Frame):
         self.label_resultado = tk.Label(conv, text="", font=(AppConfig.FONT_FAMILY, 14, 'bold'), 
                                         bg=AppConfig.COLOR_BUTTON, fg=AppConfig.COLOR_SUCCESS, wraplength=800)
         self.label_resultado.pack(pady=(5,10))
-        
-        # Números 1-20
-        num_frame = tk.Frame(content, bg=AppConfig.COLOR_BUTTON, relief='solid', borderwidth=1)
+    
+    def _crear_cardinales(self, parent):
+        num_frame = tk.Frame(parent, bg=AppConfig.COLOR_BUTTON, relief='solid', borderwidth=1)
         num_frame.pack(fill='x', padx=20, pady=(0,20), ipady=10)
         
-        ttk.Label(num_frame, text="📊 Números del 1 al 20", font=(AppConfig.FONT_FAMILY, 14, 'bold'), 
+        ttk.Label(num_frame, text="📊 Números Cardinales (1-20)", font=(AppConfig.FONT_FAMILY, 14, 'bold'), 
                  foreground=AppConfig.COLOR_ACCENT, background=AppConfig.COLOR_BUTTON).pack(pady=(10,10))
         
         grid = tk.Frame(num_frame, bg=AppConfig.COLOR_BUTTON)
@@ -67,6 +82,128 @@ class NumerosView(ttk.Frame):
             item.grid(row=i//5, column=i%5, padx=5, pady=5, sticky='ew')
             tk.Label(item, text=f"{num} = {palabra}", font=(AppConfig.FONT_FAMILY, 10), 
                     bg=AppConfig.COLOR_BG, fg=AppConfig.COLOR_FG, width=15).pack(padx=10, pady=5)
+    
+    def _crear_ordinales(self, parent):
+        ord_frame = tk.Frame(parent, bg=AppConfig.COLOR_BUTTON, relief='solid', borderwidth=1)
+        ord_frame.pack(fill='x', padx=20, pady=(0,20), ipady=10)
+        
+        ttk.Label(ord_frame, text="🥇 Números Ordinales (Primero, Segundo...)", font=(AppConfig.FONT_FAMILY, 14, 'bold'), 
+                 foreground=AppConfig.COLOR_ACCENT, background=AppConfig.COLOR_BUTTON).pack(pady=(10,10))
+        
+        grid = tk.Frame(ord_frame, bg=AppConfig.COLOR_BUTTON)
+        grid.pack(padx=20, pady=(0,10))
+        
+        ordinales = [
+            ('1st','first'),('2nd','second'),('3rd','third'),('4th','fourth'),('5th','fifth'),
+            ('6th','sixth'),('7th','seventh'),('8th','eighth'),('9th','ninth'),('10th','tenth'),
+            ('11th','eleventh'),('12th','twelfth'),('13th','thirteenth'),('14th','fourteenth'),('15th','fifteenth'),
+            ('16th','sixteenth'),('17th','seventeenth'),('18th','eighteenth'),('19th','nineteenth'),('20th','twentieth'),
+            ('21st','twenty-first'),('22nd','twenty-second'),('23rd','twenty-third'),('30th','thirtieth'),('40th','fortieth'),
+            ('50th','fiftieth'),('60th','sixtieth'),('70th','seventieth'),('80th','eightieth'),('90th','ninetieth'),('100th','hundredth')
+        ]
+        
+        for i, (num, palabra) in enumerate(ordinales):
+            item = tk.Frame(grid, bg=AppConfig.COLOR_BG, relief='solid', borderwidth=1)
+            item.grid(row=i//5, column=i%5, padx=5, pady=5, sticky='ew')
+            tk.Label(item, text=f"{num} = {palabra}", font=(AppConfig.FONT_FAMILY, 10), 
+                    bg=AppConfig.COLOR_BG, fg=AppConfig.COLOR_FG, width=15).pack(padx=10, pady=5)
+    
+    def _crear_decenas_centenas(self, parent):
+        dec_frame = tk.Frame(parent, bg=AppConfig.COLOR_BUTTON, relief='solid', borderwidth=1)
+        dec_frame.pack(fill='x', padx=20, pady=(0,20), ipady=10)
+        
+        ttk.Label(dec_frame, text="📈 Decenas, Centenas y Más", font=(AppConfig.FONT_FAMILY, 14, 'bold'), 
+                 foreground=AppConfig.COLOR_ACCENT, background=AppConfig.COLOR_BUTTON).pack(pady=(10,10))
+        
+        grid = tk.Frame(dec_frame, bg=AppConfig.COLOR_BUTTON)
+        grid.pack(padx=20, pady=(0,10))
+        
+        grandes = [
+            ('20','twenty'),('30','thirty'),('40','forty'),('50','fifty'),('60','sixty'),
+            ('70','seventy'),('80','eighty'),('90','ninety'),('100','one hundred'),('200','two hundred'),
+            ('500','five hundred'),('1,000','one thousand'),('10,000','ten thousand'),('100,000','one hundred thousand'),
+            ('1,000,000','one million'),('1,000,000,000','one billion')
+        ]
+        
+        for i, (num, palabra) in enumerate(grandes):
+            item = tk.Frame(grid, bg=AppConfig.COLOR_BG, relief='solid', borderwidth=1)
+            item.grid(row=i//4, column=i%4, padx=5, pady=5, sticky='ew')
+            tk.Label(item, text=f"{num} = {palabra}", font=(AppConfig.FONT_FAMILY, 10), 
+                    bg=AppConfig.COLOR_BG, fg=AppConfig.COLOR_FG, width=20).pack(padx=10, pady=5)
+    
+    def _crear_reglas(self, parent):
+        reglas_frame = tk.Frame(parent, bg=AppConfig.COLOR_BUTTON, relief='solid', borderwidth=1)
+        reglas_frame.pack(fill='x', padx=20, pady=(0,20), ipady=10)
+        
+        ttk.Label(reglas_frame, text="📝 Reglas de Uso de Números en Inglés", font=(AppConfig.FONT_FAMILY, 14, 'bold'), 
+                 foreground=AppConfig.COLOR_ACCENT, background=AppConfig.COLOR_BUTTON).pack(pady=(10,10))
+        
+        reglas_text = tk.Text(reglas_frame, font=(AppConfig.FONT_FAMILY, 10), bg=AppConfig.COLOR_BG, 
+                             fg=AppConfig.COLOR_FG, wrap='word', height=25, relief='flat', padx=20, pady=10)
+        reglas_text.pack(fill='x', padx=20, pady=(0,10))
+        
+        contenido = """1. NÚMEROS CARDINALES (Cantidad)
+   • Se usan para contar: one, two, three, four...
+   • Ejemplo: I have three books (Tengo tres libros)
+
+2. NÚMEROS ORDINALES (Orden/Posición)
+   • Se usan para indicar orden: first, second, third, fourth...
+   • Ejemplo: This is my first car (Este es mi primer auto)
+   • Fechas: January 1st, March 3rd, May 21st
+
+3. ESCRITURA DE NÚMEROS
+   • 0-9: Escribir en palabras (five apples)
+   • 10+: Usar números o palabras según contexto (15 people o fifteen people)
+   • Inicio de oración: SIEMPRE en palabras (Twenty students arrived)
+
+4. SEPARADORES
+   • Miles: Usar coma (1,000 = one thousand)
+   • Decimales: Usar punto (3.14 = three point one four)
+   • Ejemplo: 1,234.56 = one thousand two hundred thirty-four point five six
+
+5. HUNDRED, THOUSAND, MILLION
+   • NO llevan 's' plural: two hundred (NO two hundreds)
+   • Excepción: "hundreds of" = cientos de (cantidad indefinida)
+   • Ejemplo: 300 = three hundred | hundreds of people = cientos de personas
+
+6. AND en NÚMEROS
+   • Británico: Usar 'and' después de hundred (105 = one hundred and five)
+   • Americano: Opcional (105 = one hundred five)
+
+7. FECHAS
+   • Formato US: Month Day, Year (January 15, 2025)
+   • Formato UK: Day Month Year (15 January 2025)
+   • Lectura: January fifteenth, twenty twenty-five
+
+8. HORAS
+   • 3:00 = three o'clock
+   • 3:15 = three fifteen / quarter past three
+   • 3:30 = three thirty / half past three
+   • 3:45 = three forty-five / quarter to four
+
+9. PORCENTAJES
+   • 50% = fifty percent
+   • Ejemplo: Twenty percent of students (20% de estudiantes)
+
+10. FRACCIONES
+    • 1/2 = one half / a half
+    • 1/3 = one third
+    • 1/4 = one quarter / one fourth
+    • 2/3 = two thirds
+    • 3/4 = three quarters / three fourths
+
+11. TELÉFONOS
+    • Leer dígito por dígito: 555-1234 = five five five, one two three four
+    • Doble dígito: 555-1122 = five five five, double one double two
+
+12. CERO
+    • Zero: Matemáticas y temperatura (0°C = zero degrees)
+    • Oh: Teléfonos y números (505 = five oh five)
+    • Nil: Deportes británicos (2-0 = two nil)
+    • Nought: Británico general"""
+        
+        reglas_text.insert('1.0', contenido)
+        reglas_text.config(state='disabled')
     
     def convertir(self):
         try:

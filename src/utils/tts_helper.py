@@ -1,4 +1,5 @@
 """Helper para Text-to-Speech"""
+import threading
 try:
     import pyttsx3
     TTS_DISPONIBLE = True
@@ -8,22 +9,33 @@ except ImportError:
 class TTSHelper:
     def __init__(self):
         self.disponible = TTS_DISPONIBLE
-        self.engine = None
+        self._lock = threading.Lock()
     
     def pronunciar(self, texto):
         """Pronunciar texto usando TTS"""
         if not self.disponible:
             raise RuntimeError("TTS no disponible. Instala pyttsx3: pip install pyttsx3")
         
-        try:
-            if not self.engine:
-                self.engine = pyttsx3.init()
-                self.engine.setProperty('rate', 150)
-            
-            self.engine.say(texto)
-            self.engine.runAndWait()
-        except Exception as e:
-            raise RuntimeError(f"Error al pronunciar: {str(e)}")
+        def _speak():
+            with self._lock:
+                engine = None
+                try:
+                    engine = pyttsx3.init()
+                    engine.setProperty('rate', 150)
+                    engine.say(texto)
+                    engine.runAndWait()
+                except Exception as e:
+                    raise RuntimeError(f"Error al pronunciar: {str(e)}")
+                finally:
+                    if engine:
+                        try:
+                            engine.stop()
+                        except:
+                            pass
+                        del engine
+        
+        thread = threading.Thread(target=_speak, daemon=True)
+        thread.start()
     
     def esta_disponible(self):
         """Verificar si TTS está disponible"""
