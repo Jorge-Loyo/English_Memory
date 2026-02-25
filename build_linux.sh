@@ -1,34 +1,38 @@
 #!/bin/bash
 
 echo "=================================================="
-echo "  Creando English Memory v1.3.2 para Linux"
+echo "  Creando English Memory v1.4.0 para Linux"
 echo "=================================================="
 echo ""
 
-# Instalar pyinstaller si no está instalado
+# Instalar dependencias
+echo "Instalando dependencias..."
+pip3 install -r requirements.txt
 pip3 install pyinstaller
 
-# Crear ejecutable
-pyinstaller diccionario_gui.py \
-    --name="English Memory" \
-    --onefile \
-    --windowed \
-    --clean
+echo ""
+echo "Creando ejecutable..."
+
+# Crear ejecutable usando el spec file
+pyinstaller EnglishMemory.spec --clean
+
+# Renombrar ejecutable para Linux
+mv dist/EnglishMemory_Modular dist/EnglishMemory
 
 echo ""
 echo "=================================================="
 echo "  Ejecutable creado exitosamente"
 echo "=================================================="
 echo ""
-echo "Ubicación: ./dist/English Memory"
+echo "Ubicación: ./dist/EnglishMemory"
 echo ""
 echo "Próximos pasos:"
 echo "   1. Ve a la carpeta 'dist'"
-echo "   2. Ejecuta './English Memory'"
+echo "   2. Ejecuta './EnglishMemory'"
 echo "   3. O crea un acceso directo en tu escritorio"
 echo ""
 echo "Tus datos se guardan en:"
-echo "   ~/.local/share/DiccionarioPersonal"
+echo "   ~/.local/share/EnglishMemory/data"
 echo ""
-echo "Soporte: administrador@agilizesoluciones.com | +54 11 6168-2555"
+echo "Contacto: Jorgenayati@gmail.com"
 echo ""
