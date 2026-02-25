@@ -44,13 +44,30 @@ class CaligrafiaView(ttk.Frame):
         self.label_info.pack(pady=5)
         
         # Canvas con scroll
-        canvas = tk.Canvas(self, bg=AppConfig.COLOR_BG, highlightthickness=0)
+        canvas_frame = tk.Frame(self, bg=AppConfig.COLOR_BG)
+        canvas_frame.pack(fill="both", expand=True, padx=30, pady=(0,10))
+        
+        canvas = tk.Canvas(canvas_frame, bg=AppConfig.COLOR_BG, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(canvas_frame, orient="vertical", command=canvas.yview)
         self.content = tk.Frame(canvas, bg=AppConfig.COLOR_BG)
         
         self.content.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-        canvas.create_window((0, 0), window=self.content, anchor="nw", width=1100)
+        canvas_window = canvas.create_window((0, 0), window=self.content, anchor="nw")
         
-        canvas.pack(fill="both", expand=True, padx=30, pady=(0,10))
+        # Ajustar ancho del contenido al canvas
+        def on_canvas_configure(event):
+            canvas.itemconfig(canvas_window, width=event.width)
+        canvas.bind("<Configure>", on_canvas_configure)
+        
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # Habilitar scroll con mouse
+        def on_mousewheel(event):
+            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        canvas.bind_all("<MouseWheel>", on_mousewheel)
+        
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
         
         # Botones
         btn_frame = tk.Frame(self, bg=AppConfig.COLOR_BG)
