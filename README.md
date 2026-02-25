@@ -48,21 +48,71 @@ Aplicación educativa multiplataforma para aprender y organizar vocabulario en i
 
 ## 🚀 Instalación
 
-### Opción 1: Ejecutable Portable (Windows)
-1. Descarga `EnglishMemory_Modular.exe` desde [Releases](../../releases)
-2. Ejecuta el archivo
-3. ¡Listo! No requiere instalación
+### 🪟 Windows - Instalador Portable (Recomendado)
 
-### Opción 2: Desde Código Fuente
+1. **Descarga** el instalador desde [Releases](https://github.com/Jorge-Loyo/English_Memory/releases/latest)
+2. **Descomprime** el archivo `EnglishMemory_v1.4.0_Portable.zip`
+3. **Ejecuta** `INSTALAR.bat`
+4. ¡Listo! Se creará un acceso directo en tu escritorio
 
-#### Requisitos
-- Python 3.8 o superior
-- pip (gestor de paquetes de Python)
+**Características:**
+- ✅ No requiere Python instalado
+- ✅ Instalación automática en `%LOCALAPPDATA%\EnglishMemory`
+- ✅ Accesos directos en Escritorio y Menú Inicio
+- ✅ Desinstalador incluido (`DESINSTALAR.bat`)
 
-#### Pasos
+**Requisitos:** Windows 7 o superior
+
+---
+
+### 🐧 Linux - Compilar desde Código
+
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/Jorge-Loyo/English_Memory.git
+cd English_Memory
+
+# 2. Dar permisos de ejecución
+chmod +x build_linux.sh
+
+# 3. Compilar ejecutable
+./build_linux.sh
+
+# 4. Ejecutar
+./dist/EnglishMemory
+```
+
+**Requisitos:** Python 3.8+, pip3
+
+**Datos guardados en:** `~/.local/share/EnglishMemory/data`
+
+---
+
+### 🍎 macOS - Desde Código Fuente
+
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/Jorge-Loyo/English_Memory.git
+cd English_Memory
+
+# 2. Instalar dependencias
+pip3 install -r requirements.txt
+
+# 3. Ejecutar aplicación
+python3 app_modular.py
+```
+
+**Requisitos:** Python 3.8+, pip3
+
+**Datos guardados en:** `~/Library/Application Support/EnglishMemory/data`
+
+---
+
+### 💻 Ejecutar desde Código (Todas las plataformas)
+
 ```bash
 # Clonar repositorio
-git clone https://github.com/tu-usuario/English_Memory.git
+git clone https://github.com/Jorge-Loyo/English_Memory.git
 cd English_Memory
 
 # Instalar dependencias
