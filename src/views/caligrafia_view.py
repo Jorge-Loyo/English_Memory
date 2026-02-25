@@ -63,7 +63,8 @@ class CaligrafiaView(ttk.Frame):
     
     def cargar_palabras(self):
         if self.modo.get() == 'erroneas':
-            self.lista_palabras = sorted(list(self.practica_controller.obtener_palabras_erroneas() or []))
+            palabras_erroneas = self.practica_controller.obtener_palabras_erroneas()
+            self.lista_palabras = sorted(list(palabras_erroneas)) if palabras_erroneas else []
         else:
             self.lista_palabras = sorted(self.storage.obtener_todas_palabras().keys())
         

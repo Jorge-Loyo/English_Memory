@@ -107,18 +107,17 @@ class Database:
             return [dict(row) for row in cursor.fetchall()]
     
     def obtener_palabras_dificiles(self, limite=10):
-        """Obtener las palabras más difíciles"""
+        """Obtener las palabras más difíciles (solo nombres)"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT palabra, veces_vista, veces_correcta, veces_incorrecta,
-                       CAST(veces_correcta AS REAL) / veces_vista * 100 as tasa_exito
+                SELECT palabra
                 FROM progreso_palabras
-                WHERE veces_vista >= 3
-                ORDER BY tasa_exito ASC, veces_vista DESC
+                WHERE veces_incorrecta > 0
+                ORDER BY veces_incorrecta DESC, veces_vista DESC
                 LIMIT ?
             """, (limite,))
-            return [dict(row) for row in cursor.fetchall()]
+            return [row['palabra'] for row in cursor.fetchall()]
     
     def obtener_racha_estudio(self):
         """Calcular racha de días consecutivos estudiando"""
