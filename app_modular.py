@@ -5,7 +5,7 @@ from src.controllers import VocabularioController, PracticaController
 from src.utils import AppConfig, TTSHelper, AppStyles
 from src.views import (MainWindow, VocabularioView, PracticaView, GenericTableView,
                        CaligrafiaView, NumerosView, GramaticaView, ConjugacionView, EstadisticasView)
-from src.data import PREPOSICIONES, DIAS_MESES, CONTRACCIONES, TODOS_VERBOS
+from src.data import PREPOSICIONES, DIAS_MESES, CONTRACCIONES, TODOS_VERBOS, VERBOS_FRASALES
 
 def main():
     # Inicializar
@@ -60,21 +60,30 @@ def main():
                                     ('Infinitivo', 'Pasado', 'Participio', 'Español'), verbos_data)
     main_window.agregar_tab(verbos_view, "📘", "Verbos")
     
-    # Tab 10: Conjugación
+    # Tab 10: Verbos Frasales
+    frasales_view = GenericTableView(main_window.notebook, "Verbos Frasales",
+                                      ('Phrasal Verb', 'Significado'), VERBOS_FRASALES, tts)
+    main_window.agregar_tab(frasales_view, "🔤", "Verbos Frasales")
+    
+    # Tab 11: Conjugación
     conjugacion_view = ConjugacionView(main_window.notebook)
     main_window.agregar_tab(conjugacion_view, "⏰", "Conjugación")
     
-    # Tab 11: Estadísticas
+    # Tab 11: Conjugación
+    conjugacion_view = ConjugacionView(main_window.notebook)
+    main_window.agregar_tab(conjugacion_view, "⏰", "Conjugación")
+    
+    # Tab 12: Estadísticas
     stats_view = EstadisticasView(main_window.notebook, vocab_controller, storage)
     main_window.agregar_tab(stats_view, "📊", "Estadísticas")
     
-    # Tab 12: Estadísticas Avanzadas (placeholder)
+    # Tab 13: Estadísticas Avanzadas (placeholder)
     stats_adv_frame = tk.Frame(main_window.notebook, bg=AppConfig.COLOR_BG)
     tk.Label(stats_adv_frame, text="📈 Estadísticas Avanzadas\n\nGráficos en desarrollo", 
              font=(AppConfig.FONT_FAMILY, 16), bg=AppConfig.COLOR_BG, fg=AppConfig.COLOR_FG).pack(expand=True)
     main_window.agregar_tab(stats_adv_frame, "📈", "Estadísticas Avanzadas")
     
-    # Tab 13: Ayuda
+    # Tab 14: Ayuda
     ayuda_frame = tk.Frame(main_window.notebook, bg=AppConfig.COLOR_BG)
     ayuda_container = tk.Frame(ayuda_frame, bg=AppConfig.COLOR_BG)
     ayuda_container.pack(expand=True)

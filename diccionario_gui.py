@@ -57,7 +57,7 @@ except:
 # Imports modularizados
 from src.controllers import VocabularioController, PracticaController
 from src.utils import AppConfig, TTSHelper
-from src.data import PREPOSICIONES, DIAS_MESES, CONTRACCIONES, TODOS_VERBOS, PRONOMBRES, AUXILIARES, ARTICULOS, DEMOSTRATIVOS, CUANTIFICADORES
+from src.data import PREPOSICIONES, DIAS_MESES, CONTRACCIONES, TODOS_VERBOS, PRONOMBRES, AUXILIARES, ARTICULOS, DEMOSTRATIVOS, CUANTIFICADORES, VERBOS_FRASALES
 
 # Detectar sistema operativo y configurar ruta apropiada
 APP_DIR = AppConfig.APP_DIR
@@ -156,6 +156,7 @@ class DiccionarioApp:
         self.crear_pestaña_gramatica()
         self.crear_pestaña_contracciones()
         self.crear_pestaña_verbos()
+        self.crear_pestaña_verbos_frasales()
         self.crear_pestaña_conjugacion()
         self.crear_pestaña_estadisticas()
         self.crear_pestaña_ayuda()
@@ -220,6 +221,7 @@ class DiccionarioApp:
             ("📝", "Gramática"),
             ("🔗", "Contracciones"),
             ("📘", "Verbos"),
+            ("🔤", "Verbos Frasales"),
             ("⏰", "Conjugación"),
             ("📊", "Estadísticas"),
             ("❓", "Ayuda")
@@ -237,7 +239,7 @@ class DiccionarioApp:
             tab_id = self.notebook.index(f"@{event.x},{event.y}")
             tooltips = ["Vocabulario", "Práctica", "Caligrafía", 
                        "Preposiciones", "Días/Meses", "Números", "Gramática",
-                       "Contracciones", "Verbos", "Conjugación", "Estadísticas", "Ayuda"]
+                       "Contracciones", "Verbos", "Verbos Frasales", "Conjugación", "Estadísticas", "Ayuda"]
             
             if hasattr(self, '_tooltip_window'):
                 self._tooltip_window.destroy()
@@ -1716,6 +1718,68 @@ class DiccionarioApp:
             messagebox.showwarning("Advertencia", "Selecciona un verbo")
             return
         item = self.tree_verbos.item(seleccion[0])
+        palabra = item['values'][0]
+        self.pronunciar_palabra(palabra)
+    
+    def crear_pestaña_verbos_frasales(self):
+        frame = ttk.Frame(self.notebook)
+        self.notebook.add(frame, text="🔤")
+        
+        frame_buscar = ttk.Frame(frame)
+        frame_buscar.pack(fill='x', padx=20, pady=15)
+        
+        ttk.Label(frame_buscar, text="🔍", font=(FONT_FAMILY, 14)).pack(side='left', padx=(0,5))
+        self.entry_buscar_frasales = ttk.Entry(frame_buscar, width=30, font=(FONT_FAMILY, 11))
+        self.entry_buscar_frasales.pack(side='left', padx=5, ipady=5)
+        self.entry_buscar_frasales.bind('<KeyRelease>', self._on_search_frasales_keyrelease)
+        self._search_frasales_timer = None
+        ttk.Button(frame_buscar, text="🔊 Pronunciar", command=self.pronunciar_frasal_seleccionado).pack(side='left', padx=5)
+        
+        columns = ('Phrasal Verb', 'Significado')
+        self.tree_frasales = ttk.Treeview(frame, columns=columns, show='headings', height=20)
+        
+        self.tree_frasales.heading('Phrasal Verb', text='🇬🇧 Phrasal Verb')
+        self.tree_frasales.heading('Significado', text='🇪🇸 Significado')
+        
+        self.tree_frasales.column('Phrasal Verb', width=300, minwidth=200)
+        self.tree_frasales.column('Significado', width=600, minwidth=400)
+        
+        scrollbar = ttk.Scrollbar(frame, orient='vertical', command=self.tree_frasales.yview)
+        self.tree_frasales.configure(yscrollcommand=scrollbar.set)
+        
+        self.tree_frasales.pack(side='left', fill='both', expand=True, padx=(20,0), pady=(0,20))
+        scrollbar.pack(side='right', fill='y', pady=(0,20), padx=(0,20))
+        
+        self.mostrar_todos_frasales()
+    
+    def mostrar_todos_frasales(self):
+        for item in self.tree_frasales.get_children():
+            self.tree_frasales.delete(item)
+        for phrasal, significado in VERBOS_FRASALES:
+            self.tree_frasales.insert('', 'end', values=(phrasal, significado))
+    
+    def _on_search_frasales_keyrelease(self, event):
+        if self._search_frasales_timer:
+            self.root.after_cancel(self._search_frasales_timer)
+        self._search_frasales_timer = self.root.after(300, self.buscar_frasales)
+    
+    def buscar_frasales(self):
+        busqueda = self.entry_buscar_frasales.get().strip().lower()
+        for item in self.tree_frasales.get_children():
+            self.tree_frasales.delete(item)
+        if not busqueda:
+            self.mostrar_todos_frasales()
+            return
+        for phrasal, significado in VERBOS_FRASALES:
+            if busqueda in phrasal.lower() or busqueda in significado.lower():
+                self.tree_frasales.insert('', 'end', values=(phrasal, significado))
+    
+    def pronunciar_frasal_seleccionado(self):
+        seleccion = self.tree_frasales.selection()
+        if not seleccion:
+            messagebox.showwarning("Advertencia", "Selecciona un verbo frasal")
+            return
+        item = self.tree_frasales.item(seleccion[0])
         palabra = item['values'][0]
         self.pronunciar_palabra(palabra)
     
